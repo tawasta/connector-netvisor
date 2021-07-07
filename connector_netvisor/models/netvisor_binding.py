@@ -1,0 +1,52 @@
+from odoo import models
+from odoo import fields
+from odoo import _
+from odoo.exceptions import UserError
+
+
+class NetvisorBinding(models.AbstractModel):
+    _name = "netvisor.binding"
+    _description = "Netvisor Binding"
+    _inherit = "external.binding"
+
+    backend_id = fields.Many2one(
+        comodel_name="netvisor.backend",
+        string="Netvisor Backend",
+        required=True,
+        ondelete="restrict",
+    )
+    external_id = fields.Integer(
+        "Netvisor ID",
+        help="Netvisor record id",
+        index=True,
+    )
+
+    def get_netvisor_backend(self, company=False):
+        """
+        Return Netvisor backend record based on the current user company
+        :param company: Company record
+        :return: Netvisor backend record
+        """
+        NetvisorBackend = self.sudo().env["netvisor.backend"]
+        if not company and hasattr(self, "company_id"):
+            # Use company set on record
+            company = self.company_id
+
+        if not company:
+            # Use users company
+            company = self.env.user.company_id
+
+        backend = NetvisorBackend.search(
+            [
+                ("company_id", "=", company.id),
+            ]
+        )
+
+        if not backend:
+            raise UserError(
+                _("Please configure a Netvisor backend for company {}.").format(
+                    company.name
+                )
+            )
+
+        return backend

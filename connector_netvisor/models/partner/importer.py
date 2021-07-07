@@ -1,0 +1,208 @@
+import logging
+from odoo import _
+from odoo.addons.component.core import Component
+from odoo.addons.connector.components.mapper import mapping, changed_by
+
+_logger = logging.getLogger(__name__)
+
+
+class NetvisorPartnerImportMapper(Component):
+
+    _name = "netvisor.partner.import.mapper"
+    _description = "Netvisor Partner Import Mapper"
+    _usage = "import.mapper"
+    _inherit = "base.import.mapper"
+    _apply_on = ["netvisor.partner"]
+
+    def import_customer(self, backend, netvisor_key):
+        """
+        Import or update a customer from Netvisor
+        :param backend: Netvisor backend record
+        :param netvisor_key: Netvisor id
+        :return:
+        """
+        netvisor_model = self.env["netvisor.partner"]
+        odoo_model = self.env["res.partner"]
+        client = backend.authenticate()
+        partner = client.customers.get(netvisor_key)
+        values = self.map_record(partner).values()
+
+        # Search for existing binding
+        existing_binding = netvisor_model.search(
+            [
+                ("external_id", "=", netvisor_key),
+                ("backend_id", "=", backend.id),
+            ],
+            limit=1,
+        )
+
+        if existing_binding:
+            # Binding exists: update values
+            existing_binding.write(values)
+            return _(
+                "Updated values for partner '{}'".format(existing_binding.display_name)
+            )
+
+        # No existing binding
+        binding_values = {"backend_id": backend.id, "external_id": netvisor_key}
+
+        # Search for existing partner by business id
+        if not existing_binding and values.get("business_code"):
+            existing_record = odoo_model.search(
+                [("business_code", "=", values["business_code"])]
+            )
+
+        # Search for existing partner by email or exact name
+        if not existing_record:
+            domain = [("name", "ilike", values["name"])]
+
+            if values.get("email"):
+                domain.append(("email", "=ilike", values["email"]))
+                # Insert "or" to the beginning
+                domain.insert(0, "|")
+            existing_record = odoo_model.search(domain)
+
+        if existing_record:
+            # Partner was found but doesn't have a binding
+            binding_values["odoo_id"] = existing_binding.id
+            netvisor_model.create(binding_values)
+            existing_record.write(values)
+            return _(
+                "Updated values for partner '{}'".format(existing_binding.display_name)
+            )
+        else:
+            # No partner found. Create a new partner and binding
+            existing_record = odoo_model.create(values)
+            binding_values["odoo_id"] = existing_binding.id
+            netvisor_model.create(binding_values)
+
+            return _("Created a new partner '{}'".format(existing_record.display_name))
+
+    # Netvisor, Odoo
+    direct = [
+        ("customer", True),
+    ]
+
+    @mapping
+    def name(self, record):
+        res = {"name": record.get("customer_base_information", {}).get("name")}
+
+        return res
+
+    @mapping
+    def business_code(self, record):
+        res = {}
+        business_code = record.get("customer_base_information", {}).get(
+            "external_identifier"
+        )
+        if business_code:
+            res.update({"business_code": business_code, "is_company": True})
+
+        return res
+
+    @mapping
+    def active(self, record):
+        res = {"active": record.get("customer_base_information", {}).get("is_active")}
+
+        return res
+
+    @mapping
+    def street(self, record):
+        res = {
+            "street": record.get("customer_base_information", {}).get("street_address")
+        }
+
+        return res
+
+    @mapping
+    def city(self, record):
+        res = {"city": record.get("customer_base_information", {}).get("city")}
+
+        return res
+
+    @mapping
+    def zip(self, record):
+        res = {"zip": record.get("customer_base_information", {}).get("post_number")}
+
+        return res
+
+    @mapping
+    def country_id(self, record):
+        Country = self.env["res.country"]
+        country_code = record.get("customer_base_information", {}).get("country")
+        res = {}
+
+        if country_code:
+            country_id = Country.search(
+                [
+                    ("code", "=", country_code),
+                ],
+                limit=1,
+            )
+
+            res["country_id"] = country_id.id
+
+        return res
+
+    @mapping
+    def comment(self, record):
+        res = {
+            "comment": record.get("customer_additional_information", {}).get("comment")
+        }
+
+        return res
+
+    @mapping
+    def ref(self, record):
+        res = {
+            "ref": record.get("customer_additional_information", {}).get(
+                "reference_number"
+            )
+        }
+
+        return res
+
+    @mapping
+    def website(self, record):
+        res = {
+            "website": record.get("customer_base_information", {}).get("home_page_uri")
+        }
+
+        return res
+
+    @mapping
+    def email(self, record):
+        res = {"email": record.get("customer_base_information", {}).get("email")}
+
+        return res
+
+    @mapping
+    def phone(self, record):
+        res = {"phone": record.get("customer_base_information", {}).get("phone_number")}
+
+        return res
+
+    @mapping
+    def edicode(self, record):
+        res = {
+            "edicode": record.get("customer_finvoice_details", {}).get(
+                "finvoice_address"
+            )
+        }
+
+        return res
+
+    @mapping
+    def einvoice_operator_id(self, record):
+        res = {}
+        operator_code = record.get("customer_finvoice_details", {}).get(
+            "finvoice_router_code"
+        )
+        operator_id = self.env["res.partner.operator.einvoice"].search(
+            [("identifier", "=", operator_code)]
+        )
+
+        if operator_code and operator_id:
+            res = {"einvoice_operator_id": operator_id.id}
+
+        return res

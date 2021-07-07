@@ -1,0 +1,267 @@
+from odoo import _
+from odoo.exceptions import ValidationError
+from odoo.addons.connector.exception import MappingError
+from odoo.addons.component.core import Component
+from odoo.addons.connector.components.mapper import mapping
+from netvisor_api_client.exc import InvalidData
+
+
+class NetvisorInvoiceExportMapper(Component):
+    _name = "netvisor.invoice.export.mapper"
+    _description = "Netvisor Invoice Export Mapper"
+    _inherit = "base.export.mapper"
+    _usage = "export.mapper"
+    _apply_on = ["netvisor.invoice"]
+
+    def export_invoice(self, backend, record):
+        values = self.map_record(record).values()
+        client = backend.authenticate()
+        binding_model = self.env["netvisor.invoice"]
+
+        binding = binding_model.search(
+            [("odoo_id", "=", record.id), ("backend_id", "=", backend.id)]
+        )
+
+        try:
+            if binding:
+                # Update invoice
+                client.sales_invoices.update(binding.external_id, values)
+                msg = _(f"Updated invoice '{record.name}'")
+            else:
+                res = client.sales_invoices.create(values)
+
+                if res:
+                    binding = binding_model.create(
+                        {
+                            "backend_id": backend.id,
+                            "external_id": res,
+                            "odoo_id": record.id,
+                        }
+                    )
+
+                    msg = _(f"Created invoice '{record.display_name}'")
+                else:
+                    raise MappingError(
+                        _(
+                            "Something went wrong when exporting invoice. "
+                            "Please see log for more details"
+                        )
+                    )
+        except InvalidData as e:
+            raise ValidationError(e)
+
+        # Update Odoo invoice information
+        netvisor_invoice = client.sales_invoices.get(binding.external_id)
+        binding.odoo_id.write(
+            {
+                "name": netvisor_invoice.get("number"),
+                "payment_reference": netvisor_invoice.get("reference_number"),
+                "netvisor_status": netvisor_invoice.get("status"),
+            }
+        )
+
+        return msg
+
+    # Odoo, Netvisor
+    direct = [
+        ("invoice_date", "date"),
+        ("amount_total", "amount"),
+    ]
+
+    @mapping
+    def currency(self, record):
+        return {"currency": record.currency_id.name}
+
+    @mapping
+    def status(self, record):
+        netvisor_status = record.netvisor_status or "unsent"
+
+        if record.state == "draft":
+            netvisor_status = "unsent"
+        elif record.state == "cancel":
+            netvisor_status = "rejected"
+
+        return {"status": netvisor_status}
+
+    @mapping
+    def invoicing_customer_identifier(self, record):
+        res = {}
+
+        binding = record.partner_id.netvisor_bind_ids.filtered(
+            lambda r: r.backend_id.company_id == record.company_id
+        )
+
+        if binding:
+            res["invoicing_customer_identifier"] = binding.external_id
+
+        return res
+
+    @mapping
+    def invoicing_customer_name(self, record):
+        return {"invoicing_customer_name": record.partner_id.display_name}
+
+    @mapping
+    def invoicing_customer_address_line(self, record):
+        return {"invoicing_customer_address_line": record.partner_id.street or ""}
+
+    @mapping
+    def invoicing_customer_additional_address_line(self, record):
+        return {
+            "invoicing_customer_additional_address_line": record.partner_id.street2
+            or ""
+        }
+
+    @mapping
+    def invoicing_customer_post_number(self, record):
+        return {"invoicing_customer_post_number": record.partner_id.zip or ""}
+
+    @mapping
+    def invoicing_customer_town(self, record):
+        return {"invoicing_customer_town": record.partner_id.city or ""}
+
+    @mapping
+    def invoicing_customer_country_code(self, record):
+        # TODO: add type to netvisor-api-client
+        return
+        return {"invoicing_customer_country_code": record.partner_id.country_id.code}
+
+    @mapping
+    def delivery_address_name(self, record):
+        return {"delivery_address_name": record.partner_shipping_id.display_name}
+
+    @mapping
+    def delivery_address_line(self, record):
+        return {
+            "delivery_address_line": record.partner_shipping_id.get_combined_street()
+        }
+
+    @mapping
+    def delivery_address_post_number(self, record):
+        return {"delivery_address_post_number": record.partner_shipping_id.zip or ""}
+
+    @mapping
+    def delivery_address_town(self, record):
+        return {"delivery_address_town": record.partner_shipping_id.city or ""}
+
+    @mapping
+    def delivery_address_country_code(self, record):
+        # TODO: add type to netvisor-api-client
+        return
+        return {
+            "delivery_address_country_code": record.partner_shipping_id.country_id.code
+            or ""
+        }
+
+    @mapping
+    def payment_term_net_days(self, record):
+        net_days = record.invoice_date_due - record.invoice_date
+
+        return {"payment_term_net_days": net_days.days}
+
+    @mapping
+    def free_text_before_lines(self, record):
+        res = {}
+
+        if record.move_type == "out_refund":
+            # Ref will contain the information about refunded invoice
+            res["free_text_before_lines"] = record.ref
+
+        return res
+
+    @mapping
+    def free_text_after_lines(self, record):
+        res = {"free_text_after_lines": record.narration or ""}
+
+        return res
+
+    @mapping
+    def our_reference(self, record):
+        return {"our_reference": ""}
+
+    @mapping
+    def your_reference(self, record):
+        res = {}
+
+        if record.move_type != "out_refund":
+            # In refunds the ref goes to "free_text_before_lines"
+            res["your_reference"] = record.ref
+
+        return res
+
+    @mapping
+    def private_comment(self, record):
+        return {"private_comment": ""}
+
+    @mapping
+    def override_rate_of_overdue(self, record):
+        # TODO: add overdue interest when netvisor-api-client supports it
+        return
+        if hasattr(record, "overdue_interest"):
+            return {"override_rate_of_overdue": 8}
+
+    @mapping
+    def invoice_lines(self, record):
+        invoice_lines = list()
+        for line in record.invoice_line_ids:
+            taxes = line.tax_ids
+            if len(taxes) != 1:
+                raise MappingError(_("Please define one tax for each invoice line"))
+            tax = taxes[0]
+
+            product_identifier = line.product_id.netvisor_bind_ids.filtered(
+                lambda r: r.backend_id.company_id == record.company_id
+            )
+
+            if len(product_identifier) != 1:
+                raise MappingError(
+                    _(
+                        "Product '{}' is not found from Netvisor! "
+                        "Please export products to Netvisor before sending the invoice".format(
+                            line.product_id.display_name
+                        )
+                    )
+                )
+
+            quantity = line.quantity
+            if record.move_type == "out_refund":
+                # Negative quantity for refunds
+                quantity *= -1
+
+            # TODO: add identifier
+            invoice_lines.append(
+                {
+                    "identifier": {
+                        "identifier": product_identifier.external_id,
+                        "type": "netvisor",
+                    },
+                    "name": line.product_id.name,
+                    "free_text": line.name,
+                    "unit_price": {"amount": line.price_unit, "type": "net"},
+                    "vat_percentage": {
+                        "percentage": tax.amount,
+                        "code": tax.netvisor_code,
+                    },
+                    "quantity": quantity,
+                    "discount_percentage": line.discount,
+                }
+            )
+
+        return {"invoice_lines": invoice_lines}
+
+    @mapping
+    def attachments(self, record):
+        attachments = list()
+        for attachment in record.attachment_ids:
+            # Netvisor API won't receive the same attachment twice,
+            # so we don't need to check if the attachment is already sent
+            attachments.append(
+                {
+                    "mime_type": attachment.mimetype,
+                    "description": attachment.description,
+                    "filename": attachment.name,
+                    "data": attachment.datas,
+                    "type": "pdf",
+                }
+            )
+
+        return {"attachments": attachments}

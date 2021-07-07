@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_tax_form" model="ir.ui.view">
+        <field name="name">account.tax.form.netvisor</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="groups_id" eval="[(4, ref('queue_job.group_queue_job_manager'))]" />
+        <field name="arch" type="xml">
+            <field name="type_tax_use" position="after">
+                <field name="netvisor_code" />
+            </field>
+        </field>
+    </record>
+</odoo>

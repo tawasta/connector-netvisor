@@ -21,10 +21,21 @@
                 <page string="Netvisor" name="netvisor" groups="queue_job.group_queue_job_manager">
                     <group>
                         <button name="action_netvisor_export_invoice"
-                          type="object"
-                          class="oe_highlight"
-                          states="posted"
-                          string="Send to Netvisor" />
+                                type="object"
+                                class="oe_highlight"
+                                states="posted"
+                                string="Send to Netvisor" />
+
+                        <button name="action_netvisor_update_status"
+                                type="object"
+                                class="oe_highlight"
+                                states="posted"
+                                help="Update status from Netvisor"
+                                string="Update status" />
+                    </group>
+
+                    <group>
+                        <field name="netvisor_status" />
                     </group>
 
                     <label for="netvisor_bind_ids" />

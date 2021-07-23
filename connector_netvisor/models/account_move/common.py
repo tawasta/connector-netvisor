@@ -28,13 +28,41 @@ class NetvisorInvoice(models.Model):
 
     def netvisor_export_invoice(self, record):
         """
-        Export an invoie to Netvisor
+        Export an invoice to Netvisor
         """
         backend = self.get_netvisor_backend()
 
         with backend.work_on(self._name) as work:
             exporter = work.component(usage="export.mapper")
             return exporter.export_invoice(backend, record)
+
+    def netvisor_update_status(self, record):
+        """
+        Update status from Netvisor
+        """
+        backend = self.get_netvisor_backend()
+
+        with backend.work_on(self._name) as work:
+            importer = work.component(usage="import.mapper")
+            return importer.update_status(backend, record)
+
+    def action_update_invoice_status(self, invoice_status):
+        """
+        Update invoice status in Odoo
+        :param invoice_status: The invoice status to update to
+        :return:
+        """
+        for record in self:
+            if record.netvisor_status == invoice_status:
+                # Nothing to do
+                return
+            elif invoice_status == "unsent":
+                # Set to draft
+                record.button_draft()
+            elif invoice_status == "paid":
+                record.payment_state = invoice_status
+
+            record.netvisor_status = invoice_status
 
 
 class AccountMove(models.Model):
@@ -56,6 +84,8 @@ class AccountMove(models.Model):
             ("creditloss", "Credit loss"),
             ("rejected", "Rejected"),
         ],
+        copy=False,
+        readonly=True,
     )
 
     attachment_ids = fields.Many2many(
@@ -91,6 +121,25 @@ class AccountMove(models.Model):
             for record in self:
                 job_desc = _("Netvisor: send invoice '{}'".format(record.display_name))
                 netvisor_model.with_delay(description=job_desc).netvisor_export_invoice(
+                    record
+                )
+
+    def action_netvisor_update_status(self):
+        """
+        Update status from Netvisor
+        """
+        netvisor_model = self.env["netvisor.invoice"]
+
+        if len(self) == 1:
+            netvisor_model.netvisor_update_status(self)
+        else:
+            for record in self:
+                job_desc = _(
+                    "Netvisor: update invoice status for '{}'".format(
+                        record.display_name
+                    )
+                )
+                netvisor_model.with_delay(description=job_desc).netvisor_update_status(
                     record
                 )
 

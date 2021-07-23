@@ -243,6 +243,7 @@ class NetvisorInvoiceExportMapper(Component):
                     "quantity": quantity,
                     "discount_percentage": line.discount,
                     "dimension": self._get_dimensions(line),
+                    "accounting_account_suggestion": line.account_id.code,
                 }
             )
 

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_netvisor_backend_form" model="ir.ui.view">
+        <field name="name">Netvisor backend form - analytic</field>
+        <field name="model">netvisor.backend</field>
+        <field name="inherit_id" ref="connector_netvisor.view_netvisor_backend_form"/>
+        <field name="arch" type="xml">
+
+            <group name="products" position="after">
+              <group name="dimensions" string="Dimensions" colspan="2">
+                <p class="oe_grey oe_inline">
+                    Import or update all dimensions from Netvisor.<br />
+                    If dimension doesn't exist, one will be created.
+                    If dimension exists (name match), it will be updated.
+                </p>
+                <button name="action_import_dimensions"
+                  type="object"
+                  class="oe_highlight"
+                  string="Import dimensions"/>
+              </group>
+            </group>
+
+        </field>
+    </record>
+</odoo>

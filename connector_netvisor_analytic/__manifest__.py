@@ -1,7 +1,7 @@
 ##############################################################################
 #
 #    Author: Oy Tawasta OS Technologies Ltd.
-#    Copyright 2021 Oy Tawasta OS Technologies Ltd. (https://tawasta.fi)
+#    Copyright 2018 Oy Tawasta OS Technologies Ltd. (https://tawasta.fi)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,40 +19,21 @@
 ##############################################################################
 
 {
-    "name": "Netvisor connector",
-    "summary": "Integration between Odoo and Netvisor",
+    "name": "Netvisor connector - Analytic accounting (dimensions)",
+    "summary": "Add dimension support to Netvisor integration",
     "version": "14.0.1.0.0",
     "category": "Invoicing & Payments",
-    "website": "https://gitlab.com/tawasta/odoo/connector-netvisor",
+    "website": "https://github.com/Tawasta/connector-netvisor",
     "author": "Tawasta",
     "license": "AGPL-3",
-    "application": True,
+    "application": False,
     "installable": True,
-    "external_dependencies": {
-        "python": [
-            "cachetools",
-            "netvisor-api-client",
-        ],
-        "bin": [],
-    },
+    "external_dependencies": {"python": [], "bin": []},
     "depends": [
-        "account",
-        "connector",
-        "product",
-        "queue_job",
-        "l10n_fi_business_code",
-        "l10n_fi_edicode",
+        "analytic",
+        "analytic_tag_dimension",
+        "connector_netvisor",
     ],
-    "post_init_hook": "init_netvisor_data",
-    "data": [
-        "security/model_access.xml",
-        "views/account_move.xml",
-        "views/account_tax.xml",
-        "views/config_settings.xml",
-        "views/netvisor_backend_menu.xml",
-        "views/netvisor_backend_form.xml",
-        "views/netvisor_backend_tree.xml",
-        "views/partner.xml",
-        "views/product.xml",
-    ],
+    "data": ["data/ir_cron.xml", "views/netvisor_backend.xml"],
+    "demo": [],
 }

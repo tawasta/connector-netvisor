@@ -26,10 +26,6 @@ class NetvisorProductImportMapper(Component):
         client = backend.authenticate()
         product = client.products.get(netvisor_key)
         values = self.map_record(product).values()
-        print("PRODUCT")
-        print(product)
-        print("VALUES")
-        print(values)
 
         # Search for existing binding
         existing_binding = netvisor_model.search(
@@ -41,7 +37,6 @@ class NetvisorProductImportMapper(Component):
         )
 
         if existing_binding:
-            print(existing_binding)
             # Binding exists: update values
             existing_binding.odoo_id.write(values)
             return _(

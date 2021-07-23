@@ -227,7 +227,6 @@ class NetvisorInvoiceExportMapper(Component):
                 # Negative quantity for refunds
                 quantity *= -1
 
-            # TODO: add identifier
             invoice_lines.append(
                 {
                     "identifier": {
@@ -243,6 +242,7 @@ class NetvisorInvoiceExportMapper(Component):
                     },
                     "quantity": quantity,
                     "discount_percentage": line.discount,
+                    "dimension": self._get_dimensions(line),
                 }
             )
 
@@ -265,3 +265,10 @@ class NetvisorInvoiceExportMapper(Component):
             )
 
         return {"attachments": attachments}
+
+    def _get_dimensions(self, record):
+        """
+        A overridable function for adding dimensions to invoice line
+        :return: dict with dimension and dimension item
+        """
+        return []

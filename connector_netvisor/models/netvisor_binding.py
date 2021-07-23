@@ -50,3 +50,23 @@ class NetvisorBinding(models.AbstractModel):
             )
 
         return backend
+
+    def get_netvisor_binding(self, backend_id, external_id):
+        """
+        Return Netvisor binding if one exists
+        :param backend_id: Netvisor backend id
+        :param external_id: Netvisor external id (Netvisor key)
+        :return: Binding record
+        """
+
+        netvisor_model = self.env[self._name]
+
+        res = netvisor_model.search(
+            [
+                ("external_id", "=", external_id),
+                ("backend_id", "=", backend_id),
+            ],
+            limit=1,
+        )
+
+        return res

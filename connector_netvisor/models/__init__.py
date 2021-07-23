@@ -7,3 +7,4 @@ from . import account_move
 from . import account_tax
 from . import partner
 from . import product
+from . import res_config_settings

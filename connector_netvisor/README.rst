@@ -10,7 +10,8 @@ Integration between Odoo and Netvisor
 
 Configuration
 =============
-\-
+Currently you have to install netvisor-api-client from
+pip3 install https://github.com/Tawasta/netvisor-api-client/archive/backports.zip
 
 Bug Tracker
 ===========

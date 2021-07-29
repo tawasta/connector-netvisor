@@ -12,6 +12,12 @@ class NetvisorPartnerExportMapper(Component):
     _apply_on = ["netvisor.partner"]
 
     def export_customer(self, backend, record):
+        """
+        Export a partner as a customer to Netvisor
+        :param backend: Netvisor backend record
+        :param record: Partner record
+        :return:
+        """
         values = self.map_record(record).values()
         client = backend.authenticate()
         binding_model = self.env["netvisor.partner"]

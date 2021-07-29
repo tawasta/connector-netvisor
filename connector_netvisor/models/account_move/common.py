@@ -107,6 +107,10 @@ class AccountMove(models.Model):
             record.attachment_ids = attachment_ids
 
     def action_netvisor_export_invoice(self):
+        """
+        Export (send) invoice(s) to Netvisor
+        :return:
+        """
         netvisor_model = self.env["netvisor.invoice"]
 
         if len(self) == 1:
@@ -151,10 +155,5 @@ class AccountMove(models.Model):
 
         # Send invoice(s) to netvisor
         self.action_netvisor_export_invoice()
-
-        return res
-
-    def button_draft(self):
-        res = super().button_draft()
 
         return res

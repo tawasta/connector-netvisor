@@ -18,7 +18,7 @@ class NetvisorPartnerImportMapper(Component):
         """
         Import or update a customer from Netvisor
         :param backend: Netvisor backend record
-        :param netvisor_key: Netvisor id
+        :param netvisor_key: Netvisor external ID
         :return:
         """
         netvisor_model = self.env["netvisor.partner"]

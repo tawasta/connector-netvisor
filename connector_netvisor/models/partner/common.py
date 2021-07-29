@@ -45,6 +45,8 @@ class NetvisorPartner(models.Model):
     def netvisor_import_customer(self, netvisor_key):
         """
         Import a partner from Netvisor
+        :param netvisor_key: Netvisor external ID
+        :return:
         """
         backend = self.get_netvisor_backend()
 
@@ -55,6 +57,8 @@ class NetvisorPartner(models.Model):
     def netvisor_export_customer(self, record):
         """
         Export a partner to Netvisor
+        :param record: Partner record
+        :return:
         """
         backend = self.get_netvisor_backend()
 
@@ -73,6 +77,10 @@ class Partner(models.Model):
     )
 
     def action_netvisor_export_record(self):
+        """
+        Export partner to Netvisor
+        :return:
+        """
         netvisor_model = self.env["netvisor.partner"]
         for record in self:
             job_desc = _("Netvisor: export customer '{}'".format(record.display_name))
@@ -81,6 +89,11 @@ class Partner(models.Model):
             )
 
     def write(self, values):
+        """
+        Override to force partner create or update on each write
+        :param values: values dict
+        :return:
+        """
         res = super().write(values)
         for record in self:
             self._event("on_partner_update").notify(record)
@@ -89,6 +102,11 @@ class Partner(models.Model):
 
     @api.model
     def create(self, values):
+        """
+        Override to force partner export on each create
+        :param values: values dict
+        :return:
+        """
         res = super().create(values)
         for record in self:
             self._event("on_partner_update").notify(record)
@@ -97,7 +115,8 @@ class Partner(models.Model):
 
     def get_combined_street(self):
         """
-        :return: Combined line of street and street2
+        Get combined string for street and street2
+        :return: String with streets
         """
         self.ensure_one()
         if self.street and self.street2:

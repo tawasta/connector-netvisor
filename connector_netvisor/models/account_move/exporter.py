@@ -14,6 +14,12 @@ class NetvisorInvoiceExportMapper(Component):
     _apply_on = ["netvisor.invoice"]
 
     def export_invoice(self, backend, record):
+        """
+        Export invoice from Odoo to Netvisor
+        :param backend: Netvisor backend record
+        :param record: Account move record
+        :return:
+        """
         values = self.map_record(record).values()
         client = backend.authenticate()
         binding_model = self.env["netvisor.invoice"]
@@ -201,6 +207,11 @@ class NetvisorInvoiceExportMapper(Component):
 
     @mapping
     def invoice_lines(self, record):
+        """
+        Return mapping for invoice lines
+        :param record: Account move record
+        :return:
+        """
         invoice_lines = list()
         for line in record.invoice_line_ids:
             taxes = line.tax_ids
@@ -251,6 +262,11 @@ class NetvisorInvoiceExportMapper(Component):
 
     @mapping
     def attachments(self, record):
+        """
+        Return list of attachments
+        :param record: Account move record
+        :return:
+        """
         attachments = list()
         for attachment in record.attachment_ids:
             # Netvisor API won't receive the same attachment twice,
@@ -270,6 +286,7 @@ class NetvisorInvoiceExportMapper(Component):
     def _get_dimensions(self, record):
         """
         A overridable function for adding dimensions to invoice line
+        :param record: Account move line
         :return: dict with dimension and dimension item
         """
         return []

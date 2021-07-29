@@ -12,6 +12,12 @@ class NetvisorProductExportMapper(Component):
     _apply_on = ["netvisor.product"]
 
     def export_product(self, backend, record):
+        """
+        Export a product to Netvisor
+        :param backend: Netvisor backend record
+        :param record: Product record
+        :return:
+        """
         values = self.map_record(record).values()
         client = backend.authenticate()
         binding_model = self.env["netvisor.product"]

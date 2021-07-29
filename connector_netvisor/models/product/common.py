@@ -58,6 +58,8 @@ class NetvisorProduct(models.Model):
     def netvisor_import_product(self, netvisor_key):
         """
         Import a product from Netvisor
+        :param netvisor_key: Netvisor external ID
+        :return:
         """
         backend = self.get_netvisor_backend()
 
@@ -68,6 +70,8 @@ class NetvisorProduct(models.Model):
     def netvisor_export_product(self, record):
         """
         Export a product to Netvisor
+        :param record: Product record
+        :return:
         """
         backend = self.get_netvisor_backend()
 
@@ -86,6 +90,10 @@ class Product(models.Model):
     )
 
     def action_netvisor_export_record(self):
+        """
+        Export product(s) to Netvisor
+        :return:
+        """
         netvisor_model = self.env["netvisor.product"]
         if len(self) == 1:
             # No delayed job
@@ -100,6 +108,11 @@ class Product(models.Model):
                 )
 
     def write(self, values):
+        """
+        Override to force product create or update on each write
+        :param values: values dict
+        :return:
+        """
         res = super().write(values)
         for record in self:
             self._event("on_product_update").notify(record)
@@ -108,6 +121,11 @@ class Product(models.Model):
 
     @api.model
     def create(self, values):
+        """
+        Override to force product export on each create
+        :param values: values dict
+        :return:
+        """
         res = super().create(values)
         for record in self:
             self._event("on_product_update").notify(record)

@@ -80,6 +80,10 @@ class AccountTax(models.Model):
     )
 
     def _init_netvisor_code(self):
+        """
+        Set Netvisor tax codes for taxes in Odoo
+        :return:
+        """
         for tax_id in _TAX_MAPPING.keys():
             try:
                 tax = self.env.ref(tax_id)

@@ -32,7 +32,7 @@ class NetvisorInvoiceExportMapper(Component):
             if binding:
                 # Update invoice
                 client.sales_invoices.update(binding.external_id, values)
-                msg = _(f"Updated invoice '{record.name}'")
+                msg = _("Updated invoice '{}'".format(record.name))
             else:
                 res = client.sales_invoices.create(values)
 
@@ -45,7 +45,7 @@ class NetvisorInvoiceExportMapper(Component):
                         }
                     )
 
-                    msg = _(f"Created invoice '{record.display_name}'")
+                    msg = _("Created invoice '{}'".format(record.display_name))
                 else:
                     raise MappingError(
                         _(

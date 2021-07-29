@@ -10,8 +10,24 @@ Integration between Odoo and Netvisor
 
 Configuration
 =============
-Currently you have to install netvisor-api-client from
-pip3 install https://github.com/Tawasta/netvisor-api-client/archive/backports.zip
+! Currently you have to install ``netvisor-api-client`` with
+
+``pip3 install https://github.com/Tawasta/netvisor-api-client/archive/backports.zip``
+
+After installing the module, create a Netvisor Backend-record for each company.
+
+If you want to use dimensions, go to Settings and enable "Netvisor dimensions".
+
+Features
+========
+- Importing/exporting products
+- Importing/exporting customers
+- Exporting (sending) sale invoices to Netvisor
+- Exporting (sending) sale credit notes to Netvisor
+- Using accounting suggestions in sale invoices
+- Fetching payment status for sale invoices
+- Importing dimensions
+- Using dimensions in sale invoices
 
 Bug Tracker
 ===========

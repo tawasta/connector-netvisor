@@ -79,7 +79,7 @@ class AccountTax(models.Model):
         default="-",
     )
 
-    def _init_netvisor_code(self):
+    def _init_netvisor_codes(self):
         """
         Set Netvisor tax codes for taxes in Odoo
         :return:

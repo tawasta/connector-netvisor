@@ -74,7 +74,6 @@ class NetvisorBackend(models.Model):
         :return:
         """
         self.ensure_one()
-
         client = self.authenticate()
 
         try:
@@ -93,6 +92,9 @@ class NetvisorBackend(models.Model):
         Start an API session
         :return: Netvisor client
         """
+        if not self.company_id.company_registry:
+            raise ValidationError(_("Company registry is missing. Please provide and try again"))
+
         client = Netvisor(
             host=self.host,
             sender=self.sender,

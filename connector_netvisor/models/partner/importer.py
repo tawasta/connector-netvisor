@@ -26,6 +26,7 @@ class NetvisorPartnerImportMapper(Component):
         client = backend.authenticate()
         partner = client.customers.get(netvisor_key)
         values = self.map_record(partner).values()
+        existing_record = False
 
         # Search for existing binding
         existing_binding = netvisor_model.search(

@@ -26,6 +26,7 @@ class NetvisorProductImportMapper(Component):
         client = backend.authenticate()
         product = client.products.get(netvisor_key)
         values = self.map_record(product).values()
+        existing_record = False
 
         # Search for existing binding
         existing_binding = netvisor_model.search(
@@ -68,7 +69,6 @@ class NetvisorProductImportMapper(Component):
             # No product found. Create a new product and binding
             existing_record = odoo_model.create(values)
             binding_values["odoo_id"] = existing_record.id
-            netvisor_model.create(binding_values)
 
             return _("Created a new product '{}'".format(existing_record.display_name))
 

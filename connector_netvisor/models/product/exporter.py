@@ -61,7 +61,7 @@ class NetvisorProductExportMapper(Component):
                 # TODO: logic for what description to use
                 "description": record.description_sale or "",
                 "unit_price": {"amount": record.lst_price, "type": "net"},
-                "unit_weight": record.weight,
+                # "unit_weight": record.weight,
                 "unit": record.uom_id.name,
                 "purchase_price": record.standard_price,
                 # "tariff_heading": TODO,
@@ -86,13 +86,16 @@ class NetvisorProductExportMapper(Component):
         else:
             raise ValidationError(_("Only one tax for product is supported"))
 
+        code = record.property_account_income_id.code or False
+
         res = {
             "product_bookkeeping_details": {
                 "default_vat_percentage": tax,
-                "default_domestic_account_number": record.property_account_income_id.code
-                or "",
             }
         }
+
+        if code:
+            res["product_bookkeeping_details"]["default_domestic_account_number"] = code
 
         return res
 

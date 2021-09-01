@@ -74,16 +74,12 @@ class NetvisorPartnerImportMapper(Component):
         else:
             # No partner found. Create a new partner and binding
             existing_record = odoo_model.create(values)
-            binding_values["odoo_id"] = existing_binding.id
+            binding_values["odoo_id"] = existing_record.id
             netvisor_model.create(binding_values)
 
             return _("Created a new partner '{}'".format(existing_record.display_name))
 
     # Netvisor, Odoo
-    direct = [
-        ("customer", True),
-    ]
-
     @mapping
     def name(self, record):
         res = {"name": record.get("customer_base_information", {}).get("name")}

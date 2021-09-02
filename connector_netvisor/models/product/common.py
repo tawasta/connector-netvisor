@@ -35,10 +35,9 @@ class NetvisorProduct(models.Model):
         backend = self.get_netvisor_backend()
         client = backend.authenticate()
         records = client.products.list()
-
         for record in records:
             job_desc = _(
-                "Netvisor: import product '{}'".format(record.get("product_code"))
+                "Netvisor: import product '{}'".format(record.get("product_code") or record.get("name"))
             )
             self.with_delay(description=job_desc).netvisor_import_product(
                 record.get("netvisor_key")
@@ -114,8 +113,9 @@ class Product(models.Model):
         :return:
         """
         res = super().write(values)
-        for record in self:
-            self._event("on_product_update").notify(record)
+        if not self.env.context.get("skip_export"):
+            for record in self:
+                self._event("on_product_update").notify(record)
 
         return res
 
@@ -127,7 +127,9 @@ class Product(models.Model):
         :return:
         """
         res = super().create(values)
-        for record in self:
-            self._event("on_product_update").notify(record)
+
+        if not self.env.context.get("skip_export"):
+            for record in self:
+                self._event("on_product_update").notify(record)
 
         return res

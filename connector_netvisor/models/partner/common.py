@@ -95,8 +95,9 @@ class Partner(models.Model):
         :return:
         """
         res = super().write(values)
-        for record in self:
-            self._event("on_partner_update").notify(record)
+        if not self.env.context.get("skip_export"):
+            for record in self:
+                self._event("on_partner_update").notify(record)
 
         return res
 
@@ -108,8 +109,9 @@ class Partner(models.Model):
         :return:
         """
         res = super().create(values)
-        for record in self:
-            self._event("on_partner_update").notify(record)
+        if not self.env.context.get("skip_export"):
+            for record in self:
+                self._event("on_partner_update").notify(record)
 
         return res
 
@@ -118,6 +120,10 @@ class Partner(models.Model):
         Get combined string for street and street2
         :return: String with streets
         """
+        if not self:
+            # If function is called without records
+            return ""
+
         self.ensure_one()
         if self.street and self.street2:
             street = f"{self.street} {self.street2}"

@@ -2,7 +2,7 @@ import logging
 from odoo import _
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping, changed_by
-
+from psycopg2 import IntegrityError
 _logger = logging.getLogger(__name__)
 
 
@@ -67,13 +67,17 @@ class NetvisorPartnerImportMapper(Component):
             # Partner was found but doesn't have a binding
             binding_values["odoo_id"] = existing_binding.id
             netvisor_model.create(binding_values)
-            existing_record.write(values)
+            try:
+                existing_record.write(values)
+            except IntegrityError:
+                # Binding already exists
+                pass
             return _(
-                "Updated values for partner '{}'".format(existing_binding.display_name)
+                "Updated values for partner '{}'".format(existing_record.display_name)
             )
         else:
             # No partner found. Create a new partner and binding
-            existing_record = odoo_model.create(values)
+            existing_record = odoo_model.with_context(skip_export=True).create(values)
             binding_values["odoo_id"] = existing_record.id
             netvisor_model.create(binding_values)
 

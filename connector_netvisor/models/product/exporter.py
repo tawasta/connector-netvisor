@@ -2,6 +2,7 @@ from odoo import _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
+from psycopg2 import IntegrityError
 
 
 class NetvisorProductExportMapper(Component):
@@ -22,7 +23,7 @@ class NetvisorProductExportMapper(Component):
         client = backend.authenticate()
         binding_model = self.env["netvisor.product"]
 
-        binding = binding_model.search([("odoo_id", "=", record.id)])
+        binding = binding_model.search([("odoo_id", "=", record.id), ("backend_id", "=", backend.id)])
 
         if binding:
             # Update existing record in Netvisor
@@ -32,13 +33,17 @@ class NetvisorProductExportMapper(Component):
             res = client.products.create(values)
 
             if res:
-                binding_model.create(
-                    {
-                        "backend_id": backend.id,
-                        "external_id": res,
-                        "odoo_id": record.id,
-                    }
-                )
+                try:
+                    binding_model.create(
+                        {
+                            "backend_id": backend.id,
+                            "external_id": res,
+                            "odoo_id": record.id,
+                        }
+                    )
+                except IntegrityError:
+                    # Binding already exists
+                    pass
 
                 msg = _(f"Created product '{record.display_name}'")
             else:

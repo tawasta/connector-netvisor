@@ -58,7 +58,7 @@ class NetvisorInvoice(models.Model):
                 return
             elif invoice_status == "unsent":
                 # Set to draft
-                record.button_draft()
+                record.odoo_id.button_draft()
             elif invoice_status == "paid":
                 record.payment_state = invoice_status
 

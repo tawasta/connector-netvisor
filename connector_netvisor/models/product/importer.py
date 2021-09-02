@@ -2,6 +2,7 @@ import logging
 from odoo import _
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping, changed_by
+from psycopg2 import IntegrityError
 
 _logger = logging.getLogger(__name__)
 
@@ -48,7 +49,7 @@ class NetvisorProductImportMapper(Component):
         binding_values = {"backend_id": backend.id, "external_id": netvisor_key}
 
         # Search for existing product by default code or exact name
-        if not existing_binding and values.get("default_code"):
+        if values.get("default_code"):
             existing_record = odoo_model.search(
                 [
                     "|",
@@ -60,15 +61,17 @@ class NetvisorProductImportMapper(Component):
         if existing_record:
             # Record was found but doesn't have a binding
             binding_values["odoo_id"] = existing_record.id
-            netvisor_model.create(binding_values)
-            existing_record.write(values)
+            existing_binding = netvisor_model.create(binding_values)
+
+            existing_binding.write(values)
             return _(
-                "Updated values for product '{}'".format(existing_record.display_name)
+                "Updated values for product '{}'".format(existing_binding.display_name)
             )
         else:
             # No product found. Create a new product and binding
-            existing_record = odoo_model.create(values)
+            existing_record = odoo_model.with_context(skip_export=True).create(values)
             binding_values["odoo_id"] = existing_record.id
+            netvisor_model.create(binding_values)
 
             return _("Created a new product '{}'".format(existing_record.display_name))
 

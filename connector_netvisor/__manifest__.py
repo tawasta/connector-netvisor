@@ -40,6 +40,7 @@
         "connector",
         "product",
         "queue_job",
+        "sale",
         "l10n_fi_business_code",
         "l10n_fi_edicode",
     ],

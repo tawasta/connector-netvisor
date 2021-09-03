@@ -36,7 +36,7 @@ class NetvisorInvoice(models.Model):
             exporter = work.component(usage="export.mapper")
             return exporter.export_invoice(backend, record)
 
-    def netvisor_update_status(self, record):
+    def netvisor_import_status(self, record):
         """
         Update status from Netvisor
         """
@@ -44,6 +44,16 @@ class NetvisorInvoice(models.Model):
 
         with backend.work_on(self._name) as work:
             importer = work.component(usage="import.mapper")
+            return importer.update_status(backend, record)
+
+    def netvisor_export_status(self, record):
+        """
+        Update status to Netvisor
+        """
+        backend = self.get_netvisor_backend()
+
+        with backend.work_on(self._name) as work:
+            importer = work.component(usage="export.mapper")
             return importer.update_status(backend, record)
 
     def action_update_invoice_status(self, invoice_status):
@@ -58,7 +68,9 @@ class NetvisorInvoice(models.Model):
                 return
             elif invoice_status == "unsent":
                 # Set to draft
-                record.odoo_id.button_draft()
+                # Generally we don't want to do this
+                # record.odoo_id.button_draft()
+                pass
             elif invoice_status == "paid":
                 record.payment_state = invoice_status
 
@@ -85,7 +97,7 @@ class AccountMove(models.Model):
             ("rejected", "Rejected"),
         ],
         copy=False,
-        readonly=True,
+        #readonly=True,
     )
 
     attachment_ids = fields.Many2many(
@@ -128,22 +140,41 @@ class AccountMove(models.Model):
                     record
                 )
 
-    def action_netvisor_update_status(self):
+    def action_netvisor_import_status(self):
         """
         Update status from Netvisor
         """
         netvisor_model = self.env["netvisor.invoice"]
 
         if len(self) == 1:
-            netvisor_model.netvisor_update_status(self)
+            netvisor_model.netvisor_import_status(self)
         else:
             for record in self:
                 job_desc = _(
-                    "Netvisor: update invoice status for '{}'".format(
+                    "Netvisor: import invoice status for '{}'".format(
                         record.display_name
                     )
                 )
-                netvisor_model.with_delay(description=job_desc).netvisor_update_status(
+                netvisor_model.with_delay(description=job_desc).netvisor_import_status(
+                    record
+                )
+
+    def action_netvisor_export_status(self):
+        """
+        Update status to Netvisor
+        """
+        netvisor_model = self.env["netvisor.invoice"]
+
+        if len(self) == 1:
+            netvisor_model.netvisor_export_status(self)
+        else:
+            for record in self:
+                job_desc = _(
+                    "Netvisor: export invoice status for '{}'".format(
+                        record.display_name
+                    )
+                )
+                netvisor_model.with_delay(description=job_desc).netvisor_export_status(
                     record
                 )
 

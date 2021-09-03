@@ -19,19 +19,26 @@
 
             <xpath expr="//notebook/page[last()]" position="after">
                 <page string="Netvisor" name="netvisor" groups="queue_job.group_queue_job_manager">
-                    <group>
+                    <group col="1">
                         <button name="action_netvisor_export_invoice"
                                 type="object"
                                 class="oe_highlight"
                                 states="posted"
                                 string="Send to Netvisor" />
 
-                        <button name="action_netvisor_update_status"
+                        <button name="action_netvisor_import_status"
                                 type="object"
                                 class="oe_highlight"
                                 states="posted"
                                 help="Update status from Netvisor"
-                                string="Update status" />
+                                string="Fetch status from Netvisor" />
+
+                        <button name="action_netvisor_export_status"
+                                type="object"
+                                class="oe_highlight"
+                                states="posted"
+                                help="Update status to Netvisor"
+                                string="Send status to Netvisor" />
                     </group>
 
                     <group>

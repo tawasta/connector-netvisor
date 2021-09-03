@@ -58,15 +58,32 @@ class NetvisorInvoiceExportMapper(Component):
 
         # Update Odoo invoice information
         netvisor_invoice = client.sales_invoices.get(binding.external_id)
+        invoice_status = netvisor_invoice.get("invoice_status").lower().replace(" ", "")
+
         binding.odoo_id.write(
             {
                 "name": netvisor_invoice.get("number"),
                 "payment_reference": netvisor_invoice.get("reference_number"),
-                "netvisor_status": netvisor_invoice.get("status"),
+                "netvisor_status": invoice_status,
             }
         )
 
         return msg
+
+    def update_status(self, backend, record):
+        """ Update invoice status to Netvisor """
+        client = backend.authenticate()
+        binding_model = self.env["netvisor.invoice"]
+        binding = binding_model.search(
+            [("odoo_id", "=", record.id), ("backend_id", "=", backend.id)]
+        )
+        netvisor_status = record.netvisor_status
+
+        if record.payment_status in ["paid", "reversed"]:
+            netvisor_status = "paid"
+
+        res = client.sales_invoices.update_status(binding.external_id, netvisor_status)
+        record.netvisor_status = netvisor_status
 
     # Odoo, Netvisor
     direct = [

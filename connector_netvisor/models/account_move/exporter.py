@@ -207,7 +207,7 @@ class NetvisorInvoiceExportMapper(Component):
 
         if record.move_type != "out_refund":
             # In refunds the ref goes to "free_text_before_lines"
-            res["your_reference"] = record.ref
+            res["your_reference"] = record.ref or ""
 
         return res
 

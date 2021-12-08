@@ -82,10 +82,7 @@ class NetvisorInvoiceExportMapper(Component):
         if record.payment_state in ["paid", "reversed"]:
             netvisor_status = "paid"
 
-        print("Here")
-        print(netvisor_status)
         res = client.sales_invoices.update_status(binding.external_id, netvisor_status)
-        print(res)
         record.netvisor_status = netvisor_status
         return res
 

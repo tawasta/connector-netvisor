@@ -123,6 +123,10 @@ class NetvisorInvoiceExportMapper(Component):
             # If partner identifier is known, use it
             res["invoicing_customer_identifier"] = binding.external_id
         else:
+            # Partner seems to be mandatory?
+            raise ValidationError(
+                _(f"'{record.partner_id.name}' is not yet exported to Netvisor.")
+            )
             # If partner identifier is not known, send all information
             res["invoicing_customer_name"] = record.partner_id.display_name
             res["invoicing_customer_address_line"] = record.partner_id.street or ""

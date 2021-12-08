@@ -1,6 +1,7 @@
 import datetime
 from odoo import fields
 from odoo import models
+from odoo import _
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -86,23 +87,26 @@ class NetvisorInvoice(models.Model):
                     [("payment_type", "=", "inbound")], limit=1
                 )
 
-                payment_amount = self.amount_residual
+                payment_amount = record.amount_residual
 
                 # This will currently set today as payment date
                 # It is usually incorrect, but we don't have the correct data from Procountor here
                 payment_date = datetime.date.today()
 
+                payment_values = {
+                    "amount": payment_amount,
+                    "group_payment": True,
+                    "payment_difference_handling": "open",
+                    "currency_id": record.currency_id.id,
+                    "payment_method_id": payment_method.id,
+                    "payment_date": payment_date,
+                }
+
+                _logger.debug(_(f"Payment values: {payment_values}"))
+                _logger.debug(_(f"Invoices to pay: {record.odoo_id.ids}"))
+
                 self.env["account.payment.register"].with_context(
-                    active_model="account.move", active_ids=self.ids
-                ).create(
-                    {
-                        "amount": payment_amount,
-                        "group_payment": True,
-                        "payment_difference_handling": "open",
-                        "currency_id": record.currency_id.id,
-                        "payment_method_id": payment_method.id,
-                        "payment_date": payment_date,
-                    }
-                )._create_payments()
+                    active_model="account.move", active_ids=record.odoo_id.ids
+                ).create(payment_values)._create_payments()
 
             record.netvisor_status = invoice_status

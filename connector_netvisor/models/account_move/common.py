@@ -60,9 +60,9 @@ class AccountMove(models.Model):
                     for binding in record.netvisor_bind_ids:
                         job_desc = _("Mark invoice {} as paid".format(record.name))
 
-                        binding.with_delay(
-                            description=job_desc
-                        ).netvisor_mark_invoice_as_paid()
+                        binding.with_delay(description=job_desc).netvisor_export_status(
+                            record
+                        )
 
         return res
 

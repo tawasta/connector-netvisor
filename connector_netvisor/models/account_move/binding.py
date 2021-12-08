@@ -1,6 +1,9 @@
 import datetime
 from odoo import fields
 from odoo import models
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class NetvisorInvoice(models.Model):
@@ -31,6 +34,7 @@ class NetvisorInvoice(models.Model):
         Export an invoice to Netvisor
         """
         backend = self.get_netvisor_backend()
+        _logger.debug(f"Exporting invoice {record.id} to Netvisor")
 
         with backend.work_on(self._name) as work:
             exporter = work.component(usage="export.mapper")

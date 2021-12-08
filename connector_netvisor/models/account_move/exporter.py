@@ -4,6 +4,9 @@ from odoo.addons.connector.exception import MappingError
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
 from netvisor_api_client.exc import InvalidData
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class NetvisorInvoiceExportMapper(Component):
@@ -23,6 +26,7 @@ class NetvisorInvoiceExportMapper(Component):
         values = self.map_record(record).values()
         client = backend.authenticate()
         binding_model = self.env["netvisor.invoice"]
+        _logger.debug(f"Using values {values}")
 
         binding = binding_model.search(
             [("odoo_id", "=", record.id), ("backend_id", "=", backend.id)]
@@ -35,7 +39,6 @@ class NetvisorInvoiceExportMapper(Component):
                 msg = _("Updated invoice '{}'".format(record.name))
             else:
                 res = client.sales_invoices.create(values)
-
                 if res:
                     binding = binding_model.create(
                         {
@@ -239,6 +242,13 @@ class NetvisorInvoiceExportMapper(Component):
             if record.move_type == "out_refund":
                 # Negative quantity for refunds
                 quantity *= -1
+
+            if tax.netvisor_code == "-":
+                raise ValidationError(
+                    _(
+                        "The tax '{tax.name}' is misconfigured. Please configure 'Netvisor VAT code' for that"
+                    )
+                )
 
             invoice_lines.append(
                 {

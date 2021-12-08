@@ -2,6 +2,9 @@ from odoo import api
 from odoo import fields
 from odoo import models
 from odoo import _
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountMove(models.Model):

@@ -82,12 +82,17 @@ class NetvisorInvoiceExportMapper(Component):
         if record.payment_state in ["paid", "reversed"]:
             netvisor_status = "paid"
 
+        print("Here")
+        print(netvisor_status)
         res = client.sales_invoices.update_status(binding.external_id, netvisor_status)
+        print(res)
         record.netvisor_status = netvisor_status
+        return res
 
     # Odoo, Netvisor
     direct = [
         ("invoice_date", "date"),
+        ("date", "event_date"),
         ("amount_total", "amount"),
     ]
 
@@ -107,7 +112,7 @@ class NetvisorInvoiceExportMapper(Component):
         return {"status": netvisor_status}
 
     @mapping
-    def invoicing_customer_identifier(self, record):
+    def invoicing_customer(self, record):
         res = {}
 
         binding = record.partner_id.netvisor_bind_ids.filtered(
@@ -115,38 +120,21 @@ class NetvisorInvoiceExportMapper(Component):
         )
 
         if binding:
+            # If partner identifier is known, use it
             res["invoicing_customer_identifier"] = binding.external_id
+        else:
+            # If partner identifier is not known, send all information
+            res["invoicing_customer_name"] = record.partner_id.display_name
+            res["invoicing_customer_address_line"] = record.partner_id.street or ""
+            res["invoicing_customer_additional_address_line"] = (
+                record.partner_id.street2 or ""
+            )
+            res["invoicing_customer_post_number"] = record.partner_id.zip or ""
+            res["invoicing_customer_town"] = record.partner_id.city or ""
 
+            # TODO: add type to netvisor-api-client
+            # res["invoicing_customer_country_code"] = record.partner_id.country_id.code
         return res
-
-    @mapping
-    def invoicing_customer_name(self, record):
-        return {"invoicing_customer_name": record.partner_id.display_name}
-
-    @mapping
-    def invoicing_customer_address_line(self, record):
-        return {"invoicing_customer_address_line": record.partner_id.street or ""}
-
-    @mapping
-    def invoicing_customer_additional_address_line(self, record):
-        return {
-            "invoicing_customer_additional_address_line": record.partner_id.street2
-            or ""
-        }
-
-    @mapping
-    def invoicing_customer_post_number(self, record):
-        return {"invoicing_customer_post_number": record.partner_id.zip or ""}
-
-    @mapping
-    def invoicing_customer_town(self, record):
-        return {"invoicing_customer_town": record.partner_id.city or ""}
-
-    @mapping
-    def invoicing_customer_country_code(self, record):
-        # TODO: add type to netvisor-api-client
-        return
-        return {"invoicing_customer_country_code": record.partner_id.country_id.code}
 
     @mapping
     def delivery_address_name(self, record):

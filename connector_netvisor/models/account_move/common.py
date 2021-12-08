@@ -1,80 +1,7 @@
+from odoo import api
 from odoo import fields
 from odoo import models
 from odoo import _
-
-
-class NetvisorInvoice(models.Model):
-    """Binding Model for the Netvisor Invoice"""
-
-    _name = "netvisor.invoice"
-    _inherit = "netvisor.binding"
-    _inherits = {"account.move": "odoo_id"}
-    _description = "Netvisor Invoice"
-
-    odoo_id = fields.Many2one(
-        comodel_name="account.move",
-        string="Account move",
-        required=True,
-        ondelete="cascade",
-    )
-
-    _sql_constraints = [
-        (
-            "odoo_uniq",
-            "unique(backend_id, odoo_id)",
-            "A Netvisor binding for this invoice already exists.",
-        ),
-    ]
-
-    def netvisor_export_invoice(self, record):
-        """
-        Export an invoice to Netvisor
-        """
-        backend = self.get_netvisor_backend()
-
-        with backend.work_on(self._name) as work:
-            exporter = work.component(usage="export.mapper")
-            return exporter.export_invoice(backend, record)
-
-    def netvisor_import_status(self, record):
-        """
-        Update status from Netvisor
-        """
-        backend = self.get_netvisor_backend()
-
-        with backend.work_on(self._name) as work:
-            importer = work.component(usage="import.mapper")
-            return importer.update_status(backend, record)
-
-    def netvisor_export_status(self, record):
-        """
-        Update status to Netvisor
-        """
-        backend = self.get_netvisor_backend()
-
-        with backend.work_on(self._name) as work:
-            importer = work.component(usage="export.mapper")
-            return importer.update_status(backend, record)
-
-    def action_update_invoice_status(self, invoice_status):
-        """
-        Update invoice status in Odoo
-        :param invoice_status: The invoice status to update to
-        :return:
-        """
-        for record in self:
-            if record.netvisor_status == invoice_status:
-                # Nothing to do
-                return
-            elif invoice_status == "unsent":
-                # Set to draft
-                # Generally we don't want to do this
-                # record.odoo_id.button_draft()
-                pass
-            elif invoice_status == "paid":
-                record.payment_state = invoice_status
-
-            record.netvisor_status = invoice_status
 
 
 class AccountMove(models.Model):
@@ -97,7 +24,7 @@ class AccountMove(models.Model):
             ("rejected", "Rejected"),
         ],
         copy=False,
-        #readonly=True,
+        # readonly=True,
     )
 
     attachment_ids = fields.Many2many(
@@ -118,12 +45,30 @@ class AccountMove(models.Model):
 
             record.attachment_ids = attachment_ids
 
+    @api.model
+    def _get_invoice_in_payment_state(self):
+        # Mark the invoice as paid in Netvisor when it's marked as paid in Odoo
+        res = super()._get_invoice_in_payment_state()
+
+        if res == "paid":
+            # Set Netvisor invoice as paid
+            for record in self:
+                if record.move_type in ["out_invoice", "out_refund"]:
+                    for binding in record.netvisor_bind_ids:
+                        job_desc = _("Mark invoice {} as paid".format(record.name))
+
+                        binding.with_delay(
+                            description=job_desc
+                        ).netvisor_mark_invoice_as_paid()
+
+        return res
+
     def action_netvisor_export_invoice(self):
         """
         Export (send) invoice(s) to Netvisor
         :return:
         """
-        netvisor_model = self.env["netvisor.invoice"]
+        netvisor_model = self.env["netvisor.invoice"].sudo()
 
         if len(self) == 1:
             # Only use direct send when validating one invoice

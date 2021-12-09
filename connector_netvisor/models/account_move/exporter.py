@@ -63,6 +63,14 @@ class NetvisorInvoiceExportMapper(Component):
         netvisor_invoice = client.sales_invoices.get(binding.external_id)
         invoice_status = netvisor_invoice.get("invoice_status").lower().replace(" ", "")
 
+        if binding.reversed_entry_id:
+            # Match credit note to the original invoice
+            job_desc = _(
+                "Mark invoice {} as reversed".format(binding.reversed_entry_id.name)
+            )
+
+            binding.with_delay(description=job_desc).netvisor_match_credit_note()
+
         binding.odoo_id.write(
             {
                 "name": netvisor_invoice.get("number"),
@@ -87,6 +95,28 @@ class NetvisorInvoiceExportMapper(Component):
 
         res = client.sales_invoices.update_status(binding.external_id, netvisor_status)
         record.netvisor_status = netvisor_status
+        return res
+
+    def match_credit_note(self, binding):
+        """ Match credit ntoe """
+        client = binding.backend_id.authenticate()
+        if binding.reversed_entry_id and binding.reversed_entry_id.netvisor_bind_ids:
+            if len(binding.reversed_entry_id.netvisor_bind_ids) > 1:
+                raise ValidationError(
+                    _("Multiple bindings for one invoice is not supported.")
+                )
+            reversed_binding = binding.reversed_entry_id.netvisor_bind_ids[0]
+
+            res = _("Credit note matching not supported")
+            # TODO:
+            # res = client.sales_invoices.match_credit_note(
+            #     {
+            #         "credit_note_netvisor_key": binding.external_id,
+            #         "invoice_netvisor_key": reversed_binding.external_id,
+            #     }
+            # )
+        else:
+            res = _("No refunded invoice to match")
         return res
 
     # Odoo, Netvisor

@@ -61,6 +61,14 @@ class NetvisorInvoice(models.Model):
             exporter = work.component(usage="export.mapper")
             return exporter.update_status(backend, record)
 
+    def netvisor_match_credit_note(self):
+        """
+        Match credit note in Netvisor
+        """
+        with self.backend_id.work_on(self._name) as work:
+            exporter = work.component(usage="export.mapper")
+            return exporter.match_credit_note(self)
+
     def action_update_invoice_status(self, invoice_status):
         """
         Update invoice status in Odoo

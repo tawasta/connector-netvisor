@@ -2,7 +2,9 @@ import logging
 from odoo import _
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping, changed_by
+from odoo.exceptions import ValidationError
 from psycopg2 import IntegrityError
+
 _logger = logging.getLogger(__name__)
 
 
@@ -53,6 +55,10 @@ class NetvisorPartnerImportMapper(Component):
                 [("business_code", "=", values["business_code"])]
             )
 
+        # Search for existing partner by customer ref
+        if not existing_record and values["ref"]:
+            existing_record = odoo_model.search([("ref", "=", values["ref"])])
+
         # Search for existing partner by email or exact name
         if not existing_record:
             domain = [("name", "ilike", values["name"])]
@@ -62,6 +68,11 @@ class NetvisorPartnerImportMapper(Component):
                 # Insert "or" to the beginning
                 domain.insert(0, "|")
             existing_record = odoo_model.search(domain)
+
+        if len(existing_record) > 0:
+            raise ValidationError(
+                _(f"Found multiple matching records: {existing_record.ids}")
+            )
 
         if existing_record:
             # Partner was found but doesn't have a binding

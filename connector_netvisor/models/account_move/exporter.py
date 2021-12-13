@@ -23,6 +23,9 @@ class NetvisorInvoiceExportMapper(Component):
         :param record: Account move record
         :return:
         """
+        if not record.netvisor_send:
+            return _("Netvisor sending is disabled for this invoice")
+
         values = self.map_record(record).values()
         client = backend.authenticate()
         binding_model = self.env["netvisor.invoice"]
@@ -280,7 +283,7 @@ class NetvisorInvoiceExportMapper(Component):
             if tax.netvisor_code == "-":
                 raise ValidationError(
                     _(
-                        "The tax '{tax.name}' is misconfigured. Please configure 'Netvisor VAT code' for that"
+                        f"The tax '{tax.name}' is misconfigured. Please configure 'Netvisor VAT code' for that"
                     )
                 )
 

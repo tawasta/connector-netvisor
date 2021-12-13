@@ -110,8 +110,7 @@ class Partner(models.Model):
         """
         res = super().create(values)
         if not self.env.context.get("skip_export"):
-            for record in self:
-                self._event("on_partner_update").notify(record)
+            self._event("on_partner_update").notify(res)
 
         return res
 

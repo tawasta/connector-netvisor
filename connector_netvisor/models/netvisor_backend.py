@@ -93,7 +93,9 @@ class NetvisorBackend(models.Model):
         :return: Netvisor client
         """
         if not self.company_id.company_registry:
-            raise ValidationError(_("Company registry is missing. Please provide and try again"))
+            raise ValidationError(
+                _("Company registry is missing. Please provide and try again")
+            )
 
         client = Netvisor(
             host=self.host,
@@ -159,3 +161,36 @@ class NetvisorBackend(models.Model):
             )
 
             netvisor_model.with_delay(description=job_desc).netvisor_export_products()
+
+    def action_cron_update_invoices_status(self):
+        """
+        Scheduled update all invoices status
+        """
+        for backend in self.search([]):
+            backend.action_update_invoices_status()
+
+    def action_update_invoices_status(self):
+        """
+        Update status for all invoices
+        """
+
+        _logger.info(_("Updating invoice status from Netvisor"))
+        netvisor_model = self.env["netvisor.invoice"]
+
+        open_status = ["open", "overdue", "unsent"]
+
+        bindings = netvisor_model.search(
+            [
+                ("state", "=", "posted"),
+                ("odoo_id", "!=", False),
+                ("netvisor_status", "in", open_status),
+            ]
+        )
+        _logger.debug(_(f"Updating status for invoices: {bindings.ids}"))
+
+        for binding in bindings:
+            job_desc = _(f"Update status for invoice {binding.name}")
+
+            binding.with_delay(description=job_desc).netvisor_import_status(
+                binding.odoo_id
+            )

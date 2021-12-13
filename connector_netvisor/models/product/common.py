@@ -37,7 +37,9 @@ class NetvisorProduct(models.Model):
         records = client.products.list()
         for record in records:
             job_desc = _(
-                "Netvisor: import product '{}'".format(record.get("product_code") or record.get("name"))
+                "Netvisor: import product '{}'".format(
+                    record.get("product_code") or record.get("name")
+                )
             )
             self.with_delay(description=job_desc).netvisor_import_product(
                 record.get("netvisor_key")
@@ -129,7 +131,6 @@ class Product(models.Model):
         res = super().create(values)
 
         if not self.env.context.get("skip_export"):
-            for record in self:
-                self._event("on_product_update").notify(record)
+            self._event("on_product_update").notify(res)
 
         return res

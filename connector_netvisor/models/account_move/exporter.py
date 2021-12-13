@@ -4,6 +4,9 @@ from odoo.addons.connector.exception import MappingError
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
 from netvisor_api_client.exc import InvalidData
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class NetvisorInvoiceExportMapper(Component):
@@ -20,9 +23,13 @@ class NetvisorInvoiceExportMapper(Component):
         :param record: Account move record
         :return:
         """
+        if not record.netvisor_send:
+            return _("Netvisor sending is disabled for this invoice")
+
         values = self.map_record(record).values()
         client = backend.authenticate()
         binding_model = self.env["netvisor.invoice"]
+        _logger.debug(f"Using values {values}")
 
         binding = binding_model.search(
             [("odoo_id", "=", record.id), ("backend_id", "=", backend.id)]
@@ -35,7 +42,6 @@ class NetvisorInvoiceExportMapper(Component):
                 msg = _("Updated invoice '{}'".format(record.name))
             else:
                 res = client.sales_invoices.create(values)
-
                 if res:
                     binding = binding_model.create(
                         {
@@ -59,6 +65,14 @@ class NetvisorInvoiceExportMapper(Component):
         # Update Odoo invoice information
         netvisor_invoice = client.sales_invoices.get(binding.external_id)
         invoice_status = netvisor_invoice.get("invoice_status").lower().replace(" ", "")
+
+        if binding.reversed_entry_id:
+            # Match credit note to the original invoice
+            job_desc = _(
+                "Mark invoice {} as reversed".format(binding.reversed_entry_id.name)
+            )
+
+            binding.with_delay(description=job_desc).netvisor_match_credit_note()
 
         binding.odoo_id.write(
             {
@@ -84,10 +98,34 @@ class NetvisorInvoiceExportMapper(Component):
 
         res = client.sales_invoices.update_status(binding.external_id, netvisor_status)
         record.netvisor_status = netvisor_status
+        return res
+
+    def match_credit_note(self, binding):
+        """ Match credit ntoe """
+        client = binding.backend_id.authenticate()
+        if binding.reversed_entry_id and binding.reversed_entry_id.netvisor_bind_ids:
+            if len(binding.reversed_entry_id.netvisor_bind_ids) > 1:
+                raise ValidationError(
+                    _("Multiple bindings for one invoice is not supported.")
+                )
+            reversed_binding = binding.reversed_entry_id.netvisor_bind_ids[0]
+
+            res = _("Credit note matching not supported")
+            # TODO:
+            # res = client.sales_invoices.match_credit_note(
+            #     {
+            #         "credit_note_netvisor_key": binding.external_id,
+            #         "invoice_netvisor_key": reversed_binding.external_id,
+            #     }
+            # )
+        else:
+            res = _("No refunded invoice to match")
+        return res
 
     # Odoo, Netvisor
     direct = [
         ("invoice_date", "date"),
+        ("date", "event_date"),
         ("amount_total", "amount"),
     ]
 
@@ -107,7 +145,7 @@ class NetvisorInvoiceExportMapper(Component):
         return {"status": netvisor_status}
 
     @mapping
-    def invoicing_customer_identifier(self, record):
+    def invoicing_customer(self, record):
         res = {}
 
         binding = record.partner_id.netvisor_bind_ids.filtered(
@@ -115,38 +153,25 @@ class NetvisorInvoiceExportMapper(Component):
         )
 
         if binding:
+            # If partner identifier is known, use it
             res["invoicing_customer_identifier"] = binding.external_id
+        else:
+            # Partner seems to be mandatory?
+            raise ValidationError(
+                _(f"'{record.partner_id.name}' is not yet exported to Netvisor.")
+            )
+            # If partner identifier is not known, send all information
+            res["invoicing_customer_name"] = record.partner_id.display_name
+            res["invoicing_customer_address_line"] = record.partner_id.street or ""
+            res["invoicing_customer_additional_address_line"] = (
+                record.partner_id.street2 or ""
+            )
+            res["invoicing_customer_post_number"] = record.partner_id.zip or ""
+            res["invoicing_customer_town"] = record.partner_id.city or ""
 
+            # TODO: add type to netvisor-api-client
+            # res["invoicing_customer_country_code"] = record.partner_id.country_id.code
         return res
-
-    @mapping
-    def invoicing_customer_name(self, record):
-        return {"invoicing_customer_name": record.partner_id.display_name}
-
-    @mapping
-    def invoicing_customer_address_line(self, record):
-        return {"invoicing_customer_address_line": record.partner_id.street or ""}
-
-    @mapping
-    def invoicing_customer_additional_address_line(self, record):
-        return {
-            "invoicing_customer_additional_address_line": record.partner_id.street2
-            or ""
-        }
-
-    @mapping
-    def invoicing_customer_post_number(self, record):
-        return {"invoicing_customer_post_number": record.partner_id.zip or ""}
-
-    @mapping
-    def invoicing_customer_town(self, record):
-        return {"invoicing_customer_town": record.partner_id.city or ""}
-
-    @mapping
-    def invoicing_customer_country_code(self, record):
-        # TODO: add type to netvisor-api-client
-        return
-        return {"invoicing_customer_country_code": record.partner_id.country_id.code}
 
     @mapping
     def delivery_address_name(self, record):
@@ -254,6 +279,13 @@ class NetvisorInvoiceExportMapper(Component):
             if record.move_type == "out_refund":
                 # Negative quantity for refunds
                 quantity *= -1
+
+            if tax.netvisor_code == "-":
+                raise ValidationError(
+                    _(
+                        f"The tax '{tax.name}' is misconfigured. Please configure 'Netvisor VAT code' for that"
+                    )
+                )
 
             invoice_lines.append(
                 {

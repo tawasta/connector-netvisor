@@ -42,6 +42,7 @@
                     </group>
 
                     <group>
+                        <field name="netvisor_send" groups="base.group_no_one" />
                         <field name="netvisor_status" />
                     </group>
 

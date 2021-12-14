@@ -1,4 +1,5 @@
 import logging
+from odoo import api
 from odoo import fields
 from odoo import models
 from odoo import _
@@ -29,10 +30,15 @@ class NetvisorBackend(models.Model):
         default=True,
     )
 
+    environment = fields.Selection(
+        string="Environment",
+        selection=[("test", "Test"), ("production", "Production")],
+        default="test",
+    )
+
     host = fields.Char(
         string="External host",
         default="https://isvapi.netvisor.fi",
-        readonly=True,
     )
 
     sender = fields.Char(
@@ -67,6 +73,14 @@ class NetvisorBackend(models.Model):
         required=True,
         default="EN",
     )
+
+    @api.onchange("environment")
+    def onchange_environment(self):
+        for record in self:
+            if record.environment == "production":
+                record.host = "https://integration.netvisor.fi"
+            else:
+                record.host = "https://isvapi.netvisor.fi"
 
     def action_test_authentication(self):
         """

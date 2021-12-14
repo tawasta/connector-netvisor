@@ -61,7 +61,7 @@ class NetvisorPartnerImportMapper(Component):
 
         # Search for existing partner by email or exact name
         if not existing_record:
-            domain = [("name", "ilike", values["name"])]
+            domain = [("name", "=ilike", values["name"])]
 
             if values.get("email"):
                 domain.append(("email", "=ilike", values["email"]))

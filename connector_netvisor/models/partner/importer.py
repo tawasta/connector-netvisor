@@ -69,7 +69,7 @@ class NetvisorPartnerImportMapper(Component):
                 domain.insert(0, "|")
             existing_record = odoo_model.search(domain)
 
-        if len(existing_record) > 0:
+        if len(existing_record) > 1:
             raise ValidationError(
                 _(f"Found multiple matching records: {existing_record.ids}")
             )

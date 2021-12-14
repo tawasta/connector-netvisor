@@ -76,7 +76,7 @@ class NetvisorPartnerImportMapper(Component):
 
         if existing_record:
             # Partner was found but doesn't have a binding
-            binding_values["odoo_id"] = existing_binding.id
+            binding_values["odoo_id"] = existing_record.id
             netvisor_model.create(binding_values)
             try:
                 existing_record.write(values)

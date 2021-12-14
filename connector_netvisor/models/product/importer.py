@@ -2,7 +2,7 @@ import logging
 from odoo import _
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping, changed_by
-from psycopg2 import IntegrityError
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -56,6 +56,11 @@ class NetvisorProductImportMapper(Component):
                     ("default_code", "=", values["default_code"]),
                     ("name", "=ilike", values["name"]),
                 ]
+            )
+
+        if len(existing_record) > 1:
+            raise ValidationError(
+                _(f"Found multiple matching records: {existing_record.ids}")
             )
 
         if existing_record:

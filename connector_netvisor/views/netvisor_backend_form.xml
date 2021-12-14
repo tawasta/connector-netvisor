@@ -27,6 +27,8 @@
                             <field name="partner_key"/>
                             <field name="customer"/>
                             <field name="customer_key"/>
+                            <field name="environment"/>
+                            <field name="host" invisible="1"/>
                             <field name="language"/>
 
                         </group>

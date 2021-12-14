@@ -27,7 +27,13 @@ class AccountMove(models.Model):
             ("rejected", "Rejected"),
         ],
         copy=False,
-        # readonly=True,
+        readonly=True,
+    )
+
+    netvisor_send = fields.Boolean(
+        string="Send to netvisor",
+        help="Uncheck this to skip sending the invoice to Netvisor on confirm",
+        default=True,
     )
 
     attachment_ids = fields.Many2many(

@@ -34,60 +34,71 @@
                         </group>
                     </group>
 
-                  <notebook>
-                    <page name="import" string="Imports" >
-                      <p class="oe_grey oe_inline">
-                          You can initiate importing records here.
-                          <br/>Please be aware that this can overwrite information in Odoo.
-                      </p>
-                      <group name="customers" string="Customers" colspan="2">
-                        <p class="oe_grey oe_inline">
-                            Import or update all customers from Netvisor.<br />
-                            If customer doesn't exist, one will be created.
-                            If customer exists (business id or exact name match), it will be updated.
-                        </p>
-                        <button name="action_import_customers"
-                          type="object"
-                          class="oe_highlight"
-                          string="Import customers"/>
-                      </group>
+                    <notebook>
+                        <page name="import" string="Imports">
+                            <p class="oe_inline">
+                                You can initiate importing records here.
+                                <br/>
+                                <strong>Please be aware that this can overwrite information in Odoo.</strong>
+                            </p>
+                            <group name="customers" string="Customers" colspan="2">
+                                <p class="oe_grey oe_inline">
+                                    Import or update all customers from Netvisor.<br/>
+                                    Matching is done with business code, email, exact name.<br/>
+                                    You can configure the behaviour of this button below.
+                                </p>
+                                <button name="action_import_customers"
+                                        confirm="Are you sure you want to import customers?"
+                                        type="object"
+                                        class="oe_highlight"
+                                        string="Import customers"/>
+                                <field name="customer_import_create" widget="boolean_toggle"/>
+                                <field name="customer_import_update" widget="boolean_toggle"/>
+                            </group>
 
-                      <group name="suppliers" string="Suppliers" colspan="2" invisible="1">
-                        <p class="oe_grey oe_inline">
-                            Import or update all suppliers from Netvisor.<br />
-                            If suppliers doesn't exist, one will be created.
-                            If suppliers exists (business id or exact name match), it will be updated.
-                        </p>
-                        <button name="action_import_suppliers"
-                          type="object"
-                          class="oe_highlight"
-                          string="Import suppliers"/>
-                      </group>
+                            <group name="suppliers" string="Suppliers" colspan="2" invisible="1">
+                                <p class="oe_grey oe_inline">
+                                    Import or update all suppliers from Netvisor.
+                                    <br/>
+                                    If suppliers doesn't exist, one will be created.
+                                    If suppliers exists (business id or exact name match), it will be updated.
+                                </p>
+                                <button name="action_import_suppliers"
+                                        confirm="Are you sure you want to import suppliers?"
+                                        type="object"
+                                        class="oe_highlight"
+                                        string="Import suppliers"/>
+                            </group>
 
-                      <group name="products" string="Products" colspan="2">
-                        <p class="oe_grey oe_inline">
-                            Import or update all products from Netvisor.<br />
-                            If product doesn't exist, one will be created.
-                            If product exists (internal code or exact name match), it will be updated.
-                        </p>
-                        <button name="action_import_products"
-                          type="object"
-                          class="oe_highlight"
-                          string="Import products"/>
+                            <group name="products" string="Products" colspan="2">
+                                <p class="oe_grey oe_inline">
+                                    Import or update all products from Netvisor.<br/>
+                                    Matching is done by internal code or exact name match.<br/>
+                                    You can configure the behaviour of this button below.
+                                </p>
+                                <button name="action_import_products"
+                                        confirm="Are you sure you want to import products?"
+                                        type="object"
+                                        class="oe_highlight"
+                                        string="Import products"/>
+                                <field name="product_import_create" widget="boolean_toggle"/>
+                                <field name="product_import_update" widget="boolean_toggle"/>
 
-                        <p class="oe_grey oe_inline">
-                            Export or update all products to Netvisor.<br />
-                            If product doesn't exist, one will be created.
-                            If product exists (binding exists), it will be updated.
-                        </p>
-                        <button name="action_export_products"
-                          type="object"
-                          class="oe_highlight"
-                          string="Export products"/>
-                      </group>
+                                <p class="oe_grey oe_inline">
+                                    Export or update all products to Netvisor.
+                                    <br/>
+                                    If product doesn't exist, one will be created.
+                                    If product exists (binding exists), it will be updated.
+                                </p>
+                                <button name="action_export_products"
+                                        confirm="Are you sure you want to export products?"
+                                        type="object"
+                                        class="oe_highlight"
+                                        string="Export products"/>
+                            </group>
 
-                    </page>
-                  </notebook>
+                        </page>
+                    </notebook>
 
                 </sheet>
 

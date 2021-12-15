@@ -39,11 +39,16 @@ class NetvisorProductImportMapper(Component):
         )
 
         if existing_binding:
-            # Binding exists: update values
-            existing_binding.odoo_id.write(values)
-            return _(
-                "Updated values for product '{}'".format(existing_binding.display_name)
-            )
+            if existing_binding.backend_id.partner_import_update:
+                # Binding exists: update values
+                existing_binding.odoo_id.write(values)
+                return _(
+                    "Updated values for product '{}'".format(
+                        existing_binding.display_name
+                    )
+                )
+            else:
+                return _("Did not update product due to importer settings")
 
         # No existing binding
         binding_values = {"backend_id": backend.id, "external_id": netvisor_key}
@@ -58,7 +63,7 @@ class NetvisorProductImportMapper(Component):
                 ]
             )
 
-        if len(existing_record) > 1:
+        if existing_record and len(existing_record) > 1:
             raise ValidationError(
                 _(f"Found multiple matching records: {existing_record.ids}")
             )
@@ -68,17 +73,22 @@ class NetvisorProductImportMapper(Component):
             binding_values["odoo_id"] = existing_record.id
             existing_binding = netvisor_model.create(binding_values)
 
-            existing_binding.write(values)
-            return _(
-                "Updated values for product '{}'".format(existing_binding.display_name)
-            )
-        else:
+            if existing_binding.backend_id.customer_import_update:
+                existing_binding.write(values)
+                return _(
+                    "Updated values for product '{}'".format(
+                        existing_binding.display_name
+                    )
+                )
+        elif backend.customer_import_create:
             # No product found. Create a new product and binding
             existing_record = odoo_model.with_context(skip_export=True).create(values)
             binding_values["odoo_id"] = existing_record.id
             netvisor_model.create(binding_values)
 
             return _("Created a new product '{}'".format(existing_record.display_name))
+        else:
+            return _("Did not create or update product due to importer settings")
 
     @mapping
     def name(self, record):

@@ -34,6 +34,7 @@ class NetvisorBackend(models.Model):
         string="Environment",
         selection=[("test", "Test"), ("production", "Production")],
         default="test",
+        required=True,
     )
 
     host = fields.Char(
@@ -72,6 +73,28 @@ class NetvisorBackend(models.Model):
         selection=[("EN", "English"), ("FI", "Finnish"), ("SE", "Swedish")],
         required=True,
         default="EN",
+    )
+
+    customer_import_create = fields.Boolean(
+        string="Create new customers on import",
+        help="When importing customer that doesn't exist in Odoo, create a new partner",
+        default=True,
+    )
+    customer_import_update = fields.Boolean(
+        string="Update existing customers on import",
+        help="When importing customer that exists in Odoo, update partner values",
+        default=True,
+    )
+
+    product_import_create = fields.Boolean(
+        string="Create new products on import",
+        help="When importing products that doesn't exist in Odoo, create a new products",
+        default=True,
+    )
+    product_import_update = fields.Boolean(
+        string="Update existing products on import",
+        help="When importing products that exists in Odoo, update product values",
+        default=True,
     )
 
     @api.onchange("environment")

@@ -40,41 +40,72 @@ class NetvisorPartnerImportMapper(Component):
         )
 
         if existing_binding:
-            # Binding exists: update values
-            existing_binding.write(values)
-            return _(
-                "Updated values for partner '{}'".format(existing_binding.display_name)
-            )
+            if existing_binding.backend_id.customer_import_update:
+                # Binding exists: update values
+                existing_binding.write(values)
+                return _(
+                    "Updated values for partner '{}'".format(
+                        existing_binding.display_name
+                    )
+                )
+            else:
+                return _("Did not update partner due to importer settings")
 
         # No existing binding
         binding_values = {"backend_id": backend.id, "external_id": netvisor_key}
 
+        # Search for existing partner by business and street
+        if not existing_record and values.get("business_code"):
+            _logger.debug(_("Search for existing partner by business and street"))
+            existing_record = odoo_model.search(
+                [
+                    ("business_code", "=", values["business_code"]),
+                    ("street", "=ilike", values["street"]),
+                ]
+            )
+
         # Search for existing partner by business id
-        if not existing_binding and values.get("business_code"):
+        if not existing_record and values.get("business_code"):
+            _logger.debug(_("Search for existing partner by business id"))
             existing_record = odoo_model.search(
                 [("business_code", "=", values["business_code"])]
             )
 
         # Search for existing partner by customer ref
         if not existing_record and values["ref"]:
+            _logger.debug(_("Search for existing partner by customer ref"))
             existing_record = odoo_model.search([("ref", "=", values["ref"])])
 
-        # Search for existing partner by email or exact name
-        if not existing_record:
-            domain = [("name", "=ilike", values["name"])]
+        # Search for existing partner by email
+        if not existing_record and values["email"]:
+            _logger.debug(_("Search for existing partner by email"))
+            existing_record = odoo_model.search([("email", "=ilike", values["email"])])
 
-            if values.get("email"):
-                domain.append(("email", "=ilike", values["email"]))
-                # Insert "or" to the beginning
-                domain.insert(0, "|")
-            existing_record = odoo_model.search(domain)
+        # Search for existing partner by exact name and street
+        if not existing_record and values["name"]:
+            _logger.debug(_("Search for existing partner by name and street"))
+            existing_record = odoo_model.search(
+                [
+                    ("name", "=ilike", values["name"]),
+                    ("street", "=ilike", values["street"]),
+                ]
+            )
 
-        if len(existing_record) > 1:
+        # Search for existing partner by exact name
+        if not existing_record and values["name"]:
+            _logger.debug(_("Search for existing partner by street"))
+            existing_record = odoo_model.search(
+                [
+                    ("name", "=ilike", values["name"]),
+                ]
+            )
+
+        if existing_record and len(existing_record) > 1:
             raise ValidationError(
                 _(f"Found multiple matching records: {existing_record.ids}")
             )
 
-        if existing_record:
+        if existing_record and backend.customer_import_update:
             # Partner was found but doesn't have a binding
             binding_values["odoo_id"] = existing_record.id
             netvisor_model.create(binding_values)
@@ -86,13 +117,15 @@ class NetvisorPartnerImportMapper(Component):
             return _(
                 "Updated values for partner '{}'".format(existing_record.display_name)
             )
-        else:
+        elif backend.customer_import_create:
             # No partner found. Create a new partner and binding
             existing_record = odoo_model.with_context(skip_export=True).create(values)
             binding_values["odoo_id"] = existing_record.id
             netvisor_model.create(binding_values)
 
             return _("Created a new partner '{}'".format(existing_record.display_name))
+        else:
+            return _("Did not create or update partner due to importer settings")
 
     # Netvisor, Odoo
     @mapping

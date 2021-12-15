@@ -41,7 +41,7 @@ class NetvisorProductImportMapper(Component):
         if existing_binding:
             if existing_binding.backend_id.partner_import_update:
                 # Binding exists: update values
-                existing_binding.odoo_id.write(values)
+                existing_binding.odoo_id.with_context(skip_export=True).write(values)
                 return _(
                     "Updated values for product '{}'".format(
                         existing_binding.display_name
@@ -74,7 +74,7 @@ class NetvisorProductImportMapper(Component):
             existing_binding = netvisor_model.create(binding_values)
 
             if existing_binding.backend_id.customer_import_update:
-                existing_binding.write(values)
+                existing_binding.with_context(skip_export=True).write(values)
                 return _(
                     "Updated values for product '{}'".format(
                         existing_binding.display_name

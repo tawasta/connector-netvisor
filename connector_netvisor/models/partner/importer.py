@@ -42,7 +42,7 @@ class NetvisorPartnerImportMapper(Component):
         if existing_binding:
             if existing_binding.backend_id.customer_import_update:
                 # Binding exists: update values
-                existing_binding.write(values)
+                existing_binding.with_context(skip_export=True).write(values)
                 return _(
                     "Updated values for partner '{}'".format(
                         existing_binding.display_name
@@ -110,7 +110,7 @@ class NetvisorPartnerImportMapper(Component):
             binding_values["odoo_id"] = existing_record.id
             netvisor_model.create(binding_values)
             try:
-                existing_record.write(values)
+                existing_record.with_context(skip_export=True).write(values)
             except IntegrityError:
                 # Binding already exists
                 pass

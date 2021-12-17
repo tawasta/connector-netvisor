@@ -29,6 +29,9 @@ class NetvisorProductImportMapper(Component):
         values = self.map_record(product).values()
         existing_record = False
 
+        # Omit empty values to avoid removing existing information from Odoo
+        values = {k: v for k, v in values.items() if v}
+
         # Search for existing binding
         existing_binding = netvisor_model.search(
             [
@@ -65,7 +68,9 @@ class NetvisorProductImportMapper(Component):
 
         if existing_record and len(existing_record) > 1:
             raise ValidationError(
-                _(f"Found multiple matching records: {existing_record.ids}")
+                _(
+                    f"Found multiple matching records: {existing_record.ids} with values {values}"
+                )
             )
 
         if existing_record:

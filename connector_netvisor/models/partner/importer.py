@@ -75,17 +75,17 @@ class NetvisorPartnerImportMapper(Component):
             )
 
         # 3. Search for existing partner by customer ref
-        if not existing_record and values["ref"]:
+        if not existing_record and values.get("ref"):
             _logger.debug(_("Search for existing partner by customer ref"))
             existing_record = odoo_model.search([("ref", "=", values["ref"])])
 
         # 4. Search for existing partner by email
-        if not existing_record and values["email"]:
+        if not existing_record and values.get("email"):
             _logger.debug(_("Search for existing partner by email"))
             existing_record = odoo_model.search([("email", "=ilike", values["email"])])
 
         # 5. Search for existing partner by exact name and street
-        if not existing_record and values["name"]:
+        if not existing_record and values.get("name"):
             _logger.debug(_("Search for existing partner by name and street"))
             existing_record = odoo_model.search(
                 [

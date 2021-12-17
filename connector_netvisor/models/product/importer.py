@@ -27,6 +27,8 @@ class NetvisorProductImportMapper(Component):
         client = backend.authenticate()
         product = client.products.get(netvisor_key)
         values = self.map_record(product).values()
+        values["company_id"] = backend.company_id.id
+
         existing_record = False
 
         # Omit empty values to avoid removing existing information from Odoo

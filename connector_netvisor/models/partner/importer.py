@@ -30,6 +30,9 @@ class NetvisorPartnerImportMapper(Component):
         values = self.map_record(partner).values()
         existing_record = False
 
+        # Omit empty values to avoid removing existing information from Odoo
+        values = {k: v for k, v in values.items() if v}
+
         # Search for existing binding
         existing_binding = netvisor_model.search(
             [
@@ -54,7 +57,7 @@ class NetvisorPartnerImportMapper(Component):
         # No existing binding
         binding_values = {"backend_id": backend.id, "external_id": netvisor_key}
 
-        # Search for existing partner by business and street
+        # 1. Search for existing partner by business and street
         if not existing_record and values.get("business_code"):
             _logger.debug(_("Search for existing partner by business and street"))
             existing_record = odoo_model.search(
@@ -64,24 +67,24 @@ class NetvisorPartnerImportMapper(Component):
                 ]
             )
 
-        # Search for existing partner by business id
+        # 2. Search for existing partner by business id
         if not existing_record and values.get("business_code"):
             _logger.debug(_("Search for existing partner by business id"))
             existing_record = odoo_model.search(
                 [("business_code", "=", values["business_code"])]
             )
 
-        # Search for existing partner by customer ref
+        # 3. Search for existing partner by customer ref
         if not existing_record and values["ref"]:
             _logger.debug(_("Search for existing partner by customer ref"))
             existing_record = odoo_model.search([("ref", "=", values["ref"])])
 
-        # Search for existing partner by email
+        # 4. Search for existing partner by email
         if not existing_record and values["email"]:
             _logger.debug(_("Search for existing partner by email"))
             existing_record = odoo_model.search([("email", "=ilike", values["email"])])
 
-        # Search for existing partner by exact name and street
+        # 5. Search for existing partner by exact name and street
         if not existing_record and values["name"]:
             _logger.debug(_("Search for existing partner by name and street"))
             existing_record = odoo_model.search(
@@ -91,18 +94,11 @@ class NetvisorPartnerImportMapper(Component):
                 ]
             )
 
-        # Search for existing partner by exact name
-        if not existing_record and values["name"]:
-            _logger.debug(_("Search for existing partner by street"))
-            existing_record = odoo_model.search(
-                [
-                    ("name", "=ilike", values["name"]),
-                ]
-            )
-
         if existing_record and len(existing_record) > 1:
             raise ValidationError(
-                _(f"Found multiple matching records: {existing_record.ids}")
+                _(
+                    f"Found multiple matching records: {existing_record.ids} with values {values}"
+                )
             )
 
         if existing_record and backend.customer_import_update:

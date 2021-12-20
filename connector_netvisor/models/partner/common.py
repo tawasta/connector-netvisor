@@ -70,6 +70,8 @@ class NetvisorPartner(models.Model):
 class Partner(models.Model):
     _inherit = "res.partner"
 
+    name_extension = fields.Char(string="Name extension")
+
     netvisor_bind_ids = fields.One2many(
         comodel_name="netvisor.partner",
         inverse_name="odoo_id",

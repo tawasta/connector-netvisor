@@ -131,6 +131,16 @@ class NetvisorPartnerImportMapper(Component):
         return res
 
     @mapping
+    def name_extension(self, record):
+        res = {
+            "name_extension": record.get("customer_base_information", {}).get(
+                "name_extension"
+            )
+        }
+
+        return res
+
+    @mapping
     def business_code(self, record):
         res = {}
         business_code = record.get("customer_base_information", {}).get(
@@ -151,6 +161,16 @@ class NetvisorPartnerImportMapper(Component):
     def street(self, record):
         res = {
             "street": record.get("customer_base_information", {}).get("street_address")
+        }
+
+        return res
+
+    @mapping
+    def street2(self, record):
+        res = {
+            "street2": record.get("customer_base_information", {}).get(
+                "additional_street_address"
+            )
         }
 
         return res

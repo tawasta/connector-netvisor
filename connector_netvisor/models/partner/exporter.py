@@ -23,7 +23,9 @@ class NetvisorPartnerExportMapper(Component):
         client = backend.authenticate()
         binding_model = self.env["netvisor.partner"]
 
-        binding = binding_model.search([("odoo_id", "=", record.id), ("backend_id", "=", backend.id)])
+        binding = binding_model.search(
+            [("odoo_id", "=", record.id), ("backend_id", "=", backend.id)]
+        )
 
         if binding:
             # Update existing record in Netvisor
@@ -61,13 +63,15 @@ class NetvisorPartnerExportMapper(Component):
         res = {
             "customer_base_information": {
                 "name": record.name or "",
+                "name_extension": record.name_extension or "",
                 # Using "ref" as internal identifier is somewhat open to
                 # interpretation. Ref can also be used for customer-specific
                 # reference number
                 "internal_identifier": record.ref or "",
                 "external_identifier": record.business_code or "",
                 "is_active": record.active or "",
-                "street_address": record.get_combined_street(),
+                "street_address": record.street,
+                "additional_address_line": record.street2,
                 "city": record.city or "",
                 "post_number": record.zip or "",
                 "country": record.country_id.code or "",

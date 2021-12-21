@@ -27,6 +27,12 @@ class NetvisorInvoiceExportMapper(Component):
             return _("Netvisor sending is disabled for this invoice")
 
         values = self.map_record(record).values()
+
+        values["print_channel_format"] = {
+            "identifier": backend.print_channel_format,
+            "type": backend.print_channel_format_type,
+        }
+
         client = backend.authenticate()
         binding_model = self.env["netvisor.invoice"]
         _logger.debug(f"Using values {values}")

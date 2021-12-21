@@ -30,21 +30,17 @@
                             <field name="environment"/>
                             <field name="host" invisible="1"/>
                             <field name="language"/>
-
                         </group>
                     </group>
 
                     <notebook>
-                        <page name="import" string="Imports">
-                            <p class="oe_inline">
-                                You can initiate importing records here.
-                                <br/>
-                                <strong>Please be aware that this can overwrite information in Odoo.</strong>
-                            </p>
-                            <group name="customers" string="Customers" colspan="2">
+                        <page name="customers" string="Customers">
+                            <group name="customers" string="Import" colspan="2">
                                 <p class="oe_grey oe_inline">
-                                    Import or update all customers from Netvisor.<br/>
-                                    Matching is done with business code, email, exact name.<br/>
+                                    Import or update all customers from Netvisor.
+                                    <br/>
+                                    Matching is done with business code, email, exact name.
+                                    <br/>
                                     You can configure the behaviour of this button below.
                                 </p>
                                 <button name="action_import_customers"
@@ -55,8 +51,10 @@
                                 <field name="customer_import_create" widget="boolean_toggle"/>
                                 <field name="customer_import_update" widget="boolean_toggle"/>
                             </group>
+                        </page>
 
-                            <group name="suppliers" string="Suppliers" colspan="2" invisible="1">
+                        <page name="supplier" string="Suppliers" invisible="1">
+                            <group name="suppliers" string="Import" colspan="2">
                                 <p class="oe_grey oe_inline">
                                     Import or update all suppliers from Netvisor.
                                     <br/>
@@ -69,11 +67,15 @@
                                         class="oe_highlight"
                                         string="Import suppliers"/>
                             </group>
+                        </page>
 
-                            <group name="products" string="Products" colspan="2">
+                        <page name="products" string="Products">
+                            <group name="products_import" string="Import" colspan="2">
                                 <p class="oe_grey oe_inline">
-                                    Import or update all products from Netvisor.<br/>
-                                    Matching is done by internal code or exact name match.<br/>
+                                    Import or update all products from Netvisor.
+                                    <br/>
+                                    Matching is done by internal code or exact name match.
+                                    <br/>
                                     You can configure the behaviour of this button below.
                                 </p>
                                 <button name="action_import_products"
@@ -83,7 +85,9 @@
                                         string="Import products"/>
                                 <field name="product_import_create" widget="boolean_toggle"/>
                                 <field name="product_import_update" widget="boolean_toggle"/>
+                            </group>
 
+                            <group name="products_export" string="Export" colspan="2">
                                 <p class="oe_grey oe_inline">
                                     Export or update all products to Netvisor.
                                     <br/>
@@ -97,6 +101,13 @@
                                         string="Export products"/>
                             </group>
 
+                        </page>
+
+                        <page name="sales_invoice" string="Sales invoice">
+                            <group name="sales_settings" string="Settings" colspan="2">
+                                <field name="print_channel_format"/>
+                                <field name="print_channel_format_type"/>
+                            </group>
                         </page>
                     </notebook>
 

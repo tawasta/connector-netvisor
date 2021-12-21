@@ -75,6 +75,23 @@ class NetvisorBackend(models.Model):
         default="EN",
     )
 
+    # Print channel (invoice template)
+    print_channel_format = fields.Char(
+        string="Invoice print channel",
+        help="You can set a custom invoice channel here (invoice template). Use '1' for default template",
+        default=1,
+        required=True,
+    )
+
+    print_channel_format_type = fields.Selection(
+        string="Invoice print channel type",
+        help="'netvisor' for default templates, 'customer' for customized templates",
+        selection=[("netvisor", "Netvisor"), ("customer", "Customer")],
+        default="netvisor",
+        required=True,
+    )
+
+    # Import / export settings
     customer_import_create = fields.Boolean(
         string="Create new customers on import",
         help="When importing customer that doesn't exist in Odoo, create a new partner",

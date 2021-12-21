@@ -97,11 +97,14 @@ class NetvisorPartnerExportMapper(Component):
 
     @mapping
     def customer_finvoice_details(self, record):
-        res = {
-            "customer_finvoice_details": {
-                "finvoice_address": record.edicode or "",
-                "finvoice_router_code": record.einvoice_operator_id.identifier or "",
+        res = {}
+        if record.company_type == "company":
+            res = {
+                "customer_finvoice_details": {
+                    "finvoice_address": record.edicode or "",
+                    "finvoice_router_code": record.einvoice_operator_id.identifier
+                    or "",
+                }
             }
-        }
 
         return res

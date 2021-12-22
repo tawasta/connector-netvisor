@@ -96,17 +96,11 @@ class Product(models.Model):
         :return:
         """
         netvisor_model = self.env["netvisor.product"]
-        if len(self) == 1:
-            # No delayed job
-            netvisor_model.netvisor_export_product(self)
-        else:
-            for record in self:
-                job_desc = _(
-                    "Netvisor: export product '{}'".format(record.display_name)
-                )
-                netvisor_model.with_delay(description=job_desc).netvisor_export_product(
-                    record
-                )
+        for record in self:
+            job_desc = _("Netvisor: export product '{}'".format(record.display_name))
+            netvisor_model.with_delay(description=job_desc).netvisor_export_product(
+                record
+            )
 
     def write(self, values):
         """

@@ -299,7 +299,7 @@ class NetvisorInvoiceExportMapper(Component):
                         "identifier": product_identifier.external_id,
                         "type": "netvisor",
                     },
-                    "name": line.product_id.name,
+                    "name": line.product_id.display_name,
                     "free_text": line.name,
                     "unit_price": {"amount": line.price_unit, "type": "net"},
                     "vat_percentage": {

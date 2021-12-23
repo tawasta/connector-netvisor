@@ -34,7 +34,7 @@ class NetvisorInvoice(models.Model):
         """
         Export an invoice to Netvisor
         """
-        backend = self.get_netvisor_backend()
+        backend = self.get_netvisor_backend(record.company_id)
         _logger.debug(f"Exporting invoice {record.id} to Netvisor")
 
         with backend.work_on(self._name) as work:

@@ -77,18 +77,23 @@ class AccountMove(models.Model):
         Export (send) invoice(s) to Netvisor
         :return:
         """
-        netvisor_model = self.env["netvisor.invoice"].sudo()
-
         if len(self) == 1:
             # Only use direct send when validating one invoice
             # Otherwise we might end up with a situation where the first
             # invoice(s) are sent, but one of the following invoices end up
             # with API error and will rollback the whole action in Odoo,
             # even though some invoices were sent to Netvisor
+            netvisor_model = self.env["netvisor.invoice"].sudo()
             netvisor_model.netvisor_export_invoice(self)
         else:
             # Use delayed send to allow re-sending invoices with API errors
             for record in self:
+                netvisor_model = self.env["netvisor.invoice"].sudo()
+                if record.company_id:
+                    netvisor_model = netvisor_model.with_context(
+                        company_id=record.company_id.id
+                    )
+
                 job_desc = _("Netvisor: send invoice '{}'".format(record.display_name))
                 netvisor_model.with_delay(description=job_desc).netvisor_export_invoice(
                     record

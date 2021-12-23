@@ -74,7 +74,7 @@ class NetvisorProduct(models.Model):
         :param record: Product record
         :return:
         """
-        backend = self.get_netvisor_backend()
+        backend = self.get_netvisor_backend(record.company_id)
 
         with backend.work_on(self._name) as work:
             exporter = work.component(usage="export.mapper")
@@ -95,8 +95,13 @@ class Product(models.Model):
         Export product(s) to Netvisor
         :return:
         """
-        netvisor_model = self.env["netvisor.product"]
         for record in self:
+            netvisor_model = self.env["netvisor.product"]
+            if record.company_id:
+                netvisor_model = netvisor_model.with_context(
+                    company_id=record.company_id.id
+                )
+
             job_desc = _("Netvisor: export product '{}'".format(record.display_name))
             netvisor_model.with_delay(description=job_desc).netvisor_export_product(
                 record

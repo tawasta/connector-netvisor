@@ -83,8 +83,13 @@ class Partner(models.Model):
         Export partner to Netvisor
         :return:
         """
-        netvisor_model = self.env["netvisor.partner"]
         for record in self:
+            netvisor_model = self.env["netvisor.partner"]
+            if record.company_id:
+                netvisor_model = netvisor_model.with_context(
+                    company_id=record.company_id.id
+                )
+
             job_desc = _("Netvisor: export customer '{}'".format(record.display_name))
             netvisor_model.with_delay(description=job_desc).netvisor_export_customer(
                 record

@@ -60,14 +60,24 @@ class NetvisorPartnerExportMapper(Component):
 
     @mapping
     def customer_base_information(self, record):
+        if (
+            record.commercial_partner_id.id != record.id
+            and record.commercial_partner_id.ref != record.ref
+        ):
+            # Using "ref" as internal identifier is somewhat open to
+            # interpretation. Ref can also be used for customer-specific
+            # reference number.
+            ref = record.ref
+        else:
+            # Skip sending ref if commercial partner (contact company) has the same ref.
+            # Netvisor won't allow duplicate customer references
+            ref = ""
+
         res = {
             "customer_base_information": {
                 "name": record.name or "",
                 "name_extension": record.name_extension or "",
-                # Using "ref" as internal identifier is somewhat open to
-                # interpretation. Ref can also be used for customer-specific
-                # reference number
-                "internal_identifier": record.ref or "",
+                "internal_identifier": ref,
                 "external_identifier": record.business_code or "",
                 "is_active": record.active or "",
                 "street_address": record.street or "",

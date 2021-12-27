@@ -27,18 +27,13 @@ class NetvisorBinding(models.AbstractModel):
         :param company: Company record
         :return: Netvisor backend recordF
         """
-        print("get_netvisor_backend")
-        print(company)
-        print(self)
         NetvisorBackend = self.sudo().env["netvisor.backend"]
         if not company and hasattr(self, "company_id"):
             # Use company set on record
-            print("Use company set on record")
             company = self.company_id
 
         if not company:
             # Use users company
-            print("Use users company")
             company = self.env.user.company_id
 
         backend = NetvisorBackend.search(

@@ -4,6 +4,7 @@ from odoo.addons.connector.exception import MappingError
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
 from netvisor_api_client.exc import InvalidData
+from odoo.addons.queue_job.exception import RetryableJobError
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -116,14 +117,18 @@ class NetvisorInvoiceExportMapper(Component):
                 )
             reversed_binding = binding.reversed_entry_id.netvisor_bind_ids[0]
 
-            res = _("Credit note matching not supported")
-            # TODO:
-            # res = client.sales_invoices.match_credit_note(
-            #     {
-            #         "credit_note_netvisor_key": binding.external_id,
-            #         "invoice_netvisor_key": reversed_binding.external_id,
-            #     }
-            # )
+            try:
+                res = client.sales_invoices.match_credit_note(
+                    {
+                        "credit_note_netvisor_key": binding.external_id,
+                        "invoice_netvisor_key": reversed_binding.external_id,
+                    }
+                )
+            except InvalidData:
+                raise RetryableJobError(
+                    _("Refund invoice not found. It may not be sent in Netvisor yet")
+                )
+
         else:
             res = _("No refunded invoice to match")
         return res

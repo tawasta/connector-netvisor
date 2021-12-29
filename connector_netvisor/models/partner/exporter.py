@@ -87,7 +87,7 @@ class NetvisorPartnerExportMapper(Component):
                 "country": record.country_id.code or "",
                 "home_page_uri": record.website or "",
                 "email": record.email or "",
-                "email_invoicing_address": record.email or "",
+                "email_invoicing_address": record.email_invoicing_address or "",
                 "phone_number": record.phone or "",
             }
         }

@@ -6,8 +6,12 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
 
-            <field name="function" position="after">
+            <field name="type" position="before">
                 <field name="name_extension" />
+            </field>
+
+            <field name="website" position="before">
+                <field name="email_invoicing_address" widget="email" />
             </field>
 
             <xpath expr="//notebook/page[last()]" position="after">

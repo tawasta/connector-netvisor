@@ -238,6 +238,16 @@ class NetvisorPartnerImportMapper(Component):
         return res
 
     @mapping
+    def email_invoicing_address(self, record):
+        res = {
+            "email_invoicing_address": record.get("customer_base_information", {}).get(
+                "email_invoicing_address"
+            )
+        }
+
+        return res
+
+    @mapping
     def phone(self, record):
         res = {"phone": record.get("customer_base_information", {}).get("phone_number")}
 

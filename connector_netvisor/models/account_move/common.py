@@ -137,11 +137,11 @@ class AccountMove(models.Model):
                     record
                 )
 
-    def action_post(self):
+    def _post(self, soft=True):
         """
         Auto-send invoices to Netvisor when Validating
         """
-        res = super().action_post()
+        res = super()._post(soft)
 
         # Send invoice(s) to netvisor
         self.action_netvisor_export_invoice()

@@ -1,0 +1,9 @@
+<odoo noupdate="1">
+    <record
+        id="job_function_netvisor_match_credit_note"
+        model="queue.job.function">
+        <field name="model_id" ref="connector_netvisor.model_netvisor_invoice" />
+        <field name="method">netvisor_match_credit_note</field>
+        <field name="retry_pattern" eval="{1: 480, 2: 720, 3: 1440}" />
+    </record>
+</odoo>

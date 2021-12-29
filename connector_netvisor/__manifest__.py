@@ -47,6 +47,7 @@
     "post_init_hook": "init_netvisor_data",
     "data": [
         "data/ir_cron.xml",
+        "data/job_function.xml",
         "security/model_access.xml",
         "views/account_move.xml",
         "views/account_tax.xml",

@@ -144,6 +144,8 @@ class AccountMove(models.Model):
         res = super()._post(soft)
 
         # Send invoice(s) to netvisor
-        self.action_netvisor_export_invoice()
+        for record in self:
+            if record.is_sale_document():
+                record.action_netvisor_export_invoice()
 
         return res

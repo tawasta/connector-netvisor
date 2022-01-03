@@ -34,6 +34,12 @@
                     </group>
 
                     <notebook>
+                        <page name="invoicing" string="Invoicing">
+                            <group name="invoicing" colspan="2">
+                                <field name="auto_open_refunds" widget="boolean_toggle"/>
+                            </group>
+                        </page>
+
                         <page name="customers" string="Customers">
                             <group name="customers" string="Import" colspan="2">
                                 <p class="oe_grey oe_inline">

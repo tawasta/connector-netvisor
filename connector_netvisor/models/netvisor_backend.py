@@ -91,6 +91,13 @@ class NetvisorBackend(models.Model):
         required=True,
     )
 
+    # Invoicing settings
+    auto_open_refunds = fields.Boolean(
+        string="Set refunds as sent",
+        help="When sending a refund invoice, mark it as sent (open)",
+        default=False,
+    )
+
     # Import / export settings
     customer_import_create = fields.Boolean(
         string="Create new customers on import",

@@ -137,7 +137,7 @@ class NetvisorInvoiceExportMapper(Component):
     direct = [
         ("invoice_date", "date"),
         ("date", "event_date"),
-        ("amount_total", "amount"),
+        ("amount_total_signed", "amount"),
     ]
 
     @mapping

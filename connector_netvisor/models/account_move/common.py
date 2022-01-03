@@ -94,7 +94,9 @@ class AccountMove(models.Model):
                         company_id=record.company_id.id
                     )
 
-                job_desc = _("Netvisor: send invoice '{}'".format(record.display_name))
+                job_desc = _(
+                    f"Netvisor: send invoice [{record.id}] {record.display_name}"
+                )
                 netvisor_model.with_delay(description=job_desc).netvisor_export_invoice(
                     record
                 )

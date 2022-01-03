@@ -27,6 +27,10 @@ class NetvisorInvoiceExportMapper(Component):
         if not record.netvisor_send:
             return _("Netvisor sending is disabled for this invoice")
 
+        if record.reversed_entry_id and backend.auto_open_refunds:
+            # Mark the to-be-created refund as open immediately
+            record.netvisor_status = "open"
+
         values = self.map_record(record).values()
 
         values["print_channel_format"] = {

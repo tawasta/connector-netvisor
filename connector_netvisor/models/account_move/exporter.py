@@ -46,11 +46,17 @@ class NetvisorInvoiceExportMapper(Component):
             [("odoo_id", "=", record.id), ("backend_id", "=", backend.id)]
         )
 
+        if binding and not backend.customer_invoice_allow_updating:
+            _logger.info(
+                _(f"Updating invoices is disabled. Not sending '{record.name}'.")
+            )
+            return _("Updating invoices to Netvisor is not allowed")
+
         try:
             if binding:
                 # Update invoice
                 client.sales_invoices.update(binding.external_id, values)
-                msg = _("Updated invoice '{}'".format(record.name))
+                msg = _(f"Updated invoice '{record.name}'")
             else:
                 res = client.sales_invoices.create(values)
                 if res:

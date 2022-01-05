@@ -97,6 +97,11 @@ class NetvisorBackend(models.Model):
         help="When sending a refund invoice, mark it as sent (open)",
         default=False,
     )
+    customer_invoice_allow_updating = fields.Boolean(
+        string="Allow updating invoices",
+        help="Allow updating invoice information from Odoo to Netvisor",
+        default=False,
+    )
 
     # Import / export settings
     customer_import_create = fields.Boolean(

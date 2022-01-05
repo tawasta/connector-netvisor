@@ -37,6 +37,7 @@
                         <page name="invoicing" string="Invoicing">
                             <group name="invoicing" colspan="2">
                                 <field name="auto_open_refunds" widget="boolean_toggle"/>
+                                <field name="customer_invoice_allow_updating" widget="boolean_toggle"/>
                             </group>
                         </page>
 

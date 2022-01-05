@@ -247,9 +247,7 @@ class NetvisorBackend(models.Model):
 
         bindings = netvisor_model.search(
             [
-                ("state", "=", "posted"),
                 ("odoo_id", "!=", False),
-                ("netvisor_status", "in", open_status),
             ]
         )
         _logger.debug(_(f"Updating status for invoices: {bindings.ids}"))

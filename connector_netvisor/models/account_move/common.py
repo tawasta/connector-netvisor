@@ -95,7 +95,7 @@ class AccountMove(models.Model):
                     )
 
                 job_desc = _(
-                    f"Netvisor: send invoice [{record.id}] {record.display_name}"
+                    f"Netvisor: send invoice {record.name} [Odoo ID: {record.id}] "
                 )
                 netvisor_model.with_delay(description=job_desc).netvisor_export_invoice(
                     record
@@ -145,9 +145,11 @@ class AccountMove(models.Model):
         """
         res = super()._post(soft)
 
+        # Omit all moves that are not sale invoices
+        # Also sort the invoices so the numbering will stay in order (Netvisor should give the same number)
+        sale_invoices = self.filtered(lambda r: r.is_sale_document()).sorted("name")
+
         # Send invoice(s) to netvisor
-        for record in self:
-            if record.is_sale_document():
-                record.action_netvisor_export_invoice()
+        sale_invoices.action_netvisor_export_invoice()
 
         return res

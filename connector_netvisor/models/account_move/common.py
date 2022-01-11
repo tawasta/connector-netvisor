@@ -144,10 +144,9 @@ class AccountMove(models.Model):
         Auto-send invoices to Netvisor when Validating
         """
         res = super()._post(soft)
+        sale_invoices = self.filtered(lambda r: r.is_sale_document())
 
         # Send invoice(s) to netvisor
-        for record in self:
-            if record.is_sale_document():
-                record.action_netvisor_export_invoice()
+        sale_invoices.action_netvisor_export_invoice()
 
         return res

@@ -85,13 +85,12 @@ class NetvisorInvoiceExportMapper(Component):
 
         if binding.reversed_entry_id:
             # Match credit note to the original invoice
-            job_desc = _(
-                "Mark invoice {} as reversed".format(binding.reversed_entry_id.name)
-            )
+            job_desc = _(f"Mark invoice {binding.reversed_entry_id.name} as reversed")
 
             binding.with_delay(description=job_desc).netvisor_match_credit_note()
 
-        binding.odoo_id.write(
+        job_desc = _(f"Update binding for {binding.odoo_id.name}")
+        binding.with_delay(description=job_desc).write(
             {
                 "name": netvisor_invoice.get("number"),
                 "payment_reference": netvisor_invoice.get("reference_number"),

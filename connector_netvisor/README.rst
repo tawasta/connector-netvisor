@@ -10,9 +10,22 @@ Integration between Odoo and Netvisor
 
 Configuration
 =============
-! Currently you have to install ``netvisor-api-client`` with
+Currently you have to install ``netvisor-api-client`` with
 
-``pip3 install https://github.com/Tawasta/netvisor-api-client/archive/backports.zip``
+.. code-block:: ini
+
+    pip3 install https://github.com/Tawasta/netvisor-api-client/archive/backports.zip
+
+**IMPORTANT!**
+Never user more than one (1) worker for root.netvisor.export_invoice channel.
+This may cause Netvisor to assign the same invoice number to multiple invoices.
+You can set multiple workers for other channels e.g.:
+
+.. code-block:: ini
+
+    [queue_job]
+    channels = root:4,root.netvisor:4,root.netvisor.export_invoice:1
+
 
 After installing the module, create a Netvisor Backend-record for each company.
 

@@ -64,7 +64,9 @@ class AccountMove(models.Model):
             for record in self:
                 if record.move_type in ["out_invoice", "out_refund"]:
                     for binding in record.netvisor_bind_ids:
-                        job_desc = _("Mark invoice {} as paid".format(record.name))
+                        job_desc = _(
+                            "Mark invoice {} as paid in Netvisor".format(record.name)
+                        )
 
                         binding.with_delay(description=job_desc).netvisor_export_status(
                             record

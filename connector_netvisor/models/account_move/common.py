@@ -65,6 +65,10 @@ class AccountMove(models.Model):
             for record in self:
                 if record.move_type in ["out_invoice", "out_refund"]:
                     for binding in record.netvisor_bind_ids:
+                        if binding.netvisor_status in ["paid", "dueforpayment"]:
+                            # No reason to update status to Netvisor
+                            continue
+
                         job_desc = _(
                             "Mark invoice {} as paid in Netvisor".format(record.name)
                         )

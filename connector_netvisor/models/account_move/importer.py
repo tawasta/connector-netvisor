@@ -1,7 +1,7 @@
 import logging
 from odoo import _
 from odoo.addons.component.core import Component
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -35,4 +35,12 @@ class NetvisorInvoiceImportMapper(Component):
         invoice_status = invoice.get("invoice_status").lower().replace(" ", "")
 
         if record.netvisor_status != invoice_status:
+            res = _(
+                f"Updated status from '{record.netvisor_status}' to '{invoice_status}'"
+            )
             binding.action_update_invoice_status(invoice_status)
+
+        else:
+            res = _(f"Status '{invoice_status}' is up to date. Nothing to do")
+
+        return res

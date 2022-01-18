@@ -85,6 +85,10 @@ class NetvisorInvoice(models.Model):
                 # record.odoo_id.button_draft()
                 pass
             elif invoice_status == "paid":
+                if record.payment_state == "paid":
+                    # Nothing to do
+                    return
+
                 # Set invoice as fully paid
                 # TODO: get correct payment date
                 # TODO: get correct payment method

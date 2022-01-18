@@ -25,6 +25,7 @@ class AccountMove(models.Model):
             ("unsent", "Unsent"),
             ("creditloss", "Credit loss"),
             ("rejected", "Rejected"),
+            ("dueforpayment", "Due for payment"),
         ],
         copy=False,
         readonly=True,
@@ -64,7 +65,13 @@ class AccountMove(models.Model):
             for record in self:
                 if record.move_type in ["out_invoice", "out_refund"]:
                     for binding in record.netvisor_bind_ids:
-                        job_desc = _("Mark invoice {} as paid".format(record.name))
+                        if binding.netvisor_status in ["paid", "dueforpayment"]:
+                            # No reason to update status to Netvisor
+                            continue
+
+                        job_desc = _(
+                            "Mark invoice {} as paid in Netvisor".format(record.name)
+                        )
 
                         binding.with_delay(description=job_desc).netvisor_export_status(
                             record

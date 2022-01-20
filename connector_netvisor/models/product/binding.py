@@ -1,5 +1,6 @@
 from odoo import fields
 from odoo import models
+from odoo import _
 
 
 class NetvisorProduct(models.Model):

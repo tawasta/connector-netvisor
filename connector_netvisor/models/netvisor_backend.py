@@ -185,18 +185,36 @@ class NetvisorBackend(models.Model):
         netvisor_model = self.env["netvisor.partner"]
 
         for record in self:
+            netvisor_model = netvisor_model.with_context(
+                company_id=record.company_id.id
+            )
+
             job_desc = _(
                 "Netvisor: import customers for {}".format(record.company_id.name)
             )
 
-            netvisor_model.with_delay(description=job_desc).netvisor_import_customers()
+            netvisor_model.with_delay(description=job_desc).netvisor_import_customers(
+                record.company_id
+            )
 
     def action_import_suppliers(self):
         """
         Import suppliers from Netvisor
         :return:
         """
-        raise UserError("Importing suppliers not implemented.")
+        _logger.debug(_("Importing suppliers from Netvisor"))
+        netvisor_model = self.env["netvisor.partner"]
+
+        for record in self:
+            netvisor_model = netvisor_model.with_context(
+                company_id=record.company_id.id
+            )
+
+            job_desc = _(
+                "Netvisor: import suppliers for {}".format(record.company_id.name)
+            )
+
+            raise UserError("Importing suppliers not implemented.")
 
     def action_import_products(self):
         """
@@ -207,11 +225,17 @@ class NetvisorBackend(models.Model):
         netvisor_model = self.env["netvisor.product"]
 
         for record in self:
+            netvisor_model = netvisor_model.with_context(
+                company_id=record.company_id.id
+            )
+
             job_desc = _(
                 "Netvisor: import products for {}".format(record.company_id.name)
             )
 
-            netvisor_model.with_delay(description=job_desc).netvisor_import_products()
+            netvisor_model.with_delay(description=job_desc).netvisor_import_products(
+                record.company_id
+            )
 
     def action_export_products(self):
         """
@@ -222,6 +246,10 @@ class NetvisorBackend(models.Model):
         netvisor_model = self.env["netvisor.product"]
 
         for record in self:
+            netvisor_model = netvisor_model.with_context(
+                company_id=record.company_id.id
+            )
+
             job_desc = _(
                 "Netvisor: export products for {}".format(record.company_id.name)
             )

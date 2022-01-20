@@ -23,7 +23,9 @@ class NetvisorProductExportMapper(Component):
         client = backend.authenticate()
         binding_model = self.env["netvisor.product"]
 
-        binding = binding_model.search([("odoo_id", "=", record.id), ("backend_id", "=", backend.id)])
+        binding = binding_model.search(
+            [("odoo_id", "=", record.id), ("backend_id", "=", backend.id)]
+        )
 
         if binding:
             # Update existing record in Netvisor

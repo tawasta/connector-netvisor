@@ -4,69 +4,6 @@ from odoo import models
 from odoo import _
 
 
-class NetvisorPartner(models.Model):
-    """Binding Model for the Netvisor Partner"""
-
-    _name = "netvisor.partner"
-    _inherit = "netvisor.binding"
-    _inherits = {"res.partner": "odoo_id"}
-    _description = "Netvisor Partner"
-
-    odoo_id = fields.Many2one(
-        comodel_name="res.partner",
-        string="Odoo Partner",
-        required=True,
-        ondelete="cascade",
-    )
-
-    _sql_constraints = [
-        (
-            "odoo_uniq",
-            "unique(backend_id, odoo_id)",
-            "A Netvisor binding for this partner already exists.",
-        ),
-    ]
-
-    def netvisor_import_customers(self):
-        """
-        Import all customers from Netvisor
-        :return:
-        """
-        backend = self.get_netvisor_backend()
-        client = backend.authenticate()
-        records = client.customers.list()
-
-        for record in records:
-            job_desc = _("Netvisor: import customer '{}'".format(record.get("name")))
-            self.with_delay(description=job_desc).netvisor_import_customer(
-                record.get("netvisor_key")
-            )
-
-    def netvisor_import_customer(self, netvisor_key):
-        """
-        Import a partner from Netvisor
-        :param netvisor_key: Netvisor external ID
-        :return:
-        """
-        backend = self.get_netvisor_backend()
-
-        with backend.work_on(self._name) as work:
-            importer = work.component(usage="import.mapper")
-            return importer.import_customer(backend, netvisor_key)
-
-    def netvisor_export_customer(self, record):
-        """
-        Export a partner to Netvisor
-        :param record: Partner record
-        :return:
-        """
-        backend = self.get_netvisor_backend()
-
-        with backend.work_on(self._name) as work:
-            exporter = work.component(usage="export.mapper")
-            return exporter.export_customer(backend, record)
-
-
 class Partner(models.Model):
     _inherit = "res.partner"
 

@@ -36,9 +36,14 @@ class NetvisorBinding(models.AbstractModel):
             # Use users company
             company = self.env.user.company_id
 
+        if isinstance(company, int):
+            company_id = company
+        else:
+            company_id = company.id
+
         backend = NetvisorBackend.search(
             [
-                ("company_id", "=", company.id),
+                ("company_id", "=", company_id),
             ]
         )
 

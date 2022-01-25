@@ -1,5 +1,4 @@
-from odoo import fields
-from odoo import models
+from odoo import fields, models
 
 _TAX_MAPPING = {
     # l10n_fi

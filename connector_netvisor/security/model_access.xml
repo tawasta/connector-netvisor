@@ -2,7 +2,10 @@
 <odoo>
     <record id="role_manager_user" model="ir.model.access">
         <field name="name">Netvisor backend manager</field>
-        <field name="model_id" ref="connector_netvisor.model_netvisor_backend" />
+        <field
+      name="model_id"
+      ref="connector_netvisor.model_netvisor_backend"
+    />
         <field name="group_id" ref="connector.group_connector_manager" />
         <field name="perm_read" eval="1" />
         <field name="perm_write" eval="1" />
@@ -12,7 +15,10 @@
 
     <record id="role_partner_user" model="ir.model.access">
         <field name="name">Netvisor partner user</field>
-        <field name="model_id" ref="connector_netvisor.model_netvisor_partner" />
+        <field
+      name="model_id"
+      ref="connector_netvisor.model_netvisor_partner"
+    />
         <field name="group_id" ref="base.group_user" />
         <field name="perm_read" eval="1" />
         <field name="perm_write" eval="1" />
@@ -22,7 +28,10 @@
 
     <record id="role_product_user" model="ir.model.access">
         <field name="name">Netvisor product user</field>
-        <field name="model_id" ref="connector_netvisor.model_netvisor_product" />
+        <field
+      name="model_id"
+      ref="connector_netvisor.model_netvisor_product"
+    />
         <field name="group_id" ref="base.group_user" />
         <field name="perm_read" eval="1" />
         <field name="perm_write" eval="1" />
@@ -32,7 +41,10 @@
 
     <record id="role_invoice_user" model="ir.model.access">
         <field name="name">Netvisor invoice user</field>
-        <field name="model_id" ref="connector_netvisor.model_netvisor_invoice" />
+        <field
+      name="model_id"
+      ref="connector_netvisor.model_netvisor_invoice"
+    />
         <field name="group_id" ref="account.group_account_invoice" />
         <field name="perm_read" eval="1" />
         <field name="perm_write" eval="1" />

@@ -1,9 +1,7 @@
+import logging
 from decimal import Decimal
 
-from odoo import fields
-from odoo import models
-from odoo import _
-import logging
+from odoo import _, fields, models
 
 _logger = logging.getLogger(__name__)
 

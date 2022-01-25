@@ -1,0 +1,27 @@
+image: "python:3.8.1-buster"
+services:
+  - postgres:13
+variables:
+  POSTGRES_DB: "default"
+  POSTGRES_USER: "default"
+  POSTGRES_PASSWORD: "default"
+
+stages:
+  - test
+
+install:
+  stage: test
+  script:
+    - apt-get update -qy
+    - apt-get install -y git python3-dev python3-wheel libsasl2-dev python-dev libldap2-dev libssl-dev
+    - pip3 install pre-commit
+
+code-check:
+  stage: test
+  script:
+    - cd "$CI_PROJECT_DIR"; pre-commit run --all-files
+      # - git clone https://github.com/Tawasta/maintainer-quality-tools.git --depth 1 /opt/maintainer-qualitys-tools
+      # - git clone https://github.com/odoo/odoo.git --branch 12.0 --depth 1 /opt/odoo/12/server
+      # - pip3 install -r /opt/odoo/12/server/requirements.txt
+      # - cd "$CI_PROJECT_DIR"; ls -d * | tr '\n' ',' > /tmp/modules.txt; cat /tmp/modules.txt
+      # - /opt/odoo/12/server/odoo-bin --dev all --without-demo --test--enable -i $(cat /tmp/modules.txt)base --db_user default --db-filter default --stop-after-init

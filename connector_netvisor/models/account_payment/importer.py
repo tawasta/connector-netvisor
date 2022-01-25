@@ -1,6 +1,8 @@
 import logging
+
 from odoo import _
 from odoo.exceptions import ValidationError
+
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
 
@@ -45,18 +47,22 @@ class NetvisorPaymentImportMapper(Component):
         # No existing binding
         binding_values = {"backend_id": backend.id, "external_id": netvisor_key}
 
+        invoice_number = record.get("invoice_number")
         invoice = self.env["account.move"].search(
             [
-                ("name", "=", record.get("invoice_number")),
+                ("name", "=", invoice_number),
+                ("company_id", "=", backend.company_id.id),
             ],
-            limit=1,
         )
 
         if not invoice:
             raise ValidationError(_("Can't find an invoice to match the payment to"))
 
+        if len(invoice) != 1:
+            raise ValidationError(_(f"Found more than one invoice {invoice_number}"))
+
         if invoice.payment_state == "paid":
-            return _(f"Invoice is already fully paid. Nothing to do")
+            return _("Invoice is already fully paid. Nothing to do")
 
         # Payment register has slightly different field names
         # Let's copy the dict to leave original account.payment dict intact
@@ -98,12 +104,6 @@ class NetvisorPaymentImportMapper(Component):
     @mapping
     def group_payment(self, record):
         res = {"group_payment": True}
-
-        return res
-
-    @mapping
-    def payment_difference_handling(self, record):
-        res = {"payment_difference_handling": "open"}
 
         return res
 

@@ -1,13 +1,10 @@
 import logging
-from odoo import api
-from odoo import fields
-from odoo import models
-from odoo import _
-from odoo.exceptions import UserError
-from odoo.exceptions import ValidationError
-from odoo.exceptions import Warning
+
 from netvisor_api_client import Netvisor
 from netvisor_api_client.exc import AuthenticationFailed
+
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -78,7 +75,8 @@ class NetvisorBackend(models.Model):
     # Print channel (invoice template)
     print_channel_format = fields.Char(
         string="Invoice print channel",
-        help="You can set a custom invoice channel here (invoice template). Use '1' for default template",
+        help="You can set a custom invoice channel here (invoice template)."
+        "Use '1' for default template",
         default=1,
         required=True,
     )
@@ -129,7 +127,8 @@ class NetvisorBackend(models.Model):
     # Sale invoice payments
     payments_start_date = fields.Date(
         string="Payments import start date",
-        help="Starting date for payments import. Will be automatically updated after fetching payments",
+        help="Starting date for payments import. "
+        "Will be automatically updated after fetching payments",
         default="2020-01-01",
     )
 
@@ -152,8 +151,8 @@ class NetvisorBackend(models.Model):
         try:
             # Try to list customers
             client.customers.list()
-            # TODO: use something else than a warning popup
-            raise Warning(_("Authentication successful"))
+            # TODO: use something else than a error popup
+            raise ValidationError(_("Authentication successful"))
         except AuthenticationFailed as e:
             _logger.error(e)
             raise ValidationError(
@@ -210,18 +209,8 @@ class NetvisorBackend(models.Model):
         :return:
         """
         _logger.debug(_("Importing suppliers from Netvisor"))
-        netvisor_model = self.env["netvisor.partner"]
 
-        for record in self:
-            netvisor_model = netvisor_model.with_context(
-                company_id=record.company_id.id
-            )
-
-            job_desc = _(
-                "Netvisor: import suppliers for {}".format(record.company_id.name)
-            )
-
-            raise UserError("Importing suppliers not implemented.")
+        raise UserError(_("Importing suppliers not implemented."))
 
     def action_import_products(self):
         """
@@ -277,8 +266,6 @@ class NetvisorBackend(models.Model):
 
         _logger.info(_("Updating invoice status from Netvisor"))
         netvisor_model = self.env["netvisor.invoice"]
-
-        open_status = ["open", "overdue", "unsent"]
 
         bindings = netvisor_model.search(
             [

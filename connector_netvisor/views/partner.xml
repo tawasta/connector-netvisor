@@ -1,9 +1,9 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <odoo>
     <record id="view_partner_form" model="ir.ui.view">
         <field name="name">res.partner.form.netvisor</field>
         <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">
 
             <field name="type" position="before">
@@ -15,20 +15,26 @@
             </field>
 
             <xpath expr="//notebook/page[last()]" position="after">
-                <page string="Netvisor" name="netvisor" groups="queue_job.group_queue_job_manager">
+                <page
+          string="Netvisor"
+          name="netvisor"
+          groups="queue_job.group_queue_job_manager"
+        >
                     <group>
-                        <button name="action_netvisor_export_record"
-                          type="object"
-                          class="oe_highlight"
-                          string="Send to Netvisor" />
+                        <button
+              name="action_netvisor_export_record"
+              type="object"
+              class="oe_highlight"
+              string="Send to Netvisor"
+            />
                     </group>
 
                     <label for="netvisor_bind_ids" />
                     <field name="netvisor_bind_ids" nolabel="1">
                         <tree create="false" delete="false">
-                            <field name="backend_id" readonly="1"/>
-                            <field name="odoo_id" readonly="1"/>
-                            <field name="external_id" readonly="1"/>
+                            <field name="backend_id" readonly="1" />
+                            <field name="odoo_id" readonly="1" />
+                            <field name="external_id" readonly="1" />
                         </tree>
                     </field>
                 </page>

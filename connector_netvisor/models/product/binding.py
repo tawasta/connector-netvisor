@@ -1,6 +1,4 @@
-from odoo import fields
-from odoo import models
-from odoo import _
+from odoo import _, fields, models
 
 
 class NetvisorProduct(models.Model):

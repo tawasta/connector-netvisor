@@ -1,8 +1,7 @@
 import datetime
-from odoo import fields
-from odoo import models
-from odoo import _
 import logging
+
+from odoo import _, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -102,7 +101,7 @@ class NetvisorInvoice(models.Model):
                 payment_amount = record.amount_residual
 
                 # This will currently set today as payment date
-                # It is usually incorrect, but we don't have the correct data from Procountor here
+                # It is usually incorrect but we don't have the correct data here
                 payment_date = datetime.date.today()
 
                 payment_values = {

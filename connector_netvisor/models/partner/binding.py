@@ -1,5 +1,6 @@
 from odoo import fields
 from odoo import models
+from odoo import _
 
 
 class NetvisorPartner(models.Model):
@@ -21,7 +22,7 @@ class NetvisorPartner(models.Model):
         (
             "odoo_uniq",
             "unique(backend_id, odoo_id)",
-            "A Netvisor binding for this partner already exists.",
+            "A Netvisor binding for this record already exists.",
         ),
     ]
 

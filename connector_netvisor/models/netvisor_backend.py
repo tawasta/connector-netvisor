@@ -126,6 +126,13 @@ class NetvisorBackend(models.Model):
         default=True,
     )
 
+    # Sale invoice payments
+    payments_start_date = fields.Date(
+        string="Payments import start date",
+        help="Starting date for payments import. Will be automatically updated after fetching payments",
+        default="2020-01-01",
+    )
+
     @api.onchange("environment")
     def onchange_environment(self):
         for record in self:
@@ -286,3 +293,22 @@ class NetvisorBackend(models.Model):
             binding.with_delay(description=job_desc).netvisor_import_status(
                 binding.odoo_id
             )
+
+    def action_cron_import_payments(self):
+        """
+        Scheduled import all new payments
+        """
+        for backend in self.search([]):
+            backend.action_import_payments()
+
+    def action_import_payments(self):
+        """
+        Import all new payments from Netvisor
+        """
+
+        netvisor_model = self.env["netvisor.payment"].sudo()
+
+        job_desc = _("Import payments from Netvisor")
+        _logger.info(job_desc)
+
+        netvisor_model.with_delay(description=job_desc).netvisor_import_payments()

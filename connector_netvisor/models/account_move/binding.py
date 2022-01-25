@@ -26,7 +26,7 @@ class NetvisorInvoice(models.Model):
         (
             "odoo_uniq",
             "unique(backend_id, odoo_id)",
-            "A Netvisor binding for this invoice already exists.",
+            "A Netvisor binding for this record already exists.",
         ),
     ]
 

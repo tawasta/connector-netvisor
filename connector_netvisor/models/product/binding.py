@@ -22,7 +22,7 @@ class NetvisorProduct(models.Model):
         (
             "odoo_uniq",
             "unique(backend_id, odoo_id)",
-            "A Netvisor binding for this product already exists.",
+            "A Netvisor binding for this record already exists.",
         ),
     ]
 

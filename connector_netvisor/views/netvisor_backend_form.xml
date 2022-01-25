@@ -41,6 +41,18 @@
                             </group>
                         </page>
 
+                        <page name="payments" string="Payments">
+                            <group name="payments" colspan="2">
+                                <field name="payments_start_date" />
+
+                                <button name="action_import_payments"
+                                        type="object"
+                                        class="oe_highlight"
+                                        string="Import payments"/>
+
+                            </group>
+                        </page>
+
                         <page name="customers" string="Customers">
                             <group name="customers" string="Import" colspan="2">
                                 <p class="oe_grey oe_inline">

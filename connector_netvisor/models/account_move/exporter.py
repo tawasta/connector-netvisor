@@ -115,9 +115,9 @@ class NetvisorInvoiceExportMapper(Component):
         if record.payment_state in ["paid", "reversed"]:
             netvisor_status = "paid"
 
-        res = client.sales_invoices.update_status(binding.external_id, netvisor_status)
+        client.sales_invoices.update_status(binding.external_id, netvisor_status)
         record.netvisor_status = netvisor_status
-        return res
+        return f"Updated status to {netvisor_status}"
 
     def match_credit_note(self, binding):
         """ Match credit ntoe """

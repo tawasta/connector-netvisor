@@ -1,57 +1,79 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <odoo>
     <record id="view_move_form" model="ir.ui.view">
         <field name="name">account.move.form.netvisor</field>
         <field name="model">account.move</field>
-        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="inherit_id" ref="account.view_move_form" />
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_post'][2]" position="attributes">
+            <xpath
+        expr="//button[@name='action_post'][2]"
+        position="attributes"
+      >
                 <attribute name="string">Send to Netvisor</attribute>
             </xpath>
 
-            <xpath expr="//button[@name='action_invoice_sent'][1]" position="attributes">
+            <xpath
+        expr="//button[@name='action_invoice_sent'][1]"
+        position="attributes"
+      >
                 <attribute name="invisible">1</attribute>
             </xpath>
 
-            <xpath expr="//button[@name='action_invoice_sent'][2]" position="attributes">
+            <xpath
+        expr="//button[@name='action_invoice_sent'][2]"
+        position="attributes"
+      >
                 <attribute name="invisible">1</attribute>
             </xpath>
 
             <xpath expr="//notebook/page[last()]" position="after">
-                <page string="Netvisor" name="netvisor" groups="queue_job.group_queue_job_manager">
+                <page
+          string="Netvisor"
+          name="netvisor"
+          groups="queue_job.group_queue_job_manager"
+        >
                     <group col="1">
-                        <button name="action_netvisor_export_invoice"
-                                type="object"
-                                class="oe_highlight"
-                                states="posted"
-                                string="Send to Netvisor" />
+                        <button
+              name="action_netvisor_export_invoice"
+              type="object"
+              class="oe_highlight"
+              states="posted"
+              string="Send to Netvisor"
+            />
 
-                        <button name="action_netvisor_import_status"
-                                type="object"
-                                class="oe_highlight"
-                                states="posted"
-                                help="Update status from Netvisor"
-                                string="Fetch status from Netvisor" />
+                        <button
+              name="action_netvisor_import_status"
+              type="object"
+              class="oe_highlight"
+              states="posted"
+              help="Update status from Netvisor"
+              string="Fetch status from Netvisor"
+            />
 
-                        <button name="action_netvisor_export_status"
-                                type="object"
-                                class="oe_highlight"
-                                states="posted"
-                                help="Update status to Netvisor"
-                                string="Send status to Netvisor" />
+                        <button
+              name="action_netvisor_export_status"
+              type="object"
+              class="oe_highlight"
+              states="posted"
+              help="Update status to Netvisor"
+              string="Send status to Netvisor"
+            />
                     </group>
 
                     <group>
-                        <field name="netvisor_send" groups="base.group_no_one" />
+                        <field
+              name="netvisor_send"
+              groups="base.group_no_one"
+            />
                         <field name="netvisor_status" />
                     </group>
 
                     <label for="netvisor_bind_ids" />
                     <field name="netvisor_bind_ids" nolabel="1">
                         <tree create="false" delete="false">
-                            <field name="backend_id" readonly="1"/>
-                            <field name="odoo_id" readonly="1"/>
-                            <field name="external_id" readonly="1"/>
+                            <field name="backend_id" readonly="1" />
+                            <field name="odoo_id" readonly="1" />
+                            <field name="external_id" readonly="1" />
                         </tree>
                     </field>
                 </page>

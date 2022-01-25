@@ -4,6 +4,7 @@ from . import netvisor_binding
 
 # Import rest of the models in alphabetical order
 from . import account_move
+from . import account_payment
 from . import account_tax
 from . import partner
 from . import product

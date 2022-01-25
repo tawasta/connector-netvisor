@@ -1,9 +1,12 @@
 import logging
-from odoo import _
-from odoo.addons.component.core import Component
-from odoo.addons.connector.components.mapper import mapping, changed_by
-from odoo.exceptions import ValidationError
+
 from psycopg2 import IntegrityError
+
+from odoo import _
+from odoo.exceptions import ValidationError
+
+from odoo.addons.component.core import Component
+from odoo.addons.connector.components.mapper import mapping
 
 _logger = logging.getLogger(__name__)
 
@@ -97,7 +100,8 @@ class NetvisorPartnerImportMapper(Component):
         if existing_record and len(existing_record) > 1:
             raise ValidationError(
                 _(
-                    f"Found multiple matching records: {existing_record.ids} with values {values}"
+                    f"Found multiple matching records: "
+                    f"{existing_record.ids} with values {values}"
                 )
             )
 

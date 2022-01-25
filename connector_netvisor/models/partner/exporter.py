@@ -1,8 +1,10 @@
+from psycopg2 import IntegrityError
+
 from odoo import _
 from odoo.exceptions import UserError
+
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
-from psycopg2 import IntegrityError
 
 
 class NetvisorPartnerExportMapper(Component):

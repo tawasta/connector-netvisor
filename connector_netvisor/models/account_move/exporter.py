@@ -1,11 +1,14 @@
+import logging
+
+from netvisor_api_client.exc import InvalidData
+
 from odoo import _
 from odoo.exceptions import ValidationError
-from odoo.addons.connector.exception import MappingError
+
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
-from netvisor_api_client.exc import InvalidData
+from odoo.addons.connector.exception import MappingError
 from odoo.addons.queue_job.exception import RetryableJobError
-import logging
 
 _logger = logging.getLogger(__name__)
 
@@ -115,9 +118,9 @@ class NetvisorInvoiceExportMapper(Component):
         if record.payment_state in ["paid", "reversed"]:
             netvisor_status = "paid"
 
-        res = client.sales_invoices.update_status(binding.external_id, netvisor_status)
+        client.sales_invoices.update_status(binding.external_id, netvisor_status)
         record.netvisor_status = netvisor_status
-        return res
+        return f"Updated status to {netvisor_status}"
 
     def match_credit_note(self, binding):
         """ Match credit ntoe """
@@ -184,13 +187,13 @@ class NetvisorInvoiceExportMapper(Component):
                 _(f"'{record.partner_id.name}' is not yet exported to Netvisor.")
             )
             # If partner identifier is not known, send all information
-            res["invoicing_customer_name"] = record.partner_id.display_name
-            res["invoicing_customer_address_line"] = record.partner_id.street or ""
-            res["invoicing_customer_additional_address_line"] = (
-                record.partner_id.street2 or ""
-            )
-            res["invoicing_customer_post_number"] = record.partner_id.zip or ""
-            res["invoicing_customer_town"] = record.partner_id.city or ""
+            # res["invoicing_customer_name"] = record.partner_id.display_name
+            # res["invoicing_customer_address_line"] = record.partner_id.street or ""
+            # res["invoicing_customer_additional_address_line"] = (
+            #     record.partner_id.street2 or ""
+            # )
+            # res["invoicing_customer_post_number"] = record.partner_id.zip or ""
+            # res["invoicing_customer_town"] = record.partner_id.city or ""
 
             # TODO: add type to netvisor-api-client
             # res["invoicing_customer_country_code"] = record.partner_id.country_id.code
@@ -218,10 +221,10 @@ class NetvisorInvoiceExportMapper(Component):
     def delivery_address_country_code(self, record):
         # TODO: add type to netvisor-api-client
         return
-        return {
-            "delivery_address_country_code": record.partner_shipping_id.country_id.code
-            or ""
-        }
+        # return {
+        #     "delivery_address_country_code": record.partner_shipping_id.country_id.code
+        #     or ""
+        # }
 
     @mapping
     def payment_term_net_days(self, record):
@@ -267,8 +270,8 @@ class NetvisorInvoiceExportMapper(Component):
     def override_rate_of_overdue(self, record):
         # TODO: add overdue interest when netvisor-api-client supports it
         return
-        if hasattr(record, "overdue_interest"):
-            return {"override_rate_of_overdue": 8}
+        # if hasattr(record, "overdue_interest"):
+        #     return {"override_rate_of_overdue": 8}
 
     @mapping
     def invoice_lines(self, record):
@@ -306,7 +309,8 @@ class NetvisorInvoiceExportMapper(Component):
             if tax.netvisor_code == "-":
                 raise ValidationError(
                     _(
-                        f"The tax '{tax.name}' is misconfigured. Please configure 'Netvisor VAT code' for that"
+                        f"The tax '{tax.name}' is misconfigured. "
+                        f"Please configure 'Netvisor VAT code' for that"
                     )
                 )
 

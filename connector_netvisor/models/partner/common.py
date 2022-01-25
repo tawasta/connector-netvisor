@@ -1,7 +1,4 @@
-from odoo import api
-from odoo import fields
-from odoo import models
-from odoo import _
+from odoo import _, api, fields, models
 
 
 class Partner(models.Model):

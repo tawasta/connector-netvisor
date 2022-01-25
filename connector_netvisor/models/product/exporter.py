@@ -1,8 +1,10 @@
+from psycopg2 import IntegrityError
+
 from odoo import _
 from odoo.exceptions import UserError, ValidationError
+
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
-from psycopg2 import IntegrityError
 
 
 class NetvisorProductExportMapper(Component):
@@ -111,27 +113,27 @@ class NetvisorProductExportMapper(Component):
         # Not implemented yet
         return
 
-        res = {}
-
-        if record.weight:
-            res["product_additional_information"] = {
-                "product_gross_weight": {record.weight}
-            }
-
-        # TODO: product_net_weight
-        # TODO: product_weight_unit
-
-        return res
+        # res = {}
+        #
+        # if record.weight:
+        #     res["product_additional_information"] = {
+        #         "product_gross_weight": {record.weight}
+        #     }
+        #
+        # # TODO: product_net_weight
+        # # TODO: product_weight_unit
+        #
+        # return res
 
     @mapping
     def product_package_information(self, record):
-        res = {
-            "product_package_information": {
-                "package_width": "",
-                "package_height": "",
-                "package_length": "",
-            }
-        }
+        # {
+        #     "product_package_information": {
+        #         "package_width": "",
+        #         "package_height": "",
+        #         "package_length": "",
+        #     }
+        # }
 
         # No mappings yet, so return nothing
         return

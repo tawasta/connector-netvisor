@@ -1,0 +1,17 @@
+image: "python:3.8.1-buster"
+services:
+  - postgres:13
+  - odoo:14
+variables:
+  POSTGRES_DB: "default"
+  POSTGRES_USER: "default"
+  POSTGRES_PASSWORD: "default"
+
+stages:
+  - test
+
+code-check:
+  stage: test
+  script:
+    - pip3 install pre-commit
+    - pre-commit run --all-files

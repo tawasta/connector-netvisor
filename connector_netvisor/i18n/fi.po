@@ -4,16 +4,18 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0-20201012\n"
+"Project-Id-Version: Odoo Server 14.0-20211220\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-29 09:56+0000\n"
-"PO-Revision-Date: 2021-07-29 09:56+0000\n"
+"POT-Creation-Date: 2022-01-25 12:45+0000\n"
+"PO-Revision-Date: 2022-01-25 14:53+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
+"Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: \n"
+"Language: fi\n"
+"X-Generator: Poedit 3.0\n"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__event_count
@@ -31,9 +33,29 @@ msgid "# Product Variants"
 msgstr "# Tuotevarianttia"
 
 #. module: connector_netvisor
-#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__task_count
-msgid "# Tasks"
-msgstr "# Tehtävää"
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__reconciled_bills_count
+msgid "# Reconciled Bills"
+msgstr "# Täsmäytettyjä laskuja"
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__reconciled_invoices_count
+msgid "# Reconciled Invoices"
+msgstr "# Täsmäytettyjä laskuja"
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__reconciled_statements_count
+msgid "# Reconciled Statements"
+msgstr "# Täsmäytettyjä tiliotteita"
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__supplier_invoice_count
+msgid "# Vendor Bills"
+msgstr "# Toimittajan laskut"
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_backend__print_channel_format_type
+msgid "'netvisor' for default templates, 'customer' for customized templates"
+msgstr "'netvisor' oletuspohjalle, 'customer' räätälöidyille pohjille"
 
 #. module: connector_netvisor
 #: model:ir.model.fields.selection,name:connector_netvisor.selection__account_tax__netvisor_code__100%
@@ -52,32 +74,22 @@ msgstr "312 EU palvelumyynti"
 
 #. module: connector_netvisor
 #: model:ir.model.constraint,message:connector_netvisor.constraint_netvisor_invoice_odoo_uniq
-msgid "A Netvisor binding for this invoice already exists."
-msgstr "Tällä laskulla on jo Netvisor-liitos"
-
-#. module: connector_netvisor
 #: model:ir.model.constraint,message:connector_netvisor.constraint_netvisor_partner_odoo_uniq
-msgid "A Netvisor binding for this partner already exists."
-msgstr "Tällä kumppanilla on jo Netvisor-liitos"
-
-#. module: connector_netvisor
+#: model:ir.model.constraint,message:connector_netvisor.constraint_netvisor_payment_odoo_uniq
 #: model:ir.model.constraint,message:connector_netvisor.constraint_netvisor_product_odoo_uniq
-msgid "A Netvisor binding for this product already exists."
-msgstr "Tällä tuotteella on jo Netvisor-liitos"
+msgid "A Netvisor binding for this record already exists."
+msgstr "Netvisor-sidos tälle tietueelle on jo olemassa"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__description_sale
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sales Order, Delivery Order and "
-"Customer Invoice/Credit Note"
+"A description of the Product that you want to communicate to your customers. This description will be copied to every Sales Order, Delivery Order and Customer "
+"Invoice/Credit Note"
 msgstr "Tuotekuvaus jonka haluat välittää asiakkaillesi. Tämä kuvaus kopioidaan kaikille myynneille, toimituksille ja asiakaslaskuille"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__associate_member
-msgid ""
-"A member with whom you want to associate your membership.It will consider "
-"the membership state of the associated member."
+msgid "A member with whom you want to associate your membership.It will consider the membership state of the associated member."
 msgstr "Jäsen johon haluat liittää jäsenyytsei. Se ottaa huomioon valitun kumppanin jäsenyyden tilan."
 
 #. module: connector_netvisor
@@ -94,7 +106,13 @@ msgid "API language"
 msgstr "Rajapinnan kieli"
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__accepted_privacy_consent_ids
+msgid "Accepted privacy consents"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__access_warning
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__access_warning
 msgid "Access warning"
 msgstr "Pääsyvaroitus"
 
@@ -114,8 +132,14 @@ msgid "Account move"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__odoo_id
+msgid "Account payment"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__message_needaction
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__message_needaction
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__message_needaction
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__message_needaction
 msgid "Action Needed"
 msgstr ""
@@ -135,6 +159,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__activity_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__activity_ids
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__activity_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__activity_ids
 msgid "Activities"
 msgstr ""
@@ -142,6 +167,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__activity_exception_decoration
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__activity_exception_decoration
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__activity_exception_decoration
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__activity_exception_decoration
 msgid "Activity Exception Decoration"
 msgstr ""
@@ -149,6 +175,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__activity_state
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__activity_state
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__activity_state
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__activity_state
 msgid "Activity State"
 msgstr ""
@@ -156,13 +183,9 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__activity_type_icon
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__activity_type_icon
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__activity_type_icon
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
-
-#. module: connector_netvisor
-#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__additional_info
-msgid "Additional info"
 msgstr ""
 
 #. module: connector_netvisor
@@ -171,31 +194,56 @@ msgid "Address Type"
 msgstr ""
 
 #. module: connector_netvisor
-#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__age
-msgid "Age"
-msgstr ""
-
-#. module: connector_netvisor
-#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__age_range_id
-msgid "Age Range"
-msgstr ""
-
-#. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__lang
-msgid ""
-"All the emails and documents sent to this contact will be translated in this"
-" language."
+msgid "All the emails and documents sent to this contact will be translated in this language."
 msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_backend__customer_invoice_allow_updating
+msgid "Allow updating invoice information from Odoo to Netvisor"
+msgstr "Salli laskun tietojen päivitys Odoosta Netvisoriin"
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_backend__customer_invoice_allow_updating
+msgid "Allow updating invoices"
+msgstr "Salli laskujen päivitys"
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__amount
+msgid "Amount"
+msgstr "Summa"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__amount_residual
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__amount_residual
 msgid "Amount Due"
-msgstr ""
+msgstr "Maksettava summa"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__amount_residual_signed
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__amount_residual_signed
 msgid "Amount Due Signed"
 msgstr ""
+
+#. module: connector_netvisor
+#: model_terms:ir.ui.view,arch_db:connector_netvisor.view_netvisor_backend_form
+msgid "Are you sure you want to export products?"
+msgstr "Oletko varma että haluat viedät tuotteet?"
+
+#. module: connector_netvisor
+#: model_terms:ir.ui.view,arch_db:connector_netvisor.view_netvisor_backend_form
+msgid "Are you sure you want to import customers?"
+msgstr "Oletko varma että haluat tuoda asiakkaat?"
+
+#. module: connector_netvisor
+#: model_terms:ir.ui.view,arch_db:connector_netvisor.view_netvisor_backend_form
+msgid "Are you sure you want to import products?"
+msgstr "Oletko varma että haluat tuoda tuotteet?"
+
+#. module: connector_netvisor
+#: model_terms:ir.ui.view,arch_db:connector_netvisor.view_netvisor_backend_form
+msgid "Are you sure you want to import suppliers?"
+msgstr "Oletko varma että haluat tuoda toimittajat?"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__associate_member
@@ -205,15 +253,17 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__message_attachment_count
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__message_attachment_count
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__message_attachment_count
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Liitteiden määrä"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_account_bank_statement_line__attachment_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_account_move__attachment_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_account_payment__attachment_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__attachment_ids
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__attachment_ids
 msgid "Attachments"
 msgstr ""
 
@@ -236,18 +286,53 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__authorized_transaction_ids
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__authorized_transaction_ids
 msgid "Authorized Transactions"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__purchase_vendor_bill_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__purchase_vendor_bill_id
+msgid "Auto-complete"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__purchase_vendor_bill_id
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__purchase_vendor_bill_id
+msgid "Auto-complete from a past bill / purchase order."
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__invoice_vendor_bill_id
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__invoice_vendor_bill_id
 msgid "Auto-complete from a past bill."
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__purchase_id
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__purchase_id
+msgid "Auto-complete from a past purchase order."
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__receipt_reminder_email
+msgid "Automatically send a confirmation email to the vendor X days before the expected receipt date, asking him to confirm the exact date."
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__available_partner_bank_ids
+msgid "Available Partner Bank"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__available_payment_method_ids
+msgid "Available Payment Method"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model,name:connector_netvisor.model_netvisor_backend
 msgid "Backend for Netvisor integration"
-msgstr ""
+msgstr "Netvisor-integraation asetukset"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__bank_account_count
@@ -257,13 +342,13 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__partner_bank_id
 msgid ""
-"Bank Account Number to which the invoice will be paid. A Company bank "
-"account if this is a Customer Invoice or Vendor Credit Note, otherwise a "
-"Partner bank account number."
+"Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Vendor Credit Note, otherwise a Partner bank "
+"account number."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__bank_partner_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__bank_partner_id
 msgid "Bank Partner"
 msgstr ""
 
@@ -276,11 +361,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__barcode
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__barcode
 msgid "Barcode"
-msgstr ""
-
-#. module: connector_netvisor
-#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__birthdate_date
-msgid "Birthdate"
 msgstr ""
 
 #. module: connector_netvisor
@@ -306,6 +386,12 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__business_code
 msgid "Business ID"
+msgstr "Y-tunnus"
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__campaign_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__campaign_id
+msgid "Campaign"
 msgstr ""
 
 #. module: connector_netvisor
@@ -334,12 +420,19 @@ msgid "Can be Sold"
 msgstr ""
 
 #. module: connector_netvisor
+#: code:addons/connector_netvisor/models/account_payment/importer.py:0
+#, python-format
+msgid "Can't find an invoice to match the payment to"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__membership_cancel
 msgid "Cancel Membership Date"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__invoice_cash_rounding_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__invoice_cash_rounding_id
 msgid "Cash Rounding Method"
 msgstr ""
 
@@ -379,6 +472,11 @@ msgid "Client"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__payment_method_code
+msgid "Code"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__color
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__color
 msgid "Color Index"
@@ -392,6 +490,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__commercial_partner_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__commercial_partner_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__commercial_partner_id
 msgid "Commercial Entity"
 msgstr ""
 
@@ -404,12 +503,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_backend__company_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__company_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__company_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__company_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__company_id
 msgid "Company"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__company_currency_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__company_currency_id
 msgid "Company Currency"
 msgstr ""
 
@@ -429,13 +530,9 @@ msgid "Company Type"
 msgstr ""
 
 #. module: connector_netvisor
-#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__partner_gid
-msgid "Company database ID"
-msgstr ""
-
-#. module: connector_netvisor
-#: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__company_id
-msgid "Company related to this journal"
+#: code:addons/connector_netvisor/models/netvisor_backend.py:0
+#, python-format
+msgid "Company registry is missing. Please provide and try again"
 msgstr ""
 
 #. module: connector_netvisor
@@ -449,14 +546,23 @@ msgid "Config Settings"
 msgstr "Konfiguraatioasetukset"
 
 #. module: connector_netvisor
-#: model:ir.model,name:connector_netvisor.model_res_partner
-#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__child_ids
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__privacy_consent_count
+msgid "Consents"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model,name:connector_netvisor.model_res_partner model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__child_ids
 msgid "Contact"
 msgstr "Kontakti"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__contract_ids
 msgid "Contracts"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__purchase_method
+msgid "Control Policy"
 msgstr ""
 
 #. module: connector_netvisor
@@ -491,39 +597,41 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__country_code
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__country_code
 msgid "Country Code"
 msgstr ""
 
 #. module: connector_netvisor
-#: code:addons/connector_netvisor/models/partner/importer.py:0
-#, python-format
-msgid "Created a new partner '{}'"
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__purchase_requisition
+msgid ""
+"Create a draft purchase order: Based on your product configuration, the system will create a draft purchase order.Propose a call for tender : If the "
+"'purchase_requisition' module is installed and this option is selected, the system will create a draft call for tender."
 msgstr ""
 
 #. module: connector_netvisor
-#: code:addons/connector_netvisor/models/product/importer.py:0
-#, python-format
-msgid "Created a new product '{}'"
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_backend__customer_import_create
+msgid "Create new customers on import"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_backend__product_import_create
+msgid "Create new products on import"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_backend__create_uid
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__create_uid
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__create_uid
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__create_uid
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__create_uid
 msgid "Created by"
-msgstr ""
-
-#. module: connector_netvisor
-#: code:addons/connector_netvisor/models/account_move/exporter.py:0
-#, python-format
-msgid "Created invoice '{}'"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_backend__create_date
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__create_date
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__create_date
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__create_date
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__create_date
 msgid "Created on"
 msgstr ""
@@ -541,6 +649,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__currency_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__currency_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__currency_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__currency_id
 msgid "Currency"
 msgstr ""
@@ -558,6 +667,11 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields.selection,name:connector_netvisor.selection__netvisor_backend__print_channel_format_type__customer
+msgid "Customer"
 msgstr ""
 
 #. module: connector_netvisor
@@ -587,6 +701,7 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__access_url
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__access_url
 msgid "Customer Portal URL"
 msgstr ""
 
@@ -606,6 +721,11 @@ msgid "Customer Taxes"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__partner_id
+msgid "Customer/Vendor"
+msgstr ""
+
+#. module: connector_netvisor
 #: model_terms:ir.ui.view,arch_db:connector_netvisor.view_netvisor_backend_form
 msgid "Customers"
 msgstr ""
@@ -613,6 +733,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__date
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__date
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__date
 msgid "Date"
 msgstr ""
 
@@ -634,6 +755,11 @@ msgid "Date until which membership remains active."
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__reminder_date_before_receipt
+msgid "Days Before Receipt"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__supplier_taxes_id
 msgid "Default taxes used when buying the product."
 msgstr ""
@@ -650,9 +776,7 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__uom_po_id
-msgid ""
-"Default unit of measure used for purchase orders. It must be in the same "
-"category as the default unit of measure."
+msgid "Default unit of measure used for purchase orders. It must be in the same category as the default unit of measure."
 msgstr ""
 
 #. module: connector_netvisor
@@ -662,9 +786,8 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__invoice_cash_rounding_id
-msgid ""
-"Defines the smallest coinage of the currency that can be used to pay by "
-"cash."
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__invoice_cash_rounding_id
+msgid "Defines the smallest coinage of the currency that can be used to pay by cash."
 msgstr ""
 
 #. module: connector_netvisor
@@ -673,18 +796,26 @@ msgid "Degree of trust you have in this debtor"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__partner_shipping_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__partner_shipping_id
+msgid "Delivery Address"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__partner_shipping_id
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__partner_shipping_id
+msgid "Delivery address for current invoice."
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__sale_delay
-msgid ""
-"Delivery lead time, in days. It's the number of days, promised to the "
-"customer, between the confirmation of the sales order and the delivery."
+msgid "Delivery lead time, in days. It's the number of days, promised to the customer, between the confirmation of the sales order and the delivery."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__route_ids
 msgid ""
-"Depending on the modules installed, this will allow you to define the route "
-"of the product: whether it will be bought, manufactured, replenished on "
-"order, etc."
+"Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, replenished on order, etc."
 msgstr ""
 
 #. module: connector_netvisor
@@ -708,12 +839,31 @@ msgid "Description on Receptions"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__destination_account_id
+msgid "Destination Account"
+msgstr ""
+
+#. module: connector_netvisor
+#: code:addons/connector_netvisor/models/partner/importer.py:0
+#, python-format
+msgid "Did not update partner due to importer settings"
+msgstr ""
+
+#. module: connector_netvisor
+#: code:addons/connector_netvisor/models/product/importer.py:0
+#, python-format
+msgid "Did not update product due to importer settings"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_account_move__display_name
+#: model:ir.model.fields,field_description:connector_netvisor.field_account_payment__display_name
 #: model:ir.model.fields,field_description:connector_netvisor.field_account_tax__display_name
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_backend__display_name
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_binding__display_name
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__display_name
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__display_name
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__display_name
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__display_name
 #: model:ir.model.fields,field_description:connector_netvisor.field_product_product__display_name
 #: model:ir.model.fields,field_description:connector_netvisor.field_res_config_settings__display_name
@@ -723,6 +873,7 @@ msgstr "Näyttönimi"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__display_qr_code
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__display_qr_code
 msgid "Display QR-code"
 msgstr ""
 
@@ -743,7 +894,13 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__invoice_date_due
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__invoice_date_due
 msgid "Due Date"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields.selection,name:connector_netvisor.selection__account_move__netvisor_status__dueforpayment
+msgid "Due for payment"
 msgstr ""
 
 #. module: connector_netvisor
@@ -763,21 +920,25 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__edi_document_ids
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__edi_document_ids
 msgid "Edi Document"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__edi_error_count
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__edi_error_count
 msgid "Edi Error Count"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__edi_show_cancel_button
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__edi_show_cancel_button
 msgid "Edi Show Cancel Button"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__edi_web_services_to_process
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__edi_web_services_to_process
 msgid "Edi Web Services To Process"
 msgstr ""
 
@@ -788,19 +949,19 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__amount_by_group
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__amount_by_group
 msgid "Edit Tax amounts if you encounter rounding issues."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__partner_share
 msgid ""
-"Either customer (not a user), either shared user. Indicated the current "
-"partner is a customer without access or with a limited access created for "
-"sharing data."
+"Either customer (not a user), either shared user. Indicated the current partner is a customer without access or with a limited access created for sharing data."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__edi_state
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__edi_state
 msgid "Electronic invoicing"
 msgstr ""
 
@@ -825,16 +986,33 @@ msgid "Ensure the traceability of a storable product in your warehouse."
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_backend__environment
+msgid "Environment"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__property_account_expense_id
 msgid "Expense Account"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__expense_policy
+msgid ""
+"Expenses and vendor bills can be re-invoiced to a customer.With this option, a validated expense can be re-invoice to a customer at its cost or sales price."
+msgstr ""
+
+#. module: connector_netvisor
+#: model_terms:ir.ui.view,arch_db:connector_netvisor.view_netvisor_backend_form
+msgid "Export"
+msgstr ""
+
+#. module: connector_netvisor
 #: model_terms:ir.ui.view,arch_db:connector_netvisor.view_netvisor_backend_form
 msgid ""
-"Export or update all products to Netvisor.<br/>\n"
-"                            If product doesn't exist, one will be created.\n"
-"                            If product exists (binding exists), it will be updated."
+"Export or update all products to Netvisor.\n"
+"                                    <br/>\n"
+"                                    If product doesn't exist, one will be created.\n"
+"                                    If product exists (binding exists), it will be updated."
 msgstr ""
 
 #. module: connector_netvisor
@@ -854,15 +1032,13 @@ msgid "External host"
 msgstr ""
 
 #. module: connector_netvisor
-#: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__phone_sanitized
-msgid ""
-"Field used to store sanitized phone number. Helps speeding up searches and "
-"comparisons."
+#: model_terms:ir.ui.view,arch_db:connector_netvisor.view_move_form
+msgid "Fetch status from Netvisor"
 msgstr ""
 
 #. module: connector_netvisor
-#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__financial_type
-msgid "Financial Type"
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__phone_sanitized
+msgid "Field used to store sanitized phone number. Helps speeding up searches and comparisons."
 msgstr ""
 
 #. module: connector_netvisor
@@ -871,27 +1047,22 @@ msgid "Finnish"
 msgstr ""
 
 #. module: connector_netvisor
-#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__firstname
-msgid "First name"
-msgstr ""
-
-#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__fiscal_position_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__property_account_position_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__fiscal_position_id
 msgid "Fiscal Position"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__fiscal_position_id
-msgid ""
-"Fiscal positions are used to adapt taxes and accounts for particular "
-"customers or sales orders/invoices. The default value comes from the "
-"customer."
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__fiscal_position_id
+msgid "Fiscal positions are used to adapt taxes and accounts for particular customers or sales orders/invoices. The default value comes from the customer."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__message_follower_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__message_follower_ids
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__message_follower_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__message_follower_ids
 msgid "Followers"
 msgstr ""
@@ -899,6 +1070,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__message_channel_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__message_channel_ids
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__message_channel_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__message_channel_ids
 msgid "Followers (Channels)"
 msgstr ""
@@ -906,6 +1078,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__message_partner_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__message_partner_ids
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__message_partner_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__message_partner_ids
 msgid "Followers (Partners)"
 msgstr ""
@@ -913,6 +1086,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__activity_type_icon
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__activity_type_icon
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__activity_type_icon
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr ""
@@ -961,11 +1135,6 @@ msgid "Free To Use Quantity "
 msgstr ""
 
 #. module: connector_netvisor
-#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__gender
-msgid "Gender"
-msgstr ""
-
-#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__partner_latitude
 msgid "Geo Latitude"
 msgstr ""
@@ -973,6 +1142,11 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__partner_longitude
 msgid "Geo Longitude"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__date_localization
+msgid "Geolocation Date"
 msgstr ""
 
 #. module: connector_netvisor
@@ -987,6 +1161,7 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__has_reconciled_entries
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__has_reconciled_entries
 msgid "Has Reconciled Entries"
 msgstr ""
 
@@ -996,22 +1171,31 @@ msgid "Has Unreconciled Entries"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__hide_payment_method
+msgid "Hide Payment Method"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__highest_name
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__highest_name
 msgid "Highest Name"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__edi_error_count
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__edi_error_count
 msgid "How many EDIs are in error for this move ?"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_account_move__id
+#: model:ir.model.fields,field_description:connector_netvisor.field_account_payment__id
 #: model:ir.model.fields,field_description:connector_netvisor.field_account_tax__id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_backend__id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_binding__id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__id
 #: model:ir.model.fields,field_description:connector_netvisor.field_product_product__id
 #: model:ir.model.fields,field_description:connector_netvisor.field_res_config_settings__id
@@ -1027,6 +1211,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__activity_exception_icon
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__activity_exception_icon
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__activity_exception_icon
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__activity_exception_icon
 msgid "Icon"
 msgstr ""
@@ -1034,6 +1219,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__activity_exception_icon
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__activity_exception_icon
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__activity_exception_icon
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr ""
@@ -1043,6 +1229,8 @@ msgstr ""
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__message_unread
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__message_needaction
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__message_unread
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__message_needaction
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__message_unread
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__message_needaction
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__message_unread
 msgid "If checked, new messages require your attention."
@@ -1053,6 +1241,8 @@ msgstr ""
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__message_has_sms_error
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__message_has_error
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__message_has_sms_error
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__message_has_error
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__message_has_sms_error
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__message_has_error
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
@@ -1060,51 +1250,41 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__team_id
-msgid ""
-"If set, this Sales Team will be used for sales and assignments related to "
-"this partner"
+msgid "If set, this Sales Team will be used for sales and assignments related to this partner"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__is_blacklisted
-msgid ""
-"If the email address is on the blacklist, the contact won't receive mass "
-"mailing anymore, from any list"
+msgid "If the email address is on the blacklist, the contact won't receive mass mailing anymore, from any list"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__phone_sanitized_blacklisted
-msgid ""
-"If the sanitized phone number is on the blacklist, the contact won't receive"
-" mass mailing sms anymore, from any list"
+msgid "If the sanitized phone number is on the blacklist, the contact won't receive mass mailing sms anymore, from any list"
 msgstr ""
 
 #. module: connector_netvisor
-#: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__to_check
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__to_check model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__to_check
 msgid ""
-"If this checkbox is ticked, it means that the user was not sure of all the "
-"related informations at the time of the creation of the move and that the "
-"move needs to be checked again."
+"If this checkbox is ticked, it means that the user was not sure of all the related information at the time of the creation of the move and that the move needs "
+"to be checked again."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__auto_post
-msgid ""
-"If this checkbox is ticked, this entry will be automatically posted at its "
-"date."
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__auto_post
+msgid "If this checkbox is ticked, this entry will be automatically posted at its date."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__restrict_mode_hash_table
-msgid ""
-"If ticked, the accounting entry or invoice receives a hash as soon as it is "
-"posted and cannot be modified anymore."
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__restrict_mode_hash_table
+msgid "If ticked, the accounting entry or invoice receives a hash as soon as it is posted and cannot be modified anymore."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__active
-msgid ""
-"If unchecked, it will allow you to hide the product without removing it."
+msgid "If unchecked, it will allow you to hide the product without removing it."
 msgstr ""
 
 #. module: connector_netvisor
@@ -1139,31 +1319,46 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model_terms:ir.ui.view,arch_db:connector_netvisor.view_netvisor_backend_form
+msgid "Import"
+msgstr ""
+
+#. module: connector_netvisor
+#: model_terms:ir.ui.view,arch_db:connector_netvisor.view_netvisor_backend_form
 msgid "Import customers"
 msgstr ""
 
 #. module: connector_netvisor
 #: model_terms:ir.ui.view,arch_db:connector_netvisor.view_netvisor_backend_form
 msgid ""
-"Import or update all customers from Netvisor.<br/>\n"
-"                            If customer doesn't exist, one will be created.\n"
-"                            If customer exists (business id or exact name match), it will be updated."
+"Import or update all customers from Netvisor.\n"
+"                                    <br/>\n"
+"                                    Matching is done with business code, email, exact name.\n"
+"                                    <br/>\n"
+"                                    You can configure the behaviour of this button below."
 msgstr ""
 
 #. module: connector_netvisor
 #: model_terms:ir.ui.view,arch_db:connector_netvisor.view_netvisor_backend_form
 msgid ""
-"Import or update all products from Netvisor.<br/>\n"
-"                            If product doesn't exist, one will be created.\n"
-"                            If product exists (internal code or exact name match), it will be updated."
+"Import or update all products from Netvisor.\n"
+"                                    <br/>\n"
+"                                    Matching is done by internal code or exact name match.\n"
+"                                    <br/>\n"
+"                                    You can configure the behaviour of this button below."
 msgstr ""
 
 #. module: connector_netvisor
 #: model_terms:ir.ui.view,arch_db:connector_netvisor.view_netvisor_backend_form
 msgid ""
-"Import or update all suppliers from Netvisor.<br/>\n"
-"                            If suppliers doesn't exist, one will be created.\n"
-"                            If suppliers exists (business id or exact name match), it will be updated."
+"Import or update all suppliers from Netvisor.\n"
+"                                    <br/>\n"
+"                                    If suppliers doesn't exist, one will be created.\n"
+"                                    If suppliers exists (business id or exact name match), it will be updated."
+msgstr ""
+
+#. module: connector_netvisor
+#: model_terms:ir.ui.view,arch_db:connector_netvisor.view_netvisor_backend_form
+msgid "Import payments"
 msgstr ""
 
 #. module: connector_netvisor
@@ -1180,18 +1375,19 @@ msgstr ""
 #: code:addons/connector_netvisor/models/netvisor_backend.py:0
 #, python-format
 msgid "Importing customers from Netvisor"
-msgstr ""
+msgstr "Tuodaan asiakkaita Netvisorista"
 
 #. module: connector_netvisor
 #: code:addons/connector_netvisor/models/netvisor_backend.py:0
 #, python-format
 msgid "Importing products from Netvisor"
-msgstr ""
+msgstr "Tuodaan tuotteita Netvisorista"
 
 #. module: connector_netvisor
-#: model_terms:ir.ui.view,arch_db:connector_netvisor.view_netvisor_backend_form
-msgid "Imports"
-msgstr ""
+#: code:addons/connector_netvisor/models/netvisor_backend.py:0
+#, python-format
+msgid "Importing suppliers from Netvisor"
+msgstr "Tuodaan tomittajia Netvisorista"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__standard_price
@@ -1204,11 +1400,13 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__inalterable_hash
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__inalterable_hash
 msgid "Inalterability Hash"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__secure_sequence_number
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__secure_sequence_number
 msgid "Inalteralbility No Gap Sequence #"
 msgstr ""
 
@@ -1224,23 +1422,22 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__invoice_incoterm_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__invoice_incoterm_id
 msgid "Incoterm"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__mobile_blacklisted
 msgid ""
-"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
-"distinguish which number is blacklisted             when there is both a "
-"mobile and phone field in a model."
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps distinguish which number is blacklisted             when there is both a mobile "
+"and phone field in a model."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__phone_blacklisted
 msgid ""
-"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
-"distinguish which number is blacklisted             when there is both a "
-"mobile and phone field in a model."
+"Indicates if a blacklisted sanitized phone number is a phone number. Helps distinguish which number is blacklisted             when there is both a mobile and "
+"phone field in a model."
 msgstr ""
 
 #. module: connector_netvisor
@@ -1260,9 +1457,8 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__invoice_incoterm_id
-msgid ""
-"International Commercial Terms are a series of predefined commercial terms "
-"used in international transactions."
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__invoice_incoterm_id
+msgid "International Commercial Terms are a series of predefined commercial terms used in international transactions."
 msgstr ""
 
 #. module: connector_netvisor
@@ -1282,48 +1478,70 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__type
-msgid ""
-"Invoice & Delivery addresses are used in sales orders. Private addresses are"
-" only visible by authorized users."
+msgid "Invoice & Delivery addresses are used in sales orders. Private addresses are only visible by authorized users."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__invoice_filter_type_domain
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__invoice_filter_type_domain
 msgid "Invoice Filter Type Domain"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__invoice_has_matching_suspense_amount
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__invoice_has_matching_suspense_amount
 msgid "Invoice Has Matching Suspense Amount"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__invoice_has_outstanding
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__invoice_has_outstanding
 msgid "Invoice Has Outstanding"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__invoice_outstanding_credits_debits_widget
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__invoice_outstanding_credits_debits_widget
 msgid "Invoice Outstanding Credits Debits Widget"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__invoice_partner_display_name
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__invoice_payments_widget
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__invoice_payments_widget
 msgid "Invoice Payments Widget"
 msgstr ""
 
 #. module: connector_netvisor
+#: code:addons/connector_netvisor/models/account_payment/importer.py:0
+#, python-format
+msgid "Invoice is already fully paid. Nothing to do"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__invoice_line_ids
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__invoice_line_ids
 msgid "Invoice lines"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_backend__print_channel_format
+msgid "Invoice print channel"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_backend__print_channel_format_type
+msgid "Invoice print channel type"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__invoice_date
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__invoice_date
 msgid "Invoice/Bill Date"
 msgstr ""
 
@@ -1333,14 +1551,49 @@ msgid "Invoices"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__reconciled_bill_ids
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__reconciled_invoice_ids
+msgid "Invoices whose journal items have been reconciled with these payments."
+msgstr ""
+
+#. module: connector_netvisor
+#: model_terms:ir.ui.view,arch_db:connector_netvisor.view_netvisor_backend_form
+msgid "Invoicing"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__invoice_policy
+msgid "Invoicing Policy"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__email_invoicing_address
+#: model:ir.model.fields,field_description:connector_netvisor.field_res_partner__email_invoicing_address
+#: model:ir.model.fields,field_description:connector_netvisor.field_res_users__email_invoicing_address
+msgid "Invoicing email"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__message_is_follower
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__message_is_follower
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__message_is_follower
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__message_is_follower
 msgid "Is Follower"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__is_internal_transfer
+msgid "Is Internal Transfer"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__is_matched
+msgid "Is Matched With a Bank Statement"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__is_move_sent
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__is_move_sent
 msgid "Is Move Sent"
 msgstr ""
 
@@ -1355,6 +1608,11 @@ msgid "Is Published"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__is_reconciled
+msgid "Is Reconciled"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__is_company
 msgid "Is a Company"
 msgstr ""
@@ -1366,6 +1624,7 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__is_move_sent
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__is_move_sent
 msgid "It indicates that the invoice/payment has been sent."
 msgstr ""
 
@@ -1388,32 +1647,32 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__journal_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__journal_id
 msgid "Journal"
 msgstr ""
 
 #. module: connector_netvisor
-#: model:ir.model,name:connector_netvisor.model_account_move
+#: model:ir.model,name:connector_netvisor.model_account_move model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__move_id
 msgid "Journal Entry"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__line_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__journal_item_count
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__line_ids
 msgid "Journal Items"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__property_account_income_id
-msgid ""
-"Keep this field empty to use the default value from the product category."
+msgid "Keep this field empty to use the default value from the product category."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__property_account_expense_id
 msgid ""
-"Keep this field empty to use the default value from the product category. If"
-" anglo-saxon accounting with automated valuation method is configured, the "
-"expense account on the product category will be used."
+"Keep this field empty to use the default value from the product category. If anglo-saxon accounting with automated valuation method is configured, the expense "
+"account on the product category will be used."
 msgstr ""
 
 #. module: connector_netvisor
@@ -1423,11 +1682,13 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_account_move____last_update
+#: model:ir.model.fields,field_description:connector_netvisor.field_account_payment____last_update
 #: model:ir.model.fields,field_description:connector_netvisor.field_account_tax____last_update
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_backend____last_update
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_binding____last_update
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice____last_update
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner____last_update
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment____last_update
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product____last_update
 #: model:ir.model.fields,field_description:connector_netvisor.field_product_product____last_update
 #: model:ir.model.fields,field_description:connector_netvisor.field_res_config_settings____last_update
@@ -1439,6 +1700,7 @@ msgstr "Viimeksi muokattu"
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_backend__write_uid
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__write_uid
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__write_uid
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__write_uid
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__write_uid
 msgid "Last Updated by"
 msgstr ""
@@ -1447,13 +1709,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_backend__write_date
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__write_date
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__write_date
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__write_date
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__write_date
 msgid "Last Updated on"
-msgstr ""
-
-#. module: connector_netvisor
-#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__lastname
-msgid "Last name"
 msgstr ""
 
 #. module: connector_netvisor
@@ -1465,6 +1723,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_binding__sync_date
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__sync_date
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__sync_date
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__sync_date
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__sync_date
 msgid "Last synchronization date"
 msgstr ""
@@ -1472,9 +1731,8 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__last_time_entries_checked
 msgid ""
-"Last time the invoices & payments matching was performed for this partner. "
-"It is set either if there's not at least an unreconciled debit and an "
-"unreconciled credit or if you click the \"Done\" button."
+"Last time the invoices & payments matching was performed for this partner. It is set either if there's not at least an unreconciled debit and an unreconciled "
+"credit or if you click the \"Done\" button."
 msgstr ""
 
 #. module: connector_netvisor
@@ -1489,14 +1747,38 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__restrict_mode_hash_table
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__restrict_mode_hash_table
 msgid "Lock Posted Entries with Hash"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__mass_mailing_contact_ids
+msgid "Mailing contacts"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__mass_mailing_contacts_count
+msgid "Mailing contacts number"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__message_main_attachment_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__message_main_attachment_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__message_main_attachment_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__message_main_attachment_id
 msgid "Main Attachment"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__payment_method_id
+msgid ""
+"Manual: Get paid by cash, check or any other method outside of Odoo.\n"
+"Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online "
+"(payment token).\n"
+"Check: Pay bill by check and print it from Odoo.\n"
+"Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are "
+"suggested to reconcile the transaction with the batch deposit.To enable batch deposit, module account_batch_payment must be installed.\n"
+"SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed "
 msgstr ""
 
 #. module: connector_netvisor
@@ -1505,6 +1787,36 @@ msgid ""
 "Manual: The accounting entries to value the inventory are not posted automatically.\n"
 "        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.\n"
 "        "
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__service_type
+msgid ""
+"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
+"Create a task and track hours: Create a task on the sales order validation and track the work hours."
+msgstr ""
+
+#. module: connector_netvisor
+#: code:addons/connector_netvisor/models/account_move/common.py:0
+#, python-format
+msgid "Mark invoice {} as paid in Netvisor"
+msgstr "Merkkaa lasku {} maksetuksi Netvisorissa"
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__mass_mailing_stats_ids
+msgid "Mass mailing stats"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__mass_mailing_stats_count
+msgid "Mass mailing stats number"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__medium_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__medium_id
+msgid "Medium"
 msgstr ""
 
 #. module: connector_netvisor
@@ -1538,6 +1850,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__message_has_error
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__message_has_error
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__message_has_error
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__message_has_error
 msgid "Message Delivery error"
 msgstr ""
@@ -1548,6 +1861,26 @@ msgid "Message for Invoice"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__purchase_warn_msg
+msgid "Message for Purchase Order"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__purchase_line_warn_msg
+msgid "Message for Purchase Order Line"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__sale_warn_msg
+msgid "Message for Sales Order"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__sale_line_warn_msg
+msgid "Message for Sales Order Line"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__picking_warn_msg
 msgid "Message for Stock Picking"
 msgstr ""
@@ -1555,6 +1888,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__message_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__message_ids
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__message_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__message_ids
 msgid "Messages"
 msgstr ""
@@ -1570,37 +1904,53 @@ msgid "Mobile"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__my_activity_date_deadline
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__my_activity_date_deadline
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__my_activity_date_deadline
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__name
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__name
 msgid "Name"
 msgstr ""
 
 #. module: connector_netvisor
-#: model:ir.ui.menu,name:connector_netvisor.menu_netvisor_root
-#: model_terms:ir.ui.view,arch_db:connector_netvisor.res_config_settings_view_form
-#: model_terms:ir.ui.view,arch_db:connector_netvisor.view_move_form
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__name_extension
+#: model:ir.model.fields,field_description:connector_netvisor.field_res_partner__name_extension
+#: model:ir.model.fields,field_description:connector_netvisor.field_res_users__name_extension
+msgid "Name extension"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields.selection,name:connector_netvisor.selection__netvisor_backend__print_channel_format_type__netvisor
+#: model:ir.ui.menu,name:connector_netvisor.menu_netvisor_root model_terms:ir.ui.view,arch_db:connector_netvisor.product_normal_form_view
+#: model_terms:ir.ui.view,arch_db:connector_netvisor.res_config_settings_view_form model_terms:ir.ui.view,arch_db:connector_netvisor.view_move_form
 #: model_terms:ir.ui.view,arch_db:connector_netvisor.view_partner_form
 msgid "Netvisor"
-msgstr ""
+msgstr "Netvisor"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_binding__backend_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__backend_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__backend_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__backend_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__backend_id
 #: model_terms:ir.ui.view,arch_db:connector_netvisor.view_netvisor_backend_tree
 msgid "Netvisor Backend"
-msgstr ""
+msgstr "Netvisor Backend"
 
 #. module: connector_netvisor
 #: model:ir.actions.act_window,name:connector_netvisor.action_netvisor_backend
 msgid "Netvisor Backends"
-msgstr ""
+msgstr "Netvisor Backends"
 
 #. module: connector_netvisor
 #: model:ir.model,name:connector_netvisor.model_netvisor_binding
 msgid "Netvisor Binding"
-msgstr ""
+msgstr "Netvisor Sidos"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_account_bank_statement_line__netvisor_bind_ids
@@ -1608,125 +1958,152 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_netvisor.field_account_payment__netvisor_bind_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__netvisor_bind_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__netvisor_bind_ids
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__netvisor_bind_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__netvisor_bind_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_product_product__netvisor_bind_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_res_partner__netvisor_bind_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_res_users__netvisor_bind_ids
 msgid "Netvisor Bindings"
-msgstr ""
+msgstr "Netvisor Sidokset"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_binding__external_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__external_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__external_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__external_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__external_id
 msgid "Netvisor ID"
-msgstr ""
+msgstr "Netvisor ID"
 
 #. module: connector_netvisor
 #: model:ir.model,name:connector_netvisor.model_netvisor_invoice
 msgid "Netvisor Invoice"
-msgstr ""
+msgstr "Netvisor Lasku"
 
 #. module: connector_netvisor
 #: model:ir.model,name:connector_netvisor.model_netvisor_partner
 msgid "Netvisor Partner"
-msgstr ""
+msgstr "Netvisor Kumppani"
+
+#. module: connector_netvisor
+#: model:ir.model,name:connector_netvisor.model_netvisor_payment
+msgid "Netvisor Payment"
+msgstr "Netvisor Maksu"
 
 #. module: connector_netvisor
 #: model:ir.model,name:connector_netvisor.model_netvisor_product
 msgid "Netvisor Product"
-msgstr ""
+msgstr "Netvisor Tuote"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_account_tax__netvisor_code
 msgid "Netvisor VAT code"
-msgstr ""
+msgstr "Netvisor verokoodi"
 
 #. module: connector_netvisor
 #: model:ir.ui.menu,name:connector_netvisor.menu_netvisor_backend
 msgid "Netvisor backends"
-msgstr ""
+msgstr "Netvisor backends"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_res_config_settings__module_connector_netvisor_analytic
 msgid "Netvisor dimensions"
-msgstr ""
+msgstr "Netvisor dimensiot"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_binding__external_id
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__external_id
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__external_id
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__external_id
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__external_id
 msgid "Netvisor record id"
-msgstr ""
+msgstr "Netvisor tietueen ID"
+
+#. module: connector_netvisor
+#: code:addons/connector_netvisor/models/account_move/exporter.py:0
+#, python-format
+msgid "Netvisor sending is disabled for this invoice"
+msgstr "Tämän laskun lähetys Netvisoriin on pois käytöstä"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_account_bank_statement_line__netvisor_status
 #: model:ir.model.fields,field_description:connector_netvisor.field_account_move__netvisor_status
 #: model:ir.model.fields,field_description:connector_netvisor.field_account_payment__netvisor_status
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__netvisor_status
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__netvisor_status
 msgid "Netvisor status"
-msgstr ""
+msgstr "Tila Netvisorissa"
+
+#. module: connector_netvisor
+#: model:ir.actions.server,name:connector_netvisor.ir_cron_netvisor_payments_import_ir_actions_server
+#: model:ir.cron,cron_name:connector_netvisor.ir_cron_netvisor_payments_import model:ir.cron,name:connector_netvisor.ir_cron_netvisor_payments_import
+msgid "Netvisor: Import payments"
+msgstr "Netvisor: tuo maksut"
+
+#. module: connector_netvisor
+#: model:ir.actions.server,name:connector_netvisor.ir_cron_netvisor_invoice_status_update_ir_actions_server
+#: model:ir.cron,cron_name:connector_netvisor.ir_cron_netvisor_invoice_status_update model:ir.cron,name:connector_netvisor.ir_cron_netvisor_invoice_status_update
+msgid "Netvisor: Update invoice status"
+msgstr "Netvisor: Päivitä laskun status"
 
 #. module: connector_netvisor
 #: code:addons/connector_netvisor/models/partner/common.py:0
 #, python-format
 msgid "Netvisor: export customer '{}'"
-msgstr ""
+msgstr "Netvisor: vie asiakas '{}'"
 
 #. module: connector_netvisor
-#: code:addons/connector_netvisor/models/product/common.py:0
-#: code:addons/connector_netvisor/models/product/common.py:0
+#: code:addons/connector_netvisor/models/product/binding.py:0 code:addons/connector_netvisor/models/product/common.py:0
 #, python-format
 msgid "Netvisor: export product '{}'"
-msgstr ""
+msgstr "Netvisor: vie tuote '{}'"
 
 #. module: connector_netvisor
 #: code:addons/connector_netvisor/models/netvisor_backend.py:0
 #, python-format
 msgid "Netvisor: export products for {}"
-msgstr ""
+msgstr "Netvisor: vie tuotteet yritykselle {}"
 
 #. module: connector_netvisor
-#: code:addons/connector_netvisor/models/partner/common.py:0
+#: code:addons/connector_netvisor/models/partner/binding.py:0
 #, python-format
 msgid "Netvisor: import customer '{}'"
-msgstr ""
+msgstr "Netvisor: tuo asiakas '{}'"
 
 #. module: connector_netvisor
 #: code:addons/connector_netvisor/models/netvisor_backend.py:0
 #, python-format
 msgid "Netvisor: import customers for {}"
-msgstr ""
+msgstr "Netvisor: tuo asiakkaat yritykselle {}"
 
 #. module: connector_netvisor
-#: code:addons/connector_netvisor/models/product/common.py:0
+#: code:addons/connector_netvisor/models/account_payment/binding.py:0
+#, python-format
+msgid "Netvisor: import payment for invoice '{}'"
+msgstr "Netvisor: tuo maksu laskulle '{}'"
+
+#. module: connector_netvisor
+#: code:addons/connector_netvisor/models/product/binding.py:0
 #, python-format
 msgid "Netvisor: import product '{}'"
-msgstr ""
+msgstr "Netvisor: tuo tuote '{}'"
 
 #. module: connector_netvisor
 #: code:addons/connector_netvisor/models/netvisor_backend.py:0
 #, python-format
 msgid "Netvisor: import products for {}"
-msgstr ""
+msgstr "Netvisor: tuo tuotteet yritykselle {}"
 
 #. module: connector_netvisor
-#: code:addons/connector_netvisor/models/account_move/common.py:0
+#: code:addons/connector_netvisor/models/netvisor_backend.py:0
 #, python-format
-msgid "Netvisor: send invoice '{}'"
-msgstr ""
-
-#. module: connector_netvisor
-#: code:addons/connector_netvisor/models/account_move/common.py:0
-#, python-format
-msgid "Netvisor: update invoice status for '{}'"
-msgstr ""
+msgid "Netvisor: import suppliers for {}"
+msgstr "Netvisor:  tuo toimittajat yritykselle {}"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__activity_date_deadline
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__activity_date_deadline
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__activity_date_deadline
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr ""
@@ -1734,6 +2111,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__activity_summary
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__activity_summary
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__activity_summary
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__activity_summary
 msgid "Next Activity Summary"
 msgstr ""
@@ -1741,6 +2119,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__activity_type_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__activity_type_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__activity_type_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__activity_type_id
 msgid "Next Activity Type"
 msgstr ""
@@ -1781,25 +2160,38 @@ msgid "Normalized Email"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__payment_token_id
+msgid "Note that tokens from acquirers set to only authorize transactions (instead of capturing the amount) are not available."
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__comment
 msgid "Notes"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__name
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__name
 msgid "Number"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__message_needaction_counter
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__message_needaction_counter
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__message_needaction_counter
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__message_needaction_counter
 msgid "Number of Actions"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__reminder_date_before_receipt
+msgid "Number of days to send reminder email before the promised receipt date"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__message_has_error_counter
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__message_has_error_counter
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__message_has_error_counter
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__message_has_error_counter
 msgid "Number of errors"
 msgstr ""
@@ -1812,6 +2204,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__message_needaction_counter
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__message_needaction_counter
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__message_needaction_counter
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__message_needaction_counter
 msgid "Number of messages which requires an action"
 msgstr ""
@@ -1819,6 +2212,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__message_has_error_counter
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__message_has_error_counter
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__message_has_error_counter
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr ""
@@ -1831,6 +2225,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__message_unread_counter
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__message_unread_counter
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__message_unread_counter
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__message_unread_counter
 msgid "Number of unread messages"
 msgstr ""
@@ -1838,16 +2233,29 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__odoo_id
 msgid "Odoo Partner"
-msgstr ""
+msgstr "Odoo kumppani"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__odoo_id
 msgid "Odoo Product"
-msgstr ""
+msgstr "Odoo tuote"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__old_contract_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__old_contract_id
 msgid "Old Contract"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__purchase_method
+msgid ""
+"On ordered quantities: Control bills based on ordered quantities.\n"
+"On received quantities: Control bills based on received quantities."
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__on_time_rate
+msgid "On-Time Delivery Rate"
 msgstr ""
 
 #. module: connector_netvisor
@@ -1866,18 +2274,32 @@ msgid "Opportunity"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__invoice_policy
+msgid ""
+"Ordered Quantity: Invoice quantities ordered by the customer.\n"
+"Delivered Quantity: Invoice quantities delivered to the customer."
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__invoice_origin
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__invoice_origin
 msgid "Origin"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__tax_cash_basis_move_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__tax_cash_basis_move_id
 msgid "Origin Tax Cash Basis Entry"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__outgoing_qty
 msgid "Outgoing"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__on_time_rate
+msgid "Over the past 12 months; the number of products received on time divided by the number of ordered products."
 msgstr ""
 
 #. module: connector_netvisor
@@ -1911,6 +2333,11 @@ msgid "Partner Key"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__partner_type
+msgid "Partner Type"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__same_vat_partner_id
 msgid "Partner with same Tax ID"
 msgstr ""
@@ -1927,32 +2354,68 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__payment_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__payment_id
 msgid "Payment"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__payment_method_id
+msgid "Payment Method"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__qr_code_method
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__qr_code_method
 msgid "Payment QR-code"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__payment_reference
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__payment_reference
 msgid "Payment Reference"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__payment_state
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__payment_state
 msgid "Payment Status"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__invoice_payment_term_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__invoice_payment_term_id
 msgid "Payment Terms"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__payment_token_ids
 msgid "Payment Tokens"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__payment_transaction_id
+msgid "Payment Transaction"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__payment_type
+msgid "Payment Type"
+msgstr ""
+
+#. module: connector_netvisor
+#: code:addons/connector_netvisor/models/account_payment/importer.py:0
+#, python-format
+msgid "Payment already imported. Nothing to do"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model,name:connector_netvisor.model_account_payment model_terms:ir.ui.view,arch_db:connector_netvisor.view_netvisor_backend_form
+msgid "Payments"
+msgstr "Maksut"
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_backend__payments_start_date
+msgid "Payments import start date"
 msgstr ""
 
 #. module: connector_netvisor
@@ -1972,12 +2435,6 @@ msgid "Please configure a Netvisor backend for company {}."
 msgstr ""
 
 #. module: connector_netvisor
-#: code:addons/connector_netvisor/models/account_move/exporter.py:0
-#, python-format
-msgid "Please define one tax for each invoice line"
-msgstr ""
-
-#. module: connector_netvisor
 #: code:addons/connector_netvisor/models/account_move/importer.py:0
 #, python-format
 msgid "Please send the invoice to Netvisor first"
@@ -1985,22 +2442,30 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__access_url
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__access_url
 msgid "Portal Access URL"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__auto_post
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__auto_post
 msgid "Post Automatically"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__posted_before
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__posted_before
 msgid "Posted Before"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__price
 msgid "Price"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__property_account_creditor_price_difference
+msgid "Price Difference Account"
 msgstr ""
 
 #. module: connector_netvisor
@@ -2015,18 +2480,25 @@ msgid "Pricelist"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__privacy_consent_count
+msgid "Privacy consent requests amount"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__privacy_consent_ids
+msgid "Privacy consents"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__purchase_requisition
+msgid "Procurement"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model,name:connector_netvisor.model_product_product
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__product_variant_id
 msgid "Product"
 msgstr "Tuote"
-
-#. module: connector_netvisor
-#: code:addons/connector_netvisor/models/account_move/exporter.py:0
-#, python-format
-msgid ""
-"Product '{}' is not found from Netvisor! Please export products to Netvisor "
-"before sending the invoice"
-msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__attribute_line_ids
@@ -2051,6 +2523,11 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__type
 msgid "Product Type"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields.selection,name:connector_netvisor.selection__netvisor_backend__environment__production
+msgid "Production"
 msgstr ""
 
 #. module: connector_netvisor
@@ -2085,6 +2562,33 @@ msgid "Purchase Description"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__purchase_line_ids
+msgid "Purchase Lines"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__purchase_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__purchase_warn
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__purchase_id
+msgid "Purchase Order"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__purchase_order_count
+msgid "Purchase Order Count"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__purchase_order_line_ids
+msgid "Purchase Order Line"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__purchase_line_warn
+msgid "Purchase Order Line Warning"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__uom_po_id
 msgid "Purchase Unit of Measure"
 msgstr ""
@@ -2092,6 +2596,11 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields.selection,name:connector_netvisor.selection__account_tax__netvisor_code__raos
 msgid "Purchase of construction service"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__purchased_product_qty
+msgid "Purchased"
 msgstr ""
 
 #. module: connector_netvisor
@@ -2107,6 +2616,16 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__putaway_rule_ids
 msgid "Putaway Rules"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__qr_code
+msgid "QR Code"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__qr_code
+msgid "QR-code report URL to use to generate the QR-code to scan with a banking app to perform this payment."
 msgstr ""
 
 #. module: connector_netvisor
@@ -2138,20 +2657,61 @@ msgid ""
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__visible_qty_configurator
+msgid "Quantity visible in configurator"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__expense_policy
+msgid "Re-Invoice Expenses"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__visible_expense_policy
+msgid "Re-Invoice Policy visible"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__receipt_reminder_email
+msgid "Receipt Reminder"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__partner_bank_id
 msgid "Recipient Bank"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__partner_bank_id
+msgid "Recipient Bank Account"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__reconciled_bill_ids
+msgid "Reconciled Bills"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__reconciled_invoice_ids
+msgid "Reconciled Invoices"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__reconciled_statement_ids
+msgid "Reconciled Statements"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__ref
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__ref
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__ref
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__code
 msgid "Reference"
 msgstr ""
 
 #. module: connector_netvisor
-#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__refund_invoice_ids
-msgid "Refund Invoices"
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__payment_reference
+msgid "Reference of the document used to issue this payment. Eg. check number, file name, etc."
 msgstr ""
 
 #. module: connector_netvisor
@@ -2162,6 +2722,11 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__parent_id
 msgid "Related Company"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__related_partner_ids
+msgid "Related Partner"
 msgstr ""
 
 #. module: connector_netvisor
@@ -2180,6 +2745,11 @@ msgid "Reordering Rules"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__require_partner_bank_account
+msgid "Require Partner Bank Account"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__responsible_id
 msgid "Responsible"
 msgstr ""
@@ -2187,6 +2757,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__activity_user_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__activity_user_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__activity_user_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__activity_user_id
 msgid "Responsible User"
 msgstr ""
@@ -2198,11 +2769,13 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__reversal_move_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__reversal_move_id
 msgid "Reversal Move"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__reversed_entry_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__reversed_entry_id
 msgid "Reversal of"
 msgstr ""
 
@@ -2229,6 +2802,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__message_has_sms_error
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__message_has_sms_error
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__message_has_sms_error
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr ""
@@ -2236,6 +2810,11 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__sale_contract_count
 msgid "Sale Contracts"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__sale_order_count
+msgid "Sale Order Count"
 msgstr ""
 
 #. module: connector_netvisor
@@ -2249,13 +2828,35 @@ msgid "Sales Description"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__sale_order_ids
+msgid "Sales Order"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__sale_line_warn
+msgid "Sales Order Line"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__list_price
 msgid "Sales Price"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__team_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__team_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__team_id
 msgid "Sales Team"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__sale_warn
+msgid "Sales Warnings"
+msgstr ""
+
+#. module: connector_netvisor
+#: model_terms:ir.ui.view,arch_db:connector_netvisor.view_netvisor_backend_form
+msgid "Sales invoice"
 msgstr ""
 
 #. module: connector_netvisor
@@ -2266,6 +2867,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__invoice_user_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__user_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__invoice_user_id
 msgid "Salesperson"
 msgstr ""
 
@@ -2275,7 +2877,43 @@ msgid "Sanitized Number"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__payment_token_id
+msgid "Saved payment token"
+msgstr ""
+
+#. module: connector_netvisor
+#: code:addons/connector_netvisor/models/partner/importer.py:0
+#, python-format
+msgid "Search for existing partner by business and street"
+msgstr ""
+
+#. module: connector_netvisor
+#: code:addons/connector_netvisor/models/partner/importer.py:0
+#, python-format
+msgid "Search for existing partner by business id"
+msgstr ""
+
+#. module: connector_netvisor
+#: code:addons/connector_netvisor/models/partner/importer.py:0
+#, python-format
+msgid "Search for existing partner by customer ref"
+msgstr ""
+
+#. module: connector_netvisor
+#: code:addons/connector_netvisor/models/partner/importer.py:0
+#, python-format
+msgid "Search for existing partner by email"
+msgstr ""
+
+#. module: connector_netvisor
+#: code:addons/connector_netvisor/models/partner/importer.py:0
+#, python-format
+msgid "Search for existing partner by name and street"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__access_token
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__access_token
 msgid "Security Token"
 msgstr ""
 
@@ -2292,10 +2930,13 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__invoice_warn
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__picking_warn
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__purchase_warn
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__sale_warn
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__purchase_line_warn
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__sale_line_warn
 msgid ""
-"Selecting the \"Warning\" option will notify user with the message, "
-"Selecting \"Blocking Message\" will throw an exception with the message and "
-"block the flow. The Message has to be written in the next field."
+"Selecting the \"Warning\" option will notify user with the message, Selecting \"Blocking Message\" will throw an exception with the message and block the "
+"flow. The Message has to be written in the next field."
 msgstr ""
 
 #. module: connector_netvisor
@@ -2305,9 +2946,23 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model_terms:ir.ui.view,arch_db:connector_netvisor.view_move_form
+msgid "Send status to Netvisor"
+msgstr ""
+
+#. module: connector_netvisor
+#: model_terms:ir.ui.view,arch_db:connector_netvisor.product_normal_form_view model_terms:ir.ui.view,arch_db:connector_netvisor.view_move_form
 #: model_terms:ir.ui.view,arch_db:connector_netvisor.view_partner_form
 msgid "Send to Netvisor"
-msgstr ""
+msgstr "Lähetä Netvisoriin"
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_account_bank_statement_line__netvisor_send
+#: model:ir.model.fields,field_description:connector_netvisor.field_account_move__netvisor_send
+#: model:ir.model.fields,field_description:connector_netvisor.field_account_payment__netvisor_send
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__netvisor_send
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__netvisor_send
+msgid "Send to netvisor"
+msgstr "Lähetä Netvisoriin"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__seo_name
@@ -2321,17 +2976,29 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__sequence_number
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__sequence_number
 msgid "Sequence Number"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__sequence_prefix
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__sequence_prefix
 msgid "Sequence Prefix"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_backend__auto_open_refunds
+msgid "Set refunds as sent"
 msgstr ""
 
 #. module: connector_netvisor
 #: model_terms:ir.ui.view,arch_db:connector_netvisor.view_netvisor_backend_form
 msgid "Setting"
+msgstr ""
+
+#. module: connector_netvisor
+#: model_terms:ir.ui.view,arch_db:connector_netvisor.view_netvisor_backend_form
+msgid "Settings"
 msgstr ""
 
 #. module: connector_netvisor
@@ -2341,11 +3008,18 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__show_name_warning
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__show_name_warning
 msgid "Show Name Warning"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__show_partner_bank_account
+msgid "Show Partner Bank Account"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__show_reset_to_draft_button
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__show_reset_to_draft_button
 msgid "Show Reset To Draft Button"
 msgstr ""
 
@@ -2375,14 +3049,19 @@ msgid "Signup URL"
 msgstr ""
 
 #. module: connector_netvisor
-#: code:addons/connector_netvisor/models/account_move/exporter.py:0
-#, python-format
-msgid ""
-"Something went wrong when exporting invoice. Please see log for more details"
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__sales_count
+msgid "Sold"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__source_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__source_id
+msgid "Source"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__invoice_source_email
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__invoice_source_email
 msgid "Source Email"
 msgstr ""
 
@@ -2396,23 +3075,36 @@ msgid ""
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_backend__payments_start_date
+msgid "Starting date for payments import. Will be automatically updated after fetching payments"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__state_id
 msgid "State"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__statement_line_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__statement_line_id
 msgid "Statement Line"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__reconciled_statement_ids
+msgid "Statements matched to this payment"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__state
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__state
 msgid "Status"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__activity_state
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__activity_state
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__activity_state
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__activity_state
 msgid ""
 "Status based on activities\n"
@@ -2423,6 +3115,7 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__stock_move_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__stock_move_id
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__stock_move_ids
 msgid "Stock Move"
 msgstr ""
@@ -2439,6 +3132,7 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__stock_valuation_layer_ids
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__stock_valuation_layer_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__stock_valuation_layer_ids
 msgid "Stock Valuation Layer"
 msgstr ""
@@ -2455,12 +3149,19 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__string_to_hash
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__string_to_hash
 msgid "String To Hash"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__suitable_journal_ids
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__suitable_journal_ids
 msgid "Suitable Journal"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__property_purchase_currency_id
+msgid "Supplier Currency"
 msgstr ""
 
 #. module: connector_netvisor
@@ -2484,18 +3185,14 @@ msgid "Tags"
 msgstr ""
 
 #. module: connector_netvisor
-#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__task_ids
-msgid "Tasks"
-msgstr ""
-
-#. module: connector_netvisor
-#: model:ir.model,name:connector_netvisor.model_account_tax
-#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__amount_tax
+#: model:ir.model,name:connector_netvisor.model_account_tax model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__amount_tax
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__amount_tax
 msgid "Tax"
 msgstr "Vero"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__tax_cash_basis_rec_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__tax_cash_basis_rec_id
 msgid "Tax Cash Basis Entry of"
 msgstr ""
 
@@ -2506,16 +3203,19 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__tax_lock_date_message
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__tax_lock_date_message
 msgid "Tax Lock Date Message"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__amount_tax_signed
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__amount_tax_signed
 msgid "Tax Signed"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__amount_by_group
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__amount_by_group
 msgid "Tax amount by group"
 msgstr ""
 
@@ -2526,61 +3226,90 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__posted_before
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__posted_before
 msgid "Technical field for knowing if the move has been posted before"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__is_matched
+msgid "Technical field indicating if the payment has been matched with a statement line."
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__is_reconciled
+msgid "Technical field indicating if the payment is already reconciled."
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__edi_web_services_to_process
-msgid ""
-"Technical field to display the documents that will be processed by the CRON"
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__edi_web_services_to_process
+msgid "Technical field to display the documents that will be processed by the CRON"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__bank_partner_id
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__bank_partner_id
 msgid "Technical field to get the domain on the bank"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__payment_method_code
+msgid "Technical field used to adapt the interface to the payment type selected."
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__tax_lock_date_message
-msgid ""
-"Technical field used to display a message when the invoice's accounting date"
-" is prior of the tax lock date."
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__tax_lock_date_message
+msgid "Technical field used to display a message when the invoice's accounting date is prior of the tax lock date."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__invoice_has_matching_suspense_amount
-msgid ""
-"Technical field used to display an alert on invoices if there is at least a "
-"matching amount in any supsense account."
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__invoice_has_matching_suspense_amount
+msgid "Technical field used to display an alert on invoices if there is at least a matching amount in any supsense account."
 msgstr ""
 
 #. module: connector_netvisor
-#: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__user_id
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__user_id model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__user_id
 msgid "Technical field used to fit the generic behavior in mail templates."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__invoice_filter_type_domain
-msgid ""
-"Technical field used to have a dynamic domain on journal / taxes in the form"
-" view."
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__invoice_filter_type_domain
+msgid "Technical field used to have a dynamic domain on journal / taxes in the form view."
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__hide_payment_method
+msgid "Technical field used to hide the payment method if the selected journal has only one available which is 'manual'"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__tax_cash_basis_rec_id
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__tax_cash_basis_rec_id
 msgid ""
-"Technical field used to keep track of the tax cash basis reconciliation. "
-"This is needed when cancelling the source: it will post the inverse journal "
-"entry to cancel that part too."
+"Technical field used to keep track of the tax cash basis reconciliation. This is needed when cancelling the source: it will post the inverse journal entry to "
+"cancel that part too."
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__show_partner_bank_account
+msgid "Technical field used to know whether the field `partner_bank_id` needs to be displayed or not in the payments form views"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__require_partner_bank_account
+msgid "Technical field used to know whether the field `partner_bank_id` needs to be required or not in the payments form views"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__pricelist_id
-msgid ""
-"Technical field. Used for searching on pricelists, not stored in database."
+msgid "Technical field. Used for searching on pricelists, not stored in database."
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__purchase_order_line_ids
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__stock_move_ids
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__stock_quant_ids
 msgid "Technical: used to compute quantities."
@@ -2588,7 +3317,13 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__narration
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__narration
 msgid "Terms and Conditions"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields.selection,name:connector_netvisor.selection__netvisor_backend__environment__test
+msgid "Test"
 msgstr ""
 
 #. module: connector_netvisor
@@ -2603,6 +3338,7 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__country_code
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__country_code
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
@@ -2610,25 +3346,24 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__vat
-msgid ""
-"The Tax Identification Number. Complete it if the contact is subjected to "
-"government taxes. Used in some legal statements."
+msgid "The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__edi_state
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__edi_state
 msgid "The aggregated state of all the EDIs of this move"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__invoice_origin
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__invoice_origin
 msgid "The document(s) that generated the invoice."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__property_account_position_id
-msgid ""
-"The fiscal position determines the taxes/accounts used for this contact."
+msgid "The fiscal position determines the taxes/accounts used for this contact."
 msgstr ""
 
 #. module: connector_netvisor
@@ -2643,21 +3378,23 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__tax_cash_basis_move_id
-msgid ""
-"The journal entry from which this tax cash basis journal entry has been "
-"created."
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__tax_cash_basis_move_id
+msgid "The journal entry from which this tax cash basis journal entry has been created."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__has_unreconciled_entries
-msgid ""
-"The partner has at least one unreconciled debit and credit since last time "
-"the invoices & payments matching was performed."
+msgid "The partner has at least one unreconciled debit and credit since last time the invoices & payments matching was performed."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__payment_reference
 msgid "The payment reference to set on journal items."
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__currency_id
+msgid "The payment's currency."
 msgstr ""
 
 #. module: connector_netvisor
@@ -2667,42 +3404,62 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__lst_price
-msgid ""
-"The sale price is managed from the product template. Click on the 'Configure"
-" Variants' button to set the extra attribute prices."
+msgid "The sale price is managed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__property_stock_customer
-msgid ""
-"The stock location used as destination when sending goods to this contact."
+msgid "The stock location used as destination when sending goods to this contact."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__property_stock_supplier
+msgid "The stock location used as source when receiving goods from this contact."
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__property_account_creditor_price_difference
 msgid ""
-"The stock location used as source when receiving goods from this contact."
+"This account is used in automated inventory valuation to record the price difference between a purchase order and its related vendor bill when validating this "
+"vendor bill."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__property_account_payable_id
-msgid ""
-"This account will be used instead of the default one as the payable account "
-"for the current partner"
+msgid "This account will be used instead of the default one as the payable account for the current partner"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__property_account_receivable_id
-msgid ""
-"This account will be used instead of the default one as the receivable "
-"account for the current partner"
+msgid "This account will be used instead of the default one as the receivable account for the current partner"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__property_purchase_currency_id
+msgid "This currency will be used, instead of the default one, for purchases from the current partner"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__email_normalized
-msgid ""
-"This field is used to search on email address as the primary email field can"
-" contain more than strictly an email address."
+msgid "This field is used to search on email address as the primary email field can contain more than strictly an email address."
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__campaign_id
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__campaign_id
+msgid "This is a name that helps you keep track of your different campaign efforts, e.g. Fall_Drive, Christmas_Special"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__medium_id
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__medium_id
+msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__source_id
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__source_id
+msgid "This is the source of the link, e.g. Search Engine, another domain, or name of email list"
 msgstr ""
 
 #. module: connector_netvisor
@@ -2712,44 +3469,32 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__property_supplier_payment_term_id
-msgid ""
-"This payment term will be used instead of the default one for purchase "
-"orders and vendor bills"
+msgid "This payment term will be used instead of the default one for purchase orders and vendor bills"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__property_payment_term_id
-msgid ""
-"This payment term will be used instead of the default one for sales orders "
-"and customer invoices"
+msgid "This payment term will be used instead of the default one for sales orders and customer invoices"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__property_product_pricelist
-msgid ""
-"This pricelist will be used, instead of the default one, for sales to the "
-"current partner"
+msgid "This pricelist will be used, instead of the default one, for sales to the current partner"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__property_stock_production
-msgid ""
-"This stock location will be used, instead of the default one, as the source "
-"location for stock moves generated by manufacturing orders."
+msgid "This stock location will be used, instead of the default one, as the source location for stock moves generated by manufacturing orders."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__property_stock_inventory
-msgid ""
-"This stock location will be used, instead of the default one, as the source "
-"location for stock moves generated when you do an inventory."
+msgid "This stock location will be used, instead of the default one, as the source location for stock moves generated when you do an inventory."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__responsible_id
-msgid ""
-"This user will be responsible of the next activities related to logistic "
-"operations for this product."
+msgid "This user will be responsible of the next activities related to logistic operations for this product."
 msgstr ""
 
 #. module: connector_netvisor
@@ -2769,11 +3514,13 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__to_check
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__to_check
 msgid "To Check"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__amount_total
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__amount_total
 msgid "Total"
 msgstr ""
 
@@ -2794,6 +3541,7 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__amount_total_signed
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__amount_total_signed
 msgid "Total Signed"
 msgstr ""
 
@@ -2808,38 +3556,54 @@ msgid "Total amount you have to pay to this vendor."
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__service_type
+msgid "Track Service"
+msgstr ""
+
+#. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__tracking
 msgid "Tracking"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__transaction_ids
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__transaction_ids
 msgid "Transactions"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__move_type
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__move_type
 msgid "Type"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__type_name
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__type_name
 msgid "Type Name"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__qr_code_method
-msgid ""
-"Type of QR-code to be generated for the payment of this invoice, when "
-"printing it. If left blank, the first available and usable method will be "
-"used."
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__qr_code_method
+msgid "Type of QR-code to be generated for the payment of this invoice, when printing it. If left blank, the first available and usable method will be used."
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__activity_exception_decoration
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__activity_exception_decoration
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__activity_exception_decoration
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__activity_exception_decoration
 msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_account_bank_statement_line__netvisor_send
+#: model:ir.model.fields,help:connector_netvisor.field_account_move__netvisor_send
+#: model:ir.model.fields,help:connector_netvisor.field_account_payment__netvisor_send
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__netvisor_send
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__netvisor_send
+msgid "Uncheck this to skip sending the invoice to Netvisor on confirm"
 msgstr ""
 
 #. module: connector_netvisor
@@ -2855,6 +3619,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__message_unread
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__message_unread
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__message_unread
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__message_unread
 msgid "Unread Messages"
 msgstr ""
@@ -2862,6 +3627,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__message_unread_counter
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__message_unread_counter
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__message_unread_counter
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr ""
@@ -2873,17 +3639,24 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__amount_untaxed
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__amount_untaxed
 msgid "Untaxed Amount"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__amount_untaxed_signed
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__amount_untaxed_signed
 msgid "Untaxed Amount Signed"
 msgstr ""
 
 #. module: connector_netvisor
-#: model_terms:ir.ui.view,arch_db:connector_netvisor.view_move_form
-msgid "Update status"
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_backend__customer_import_update
+msgid "Update existing customers on import"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_backend__product_import_update
+msgid "Update existing products on import"
 msgstr ""
 
 #. module: connector_netvisor
@@ -2892,13 +3665,11 @@ msgid "Update status from Netvisor"
 msgstr ""
 
 #. module: connector_netvisor
-#: code:addons/connector_netvisor/models/account_move/exporter.py:0
-#, python-format
-msgid "Updated invoice '{}'"
+#: model_terms:ir.ui.view,arch_db:connector_netvisor.view_move_form
+msgid "Update status to Netvisor"
 msgstr ""
 
 #. module: connector_netvisor
-#: code:addons/connector_netvisor/models/partner/importer.py:0
 #: code:addons/connector_netvisor/models/partner/importer.py:0
 #, python-format
 msgid "Updated values for partner '{}'"
@@ -2906,9 +3677,14 @@ msgstr ""
 
 #. module: connector_netvisor
 #: code:addons/connector_netvisor/models/product/importer.py:0
-#: code:addons/connector_netvisor/models/product/importer.py:0
 #, python-format
 msgid "Updated values for product '{}'"
+msgstr ""
+
+#. module: connector_netvisor
+#: code:addons/connector_netvisor/models/netvisor_backend.py:0
+#, python-format
+msgid "Updating invoice status from Netvisor"
 msgstr ""
 
 #. module: connector_netvisor
@@ -2923,13 +3699,12 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_res_config_settings__module_connector_netvisor_analytic
-msgid ""
-"Use dimensions (analytic tags) with Netvisor integration. This will install "
-"connector_netvisor_analytic"
+msgid "Use dimensions (analytic tags) with Netvisor integration. This will install connector_netvisor_analytic"
 msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__user_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__user_id
 msgid "User"
 msgstr ""
 
@@ -2951,6 +3726,11 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__value_svl
 msgid "Value Svl"
+msgstr ""
+
+#. module: connector_netvisor
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__variant_company_id
+msgid "Variant Company"
 msgstr ""
 
 #. module: connector_netvisor
@@ -2990,6 +3770,7 @@ msgstr ""
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__invoice_vendor_bill_id
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__invoice_vendor_bill_id
 msgid "Vendor Bill"
 msgstr ""
 
@@ -3051,6 +3832,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__website_message_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__website_message_ids
+#: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__website_message_ids
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__website_message_ids
 msgid "Website Messages"
 msgstr ""
@@ -3073,6 +3855,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_invoice__website_message_ids
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__website_message_ids
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_payment__website_message_ids
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_product__website_message_ids
 msgid "Website communication history"
 msgstr ""
@@ -3108,6 +3891,26 @@ msgid "Weight unit of measure label"
 msgstr ""
 
 #. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_backend__customer_import_create
+msgid "When importing customer that doesn't exist in Odoo, create a new partner"
+msgstr "Kun tuodaan asiakasta joka ei ole olemassa Odoossa, luo uusi"
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_backend__customer_import_update
+msgid "When importing customer that exists in Odoo, update partner values"
+msgstr "Kun tuodaan asiakasta joka on olemassa Odoossa, päivitä tiedot"
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_backend__product_import_create
+msgid "When importing products that doesn't exist in Odoo, create a new products"
+msgstr "Kun tuodaan tuotetta joka ei ole olemassa Odoossa, luo uusi"
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_backend__product_import_update
+msgid "When importing products that exists in Odoo, update product values"
+msgstr "Kun tuodaan tuotetta joka on olemassa Odoossa, päivitä tiedot"
+
+#. module: connector_netvisor
 #: model:ir.model.fields,help:connector_netvisor.field_netvisor_partner__tz
 msgid ""
 "When printing documents and exporting/importing data, time values are computed according to this timezone.\n"
@@ -3116,10 +3919,19 @@ msgid ""
 msgstr ""
 
 #. module: connector_netvisor
-#: model_terms:ir.ui.view,arch_db:connector_netvisor.view_netvisor_backend_form
-msgid ""
-"You can initiate importing records here.\n"
-"                          <br/>Please be aware that this can overwrite information in Odoo."
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_backend__auto_open_refunds
+msgid "When sending a refund invoice, mark it as sent (open)"
+msgstr "Lähettäessä hyvitystä, merkkaa se lähetetyksi (avoimeksi)"
+
+#. module: connector_netvisor
+#: model:ir.model.fields,help:connector_netvisor.field_netvisor_backend__print_channel_format
+msgid "You can set a custom invoice channel here (invoice template). Use '1' for default template"
+msgstr ""
+
+#. module: connector_netvisor
+#: code:addons/connector_netvisor/models/account_move/exporter.py:0
+#, python-format
+msgid "Zero sum invoice. Skip sending"
 msgstr ""
 
 #. module: connector_netvisor
@@ -3130,4 +3942,4 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__einvoice_operator_id
 msgid "eInvoice Operator"
-msgstr ""
+msgstr "Verkkolaskuoperaattori"

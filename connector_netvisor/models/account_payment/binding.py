@@ -37,31 +37,37 @@ class NetvisorPayment(models.Model):
         backend = self.get_netvisor_backend(company)
         client = backend.authenticate()
         records = client.sales_payments.list(
-            params={"begindate": backend.payments_start_date.isoformat()}
+            params={
+                "begindate": backend.payments_start_date.isoformat(),
+                "limitlinkedpayments": 1,
+                "limitbytype": "excludecreditloss",
+            }
         )
 
         if backend.company_id:
             self = self.with_context(company_id=backend.company_id.id)
 
-        for record in records:
-            job_desc = _(
-                "Netvisor: import payment for invoice '{}'".format(
-                    record.get("invoice_number")
+        if records:
+            for record in records:
+                job_desc = _(
+                    "Netvisor: import payment for invoice '{}'".format(
+                        record.get("invoice_number")
+                    )
                 )
-            )
 
-            # Convert decimals to floats. Generally this isn't a great idea,
-            # but json.dumps() can't handle Decimals
+                # Convert decimals to floats. Generally this isn't a great idea,
+                # but json.dumps() can't handle Decimals
 
-            for k, v in record.items():
-                if isinstance(record[k], Decimal):
-                    record[k] = float(v)
+                for k, v in record.items():
+                    if isinstance(record[k], Decimal):
+                        record[k] = float(v)
 
-            self.with_delay(description=job_desc).netvisor_import_payment(
-                record, backend.company_id
-            )
+                self.with_delay(description=job_desc).netvisor_import_payment(
+                    record, backend.company_id
+                )
 
         backend.payments_start_date = fields.Datetime.now()
+        return _(f"{len(records)} payment import jobs done")
 
     def netvisor_import_payment(self, record, company=False):
         """

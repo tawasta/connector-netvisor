@@ -47,7 +47,11 @@ class NetvisorPayment(models.Model):
         if backend.company_id:
             self = self.with_context(company_id=backend.company_id.id)
 
+        count = 0
+
         if records:
+            count = len(records)
+
             for record in records:
                 job_desc = _(
                     "Netvisor: import payment for invoice '{}'".format(
@@ -67,7 +71,7 @@ class NetvisorPayment(models.Model):
                 )
 
         backend.payments_start_date = fields.Datetime.now()
-        return _(f"{len(records)} payment import jobs done")
+        return _(f"{count} payment import jobs done")
 
     def netvisor_import_payment(self, record, company=False):
         """

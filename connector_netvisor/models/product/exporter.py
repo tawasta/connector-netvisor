@@ -21,6 +21,9 @@ class NetvisorProductExportMapper(Component):
         :param record: Product record
         :return:
         """
+        # Force record company for property fields
+        if record.company_id:
+            record = record.with_company(record.company_id.id)
         values = self.map_record(record).values()
         client = backend.authenticate()
         binding_model = self.env["netvisor.product"]

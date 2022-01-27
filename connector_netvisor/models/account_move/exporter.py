@@ -33,6 +33,10 @@ class NetvisorInvoiceExportMapper(Component):
         if record.amount_total_signed == 0:
             return _("Zero sum invoice. Skip sending")
 
+        # Force record company for property fields
+        if record.company_id:
+            record = record.with_company(record.company_id.id)
+
         if record.reversed_entry_id and backend.auto_open_refunds:
             # Mark the to-be-created refund as open immediately
             record.netvisor_status = "open"

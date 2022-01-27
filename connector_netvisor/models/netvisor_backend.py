@@ -293,9 +293,11 @@ class NetvisorBackend(models.Model):
         Import all new payments from Netvisor
         """
 
-        netvisor_model = self.env["netvisor.payment"].sudo()
+        netvisor_model = self.env["netvisor.payment"]
 
         job_desc = _("Import payments from Netvisor")
         _logger.info(job_desc)
 
-        netvisor_model.with_delay(description=job_desc).netvisor_import_payments()
+        netvisor_model.with_delay(description=job_desc).netvisor_import_payments(
+            self.company_id.id
+        )

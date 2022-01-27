@@ -29,23 +29,23 @@ class NetvisorPayment(models.Model):
         ),
     ]
 
-    def netvisor_import_payments(self, company=False):
+    def netvisor_import_payments(self, company_id=False):
         """
         Import all payments from Netvisor
         :return:
         """
-        backend = self.get_netvisor_backend(company)
+        backend = self.get_netvisor_backend(company_id)
         client = backend.authenticate()
-        records = client.sales_payments.list(
-            params={
-                "begindate": backend.payments_start_date.isoformat(),
-                "limitlinkedpayments": 1,
-                "limitbytype": "excludecreditloss",
-            }
-        )
 
+        params = {
+            "begindate": backend.payments_start_date.isoformat(),
+            "limitlinkedpayments": 1,
+            "limitbytype": "excludecreditloss",
+        }
+
+        records = client.sales_payments.list(params=params)
         if backend.company_id:
-            self = self.with_context(company_id=backend.company_id.id)
+            self = self.with_company(backend.company_id.id)
 
         count = 0
 
@@ -73,13 +73,13 @@ class NetvisorPayment(models.Model):
         backend.payments_start_date = fields.Datetime.now()
         return _(f"{count} payment import jobs done")
 
-    def netvisor_import_payment(self, record, company=False):
+    def netvisor_import_payment(self, record, company_id=False):
         """
         Import a payment from Netvisor
         :param netvisor_key: Netvisor external ID
         :return:
         """
-        backend = self.get_netvisor_backend(company)
+        backend = self.get_netvisor_backend(company_id)
 
         with backend.work_on(self._name) as work:
             importer = work.component(usage="import.mapper")

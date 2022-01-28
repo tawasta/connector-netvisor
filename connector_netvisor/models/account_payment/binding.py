@@ -38,7 +38,7 @@ class NetvisorPayment(models.Model):
         client = backend.authenticate()
 
         params = {
-            "begindate": backend.payments_start_date.isoformat(),
+            "lastmodifiedstart": backend.payments_start_date.isoformat(),
             "limitlinkedpayments": 1,
             "limitbytype": "excludecreditloss",
         }

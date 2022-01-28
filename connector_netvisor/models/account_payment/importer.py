@@ -64,6 +64,9 @@ class NetvisorPaymentImportMapper(Component):
         if invoice.payment_state == "paid":
             return _("Invoice is already fully paid. Nothing to do")
 
+        if invoice.payment_state == "reversed":
+            return _("Invoice is reversed. Nothing to do")
+
         # Payment register has slightly different field names
         # Let's copy the dict to leave original account.payment dict intact
         payment_register_values = payment_values.copy()

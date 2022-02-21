@@ -41,6 +41,16 @@ class AccountMove(models.Model):
         compute="_compute_attachment_ids",
     )
 
+    @api.depends("posted_before", "state", "journal_id", "date")
+    def _compute_name(self):
+        for record in self:
+            if record.is_sale_document and record.amount_total_signed == 0:
+                # Don't set invoice numbers for zero sum invoices.
+                # They can't be sent to Netvisor and this would mess up the sequencing
+                record.name = "/"
+            else:
+                super(AccountMove, record)._compute_name()
+
     def _compute_attachment_ids(self):
         ir_attachment = self.env["ir.attachment"]
         for record in self:

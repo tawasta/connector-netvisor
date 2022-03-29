@@ -10,7 +10,7 @@ class Product(models.Model):
         string="Netvisor Bindings",
     )
 
-    def action_netvisor_export_record(self):
+    def action_netvisor_export_record(self, use_queue=True):
         """
         Export product(s) to Netvisor
         :return:
@@ -22,10 +22,17 @@ class Product(models.Model):
                     company_id=record.company_id.id
                 )
 
-            job_desc = _("Netvisor: export product '{}'".format(record.display_name))
-            netvisor_model.with_delay(description=job_desc).netvisor_export_product(
-                record
-            )
+            if use_queue:
+                # Queued sending
+                job_desc = _(
+                    "Netvisor: export product '{}'".format(record.display_name)
+                )
+                netvisor_model.with_delay(description=job_desc).netvisor_export_product(
+                    record
+                )
+            else:
+                # Immediate sending
+                netvisor_model.netvisor_export_product(record)
 
     def write(self, values):
         """

@@ -130,7 +130,7 @@ class AccountMove(models.Model):
         """
         netvisor_model = self.env["netvisor.invoice"]
 
-        if len(self) == 1:
+        if len(self) == 1 and not self.netvisor_delayed_send:
             netvisor_model.netvisor_import_status(self)
         else:
             for record in self:
@@ -149,7 +149,7 @@ class AccountMove(models.Model):
         """
         netvisor_model = self.env["netvisor.invoice"]
 
-        if len(self) == 1:
+        if len(self) == 1 and not self.netvisor_delayed_send:
             netvisor_model.netvisor_export_status(self)
         else:
             for record in self:

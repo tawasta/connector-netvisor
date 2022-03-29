@@ -13,7 +13,7 @@ class Partner(models.Model):
         string="Netvisor Bindings",
     )
 
-    def action_netvisor_export_record(self):
+    def action_netvisor_export_record(self, use_queue=True):
         """
         Export partner to Netvisor
         :return:
@@ -25,10 +25,17 @@ class Partner(models.Model):
                     company_id=record.company_id.id
                 )
 
-            job_desc = _("Netvisor: export customer '{}'".format(record.display_name))
-            netvisor_model.with_delay(description=job_desc).netvisor_export_customer(
-                record
-            )
+            if use_queue:
+                # Queued sending
+                job_desc = _(
+                    "Netvisor: export customer '{}'".format(record.display_name)
+                )
+                netvisor_model.with_delay(
+                    description=job_desc
+                ).netvisor_export_customer(record)
+            else:
+                # Immediate sending
+                netvisor_model.netvisor_export_customer(record)
 
     def write(self, values):
         """

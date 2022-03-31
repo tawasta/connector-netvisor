@@ -35,6 +35,14 @@ class AccountMove(models.Model):
         default=True,
     )
 
+    netvisor_delayed_send = fields.Boolean(
+        string="Netvisor delayed send",
+        default=False,
+        copy=False,
+        help="When sending invoice to Netvisor, send it as a delayed job. "
+        "This is preferred when sending invoices programmatically or in a batch",
+    )
+
     attachment_ids = fields.Many2many(
         comodel_name="ir.attachment",
         string="Attachments",
@@ -92,7 +100,7 @@ class AccountMove(models.Model):
         Export (send) invoice(s) to Netvisor
         :return:
         """
-        if len(self) == 1:
+        if len(self) == 1 and not self.netvisor_delayed_send:
             # Only use direct send when validating one invoice
             # Otherwise we might end up with a situation where the first
             # invoice(s) are sent, but one of the following invoices end up
@@ -122,7 +130,7 @@ class AccountMove(models.Model):
         """
         netvisor_model = self.env["netvisor.invoice"]
 
-        if len(self) == 1:
+        if len(self) == 1 and not self.netvisor_delayed_send:
             netvisor_model.netvisor_import_status(self)
         else:
             for record in self:
@@ -141,7 +149,7 @@ class AccountMove(models.Model):
         """
         netvisor_model = self.env["netvisor.invoice"]
 
-        if len(self) == 1:
+        if len(self) == 1 and not self.netvisor_delayed_send:
             netvisor_model.netvisor_export_status(self)
         else:
             for record in self:

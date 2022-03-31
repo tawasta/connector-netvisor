@@ -178,6 +178,11 @@ class NetvisorInvoiceExportMapper(Component):
     def invoicing_customer(self, record):
         res = {}
 
+        # Export the partner to
+        # a) Create a new partner
+        # b) Update existing partner values
+        record.partner_id.action_netvisor_export_record(use_queue=False)
+
         binding = record.partner_id.netvisor_bind_ids.filtered(
             lambda r: r.backend_id.company_id == record.company_id
         )
@@ -286,10 +291,20 @@ class NetvisorInvoiceExportMapper(Component):
         """
         invoice_lines = list()
         for line in record.invoice_line_ids:
+            # TODO: Uncomment when the Python library supports comment lines
+            # if line.display_type:
+            #     invoice_lines.append({"comment_line": line.name})
+            #     continue
+
             taxes = line.tax_ids
             if len(taxes) != 1:
                 raise MappingError(_("Please define one tax for each invoice line"))
             tax = taxes[0]
+
+            # Export the product to
+            # a) Create a new product
+            # b) Update existing product values
+            line.product_id.action_netvisor_export_record(use_queue=False)
 
             product_identifier = line.product_id.netvisor_bind_ids.filtered(
                 lambda r: r.backend_id.company_id == record.company_id

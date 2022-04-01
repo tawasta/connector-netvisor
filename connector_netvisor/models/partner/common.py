@@ -13,17 +13,19 @@ class Partner(models.Model):
         string="Netvisor Bindings",
     )
 
-    def action_netvisor_export_record(self, use_queue=True):
+    def action_netvisor_export_record(self, use_queue=True, company_id=False):
         """
         Export partner to Netvisor
         :return:
         """
         for record in self:
             netvisor_model = self.env["netvisor.partner"]
-            if record.company_id:
-                netvisor_model = netvisor_model.with_context(
-                    company_id=record.company_id.id
-                )
+
+            if not company_id and record.company_id:
+                company_id = record.company_id.id
+
+            if company_id:
+                netvisor_model = netvisor_model.with_context(company_id=company_id)
 
             if use_queue:
                 # Queued sending

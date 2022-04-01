@@ -69,13 +69,17 @@ class NetvisorProduct(models.Model):
             importer = work.component(usage="import.mapper")
             return importer.import_product(backend, netvisor_key)
 
-    def netvisor_export_product(self, record):
+    def netvisor_export_product(self, record, company=False):
         """
         Export a product to Netvisor
         :param record: Product record
+        :param company: Company ID
         :return:
         """
-        backend = self.get_netvisor_backend(record.company_id)
+        if not company and record.company_id:
+            company = record.company_id.id
+
+        backend = self.get_netvisor_backend(company)
 
         with backend.work_on(self._name) as work:
             exporter = work.component(usage="export.mapper")

@@ -34,10 +34,10 @@ class Partner(models.Model):
                 )
                 netvisor_model.with_delay(
                     description=job_desc
-                ).netvisor_export_customer(record)
+                ).netvisor_export_customer(record, company_id)
             else:
                 # Immediate sending
-                netvisor_model.netvisor_export_customer(record)
+                netvisor_model.netvisor_export_customer(record, company_id)
 
     def write(self, values):
         """

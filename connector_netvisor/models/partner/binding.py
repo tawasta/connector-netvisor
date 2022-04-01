@@ -54,13 +54,14 @@ class NetvisorPartner(models.Model):
             importer = work.component(usage="import.mapper")
             return importer.import_customer(backend, netvisor_key)
 
-    def netvisor_export_customer(self, record):
+    def netvisor_export_customer(self, record, company=False):
         """
         Export a partner to Netvisor
         :param record: Partner record
+        :param company: Company ID
         :return:
         """
-        backend = self.get_netvisor_backend()
+        backend = self.get_netvisor_backend(company)
 
         with backend.work_on(self._name) as work:
             exporter = work.component(usage="export.mapper")

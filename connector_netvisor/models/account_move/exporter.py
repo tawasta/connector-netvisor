@@ -299,8 +299,14 @@ class NetvisorInvoiceExportMapper(Component):
             #     continue
 
             taxes = line.tax_ids
-            if len(taxes) != 1:
-                raise MappingError(_("Please define one tax for each invoice line"))
+            if len(taxes) > 1:
+                raise MappingError(
+                    _(f"Please define only one tax for invoice line '{line.name}'")
+                )
+            elif len(taxes) < 1:
+                raise MappingError(
+                    _(f"Please define one tax for invoice line '{line.name}'")
+                )
             tax = taxes[0]
 
             # Export the product to

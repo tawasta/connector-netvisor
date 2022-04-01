@@ -181,7 +181,9 @@ class NetvisorInvoiceExportMapper(Component):
         # Export the partner to
         # a) Create a new partner
         # b) Update existing partner values
-        record.partner_id.action_netvisor_export_record(use_queue=False)
+        record.partner_id.action_netvisor_export_record(
+            use_queue=False, company_id=record.company_id.id
+        )
 
         binding = record.partner_id.netvisor_bind_ids.filtered(
             lambda r: r.backend_id.company_id == record.company_id
@@ -304,7 +306,9 @@ class NetvisorInvoiceExportMapper(Component):
             # Export the product to
             # a) Create a new product
             # b) Update existing product values
-            line.product_id.action_netvisor_export_record(use_queue=False)
+            line.product_id.action_netvisor_export_record(
+                use_queue=False, company_id=record.company_id.id
+            )
 
             product_identifier = line.product_id.netvisor_bind_ids.filtered(
                 lambda r: r.backend_id.company_id == record.company_id

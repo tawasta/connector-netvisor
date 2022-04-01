@@ -30,11 +30,11 @@ class Product(models.Model):
                     "Netvisor: export product '{}'".format(record.display_name)
                 )
                 netvisor_model.with_delay(description=job_desc).netvisor_export_product(
-                    record
+                    record, company_id
                 )
             else:
                 # Immediate sending
-                netvisor_model.netvisor_export_product(record)
+                netvisor_model.netvisor_export_product(record, company_id)
 
     def write(self, values):
         """

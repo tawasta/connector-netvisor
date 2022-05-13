@@ -87,7 +87,7 @@ class NetvisorInvoiceExportMapper(Component):
                         )
                     )
         except InvalidData as e:
-            raise ValidationError(e)
+            raise ValidationError(_("Invalid data")) from e
 
         # Update Odoo invoice information
         netvisor_invoice = client.sales_invoices.get(binding.external_id)
@@ -111,7 +111,7 @@ class NetvisorInvoiceExportMapper(Component):
         return msg
 
     def update_status(self, backend, record):
-        """ Update invoice status to Netvisor """
+        """Update invoice status to Netvisor"""
         client = backend.authenticate()
         binding_model = self.env["netvisor.invoice"]
         binding = binding_model.search(
@@ -127,7 +127,7 @@ class NetvisorInvoiceExportMapper(Component):
         return f"Updated status to {netvisor_status}"
 
     def match_credit_note(self, binding):
-        """ Match credit ntoe """
+        """Match credit ntoe"""
         client = binding.backend_id.authenticate()
         if binding.reversed_entry_id and binding.reversed_entry_id.netvisor_bind_ids:
             if len(binding.reversed_entry_id.netvisor_bind_ids) > 1:
@@ -143,10 +143,10 @@ class NetvisorInvoiceExportMapper(Component):
                         "invoice_netvisor_key": reversed_binding.external_id,
                     }
                 )
-            except InvalidData:
+            except InvalidData as e:
                 raise RetryableJobError(
                     _("Refund invoice not found. It may not be sent in Netvisor yet")
-                )
+                ) from e
 
         else:
             res = _("No refunded invoice to match")

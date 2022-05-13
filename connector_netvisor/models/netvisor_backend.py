@@ -157,7 +157,7 @@ class NetvisorBackend(models.Model):
             _logger.error(e)
             raise ValidationError(
                 _("Authentication failed! Please see server log for more information")
-            )
+            ) from e
 
     def authenticate(self):
         """

@@ -62,13 +62,13 @@
 
                     <group>
                         <field
-                          name="netvisor_send"
-                          groups="base.group_no_one"
-                        />
+              name="netvisor_send"
+              groups="base.group_no_one"
+            />
                         <field
-                          name="netvisor_delayed_send"
-                          groups="base.group_no_one"
-                        />
+              name="netvisor_delayed_send"
+              groups="base.group_no_one"
+            />
                         <field name="netvisor_status" />
                     </group>
 

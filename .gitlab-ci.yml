@@ -1,11 +1,4 @@
-image: "python:3.8.1-buster"
-services:
-  - postgres:13
-  - odoo:14
-variables:
-  POSTGRES_DB: "default"
-  POSTGRES_USER: "default"
-  POSTGRES_PASSWORD: "default"
+image: python:3.8.5
 
 stages:
   - test

@@ -34,6 +34,7 @@ repos:
       - id: oca-update-pre-commit-excluded-addons
       - id: oca-fix-manifest-website
         args: ["https://gitlab.com/tawasta/odoo/connector-netvisor"]
+      - id: oca-gen-addons-table
   - repo: https://github.com/myint/autoflake
     rev: v1.4
     hooks:

@@ -87,7 +87,8 @@ class NetvisorInvoiceExportMapper(Component):
                         )
                     )
         except InvalidData as e:
-            raise ValidationError(_("Invalid data")) from e
+            _logger.error(e)
+            raise ValidationError(_("Invalid data: {}".format(e))) from e
 
         # Update Odoo invoice information
         netvisor_invoice = client.sales_invoices.get(binding.external_id)
@@ -376,13 +377,28 @@ class NetvisorInvoiceExportMapper(Component):
         for attachment in record.attachment_ids:
             # Netvisor API won't receive the same attachment twice,
             # so we don't need to check if the attachment is already sent
+            file_ending = attachment.mimetype.split("/")[1]
+            if file_ending not in [
+                "pdf",
+                "doc",
+                "xls",
+                "tif",
+                "jpg",
+                "gif",
+                "txt",
+                "xsl",
+                "html",
+            ]:
+                # Filetype is not supported, skip it
+                continue
+
             attachments.append(
                 {
                     "mime_type": attachment.mimetype,
                     "description": attachment.description,
                     "filename": attachment.name,
                     "data": attachment.datas,
-                    "type": "pdf",
+                    "type": file_ending,
                 }
             )
 

@@ -155,9 +155,7 @@ class NetvisorBackend(models.Model):
             raise ValidationError(_("Authentication successful"))
         except AuthenticationFailed as e:
             _logger.error(e)
-            raise ValidationError(
-                _("Authentication failed! Please see server log for more information")
-            ) from e
+            raise ValidationError(_("Authentication failed!\n{}".format(e))) from e
 
     def authenticate(self):
         """

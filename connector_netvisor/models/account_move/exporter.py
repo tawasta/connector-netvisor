@@ -91,23 +91,16 @@ class NetvisorInvoiceExportMapper(Component):
             raise ValidationError(_("Invalid data: {}".format(e))) from e
 
         # Update Odoo invoice information
-        netvisor_invoice = client.sales_invoices.get(binding.external_id)
-        invoice_status = netvisor_invoice.get("invoice_status").lower().replace(" ", "")
+        job_desc = _(f"Import invoice details for {binding.odoo_id.name}")
+        binding.with_delay(description=job_desc).netvisor_import_invoice_details(
+            binding.odoo_id
+        )
 
         if binding.reversed_entry_id:
             # Match credit note to the original invoice
             job_desc = _(f"Mark invoice {binding.reversed_entry_id.name} as reversed")
 
             binding.with_delay(description=job_desc).netvisor_match_credit_note()
-
-        job_desc = _(f"Update binding for {binding.odoo_id.name}")
-        binding.with_delay(description=job_desc).write(
-            {
-                "name": netvisor_invoice.get("number"),
-                "payment_reference": netvisor_invoice.get("reference_number"),
-                "netvisor_status": invoice_status,
-            }
-        )
 
         return msg
 

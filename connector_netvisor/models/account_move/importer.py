@@ -31,9 +31,8 @@ class NetvisorInvoiceImportMapper(Component):
         if not binding:
             raise ValidationError(_("Please send the invoice to Netvisor first"))
 
-        netvisor_key = binding.external_id
         client = backend.authenticate()
-        invoice = client.sales_invoices.get(netvisor_key)
+        invoice = client.sales_invoices.get(binding.external_id)
         invoice_status = invoice.get("invoice_status").lower().replace(" ", "")
 
         if record.netvisor_status != invoice_status:
@@ -46,3 +45,31 @@ class NetvisorInvoiceImportMapper(Component):
             res = _(f"Status '{invoice_status}' is up to date. Nothing to do")
 
         return res
+
+    def update_details(self, backend, record):
+        """
+        Update invoice details
+        :param backend: Netvisor backend record
+        :param netvisor_key: Netvisor external id
+        :return:
+        """
+        binding = record.netvisor_bind_ids.filtered(
+            lambda r: r.backend_id.company_id == record.company_id
+        )
+
+        if not binding:
+            raise ValidationError(_("Please send the invoice to Netvisor first"))
+
+        client = backend.authenticate()
+        invoice = client.sales_invoices.get(binding.external_id)
+        invoice_status = invoice.get("invoice_status").lower().replace(" ", "")
+
+        binding.write(
+            {
+                "name": invoice.get("number"),
+                "payment_reference": invoice.get("reference_number"),
+                "netvisor_status": invoice_status,
+            }
+        )
+
+        return _("Updated details for {}".format(binding.odoo_id))

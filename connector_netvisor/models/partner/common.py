@@ -46,7 +46,8 @@ class Partner(models.Model):
         :return:
         """
         res = super().write(values)
-        if not self.env.context.get("skip_export"):
+        auto_export = False
+        if auto_export and not self.env.context.get("skip_export"):
             for record in self:
                 self._event("on_partner_update").notify(record)
 
@@ -60,7 +61,8 @@ class Partner(models.Model):
         :return:
         """
         res = super().create(values)
-        if not self.env.context.get("skip_export"):
+        auto_export = False
+        if auto_export and not self.env.context.get("skip_export"):
             self._event("on_partner_update").notify(res)
 
         return res

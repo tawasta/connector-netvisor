@@ -33,14 +33,6 @@ class NetvisorInvoiceExportMapper(Component):
         if record.amount_total_signed == 0:
             return _("Zero sum invoice. Skip sending")
 
-        # Export (or update) partners
-        partner = self.env["res.partner"]
-        partner.action_netvisor_export_record(backend, record.partner_id)
-        partner.action_netvisor_export_record(backend, record.partner_shipping_id)
-
-        # Export (or update) products
-        record.invoice_line_ids.mapped("product_id").action_netvisor_export_record()
-
         # Force record company for property fields
         if record.company_id:
             record = record.with_company(record.company_id.id)

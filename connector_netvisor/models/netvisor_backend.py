@@ -1,4 +1,9 @@
+import uuid
+import requests
 import logging
+import hashlib
+
+from datetime import datetime
 
 from netvisor_api_client import Netvisor
 from netvisor_api_client.exc import AuthenticationFailed
@@ -179,6 +184,76 @@ class NetvisorBackend(models.Model):
         )
 
         return client
+    def _api_request_post(self, endpoint, values, params=None):
+        """
+        Helper for requests.post method
+
+        :param endpoint: API Endpoint
+        :param values: Requests data
+        :param params: Requests params
+        :return: Parser response dict
+        """
+        _logger.debug(_("Making a POST request to endpoint %s" % endpoint))
+
+        if not self.company_id.company_registry:
+            raise ValidationError(
+                _("Company registry is missing. Please provide and try again")
+            )
+
+        if params is None:
+            params = {}
+
+        headers = self._get_authentication_headers(endpoint)
+
+        response = requests.post(
+            url=endpoint,
+            json=values,
+            headers=headers,
+            params=params,
+        )
+
+        print(response.status_code)
+        print(response.json())
+
+        return response
+
+    def _get_mac(self, endpoint, timestamp, transaction_id):
+        parameters = [
+            endpoint,
+            self.sender,
+            self.customer,
+            timestamp,
+            self.language,
+            self.company_id.company_registry,
+            transaction_id,
+            self.customer_key,
+            self.partner_key,
+        ]
+        joined_parameters = b'&'.join(
+            p.encode('utf-8') if isinstance(p, str) else p
+            for p in parameters
+        )
+        print(joined_parameters)
+        return hashlib.sha256(joined_parameters).hexdigest()
+
+    def _get_authentication_headers(self, endpoint):
+        timestamp = datetime.now().isoformat(' ')[:-3]
+        transaction_id = uuid.uuid4().hex
+        mac = self._get_mac(endpoint, timestamp, transaction_id)
+
+        headers = {
+            'Content-type': "text/plain",
+            'X-Netvisor-Authentication-Sender': self.sender,
+            'X-Netvisor-Authentication-CustomerId': self.customer,
+            'X-Netvisor-Authentication-PartnerId': self.partner,
+            'X-Netvisor-Authentication-Timestamp': timestamp,
+            'X-Netvisor-Interface-Language': self.language,
+            'X-Netvisor-Organisation-ID': self.company_id.company_registry,
+            'X-Netvisor-Authentication-TransactionId': transaction_id,
+            'X-Netvisor-Authentication-MAC': mac,
+        }
+
+        return headers
 
     def action_import_customers(self):
         """

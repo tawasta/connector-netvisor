@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!--
+        Netvisor customer XML document
+    -->
+    <template id="customer">
+        <root>
+            <customer>
+                <customerbaseinformation>
+                    <internalidentifier>abc123</internalidentifier>
+                    <externalidentifier>1967543-8</externalidentifier>
+                    <organizationunitnumber>00371967543815</organizationunitnumber>
+                    <name>Example Customer Oy</name>
+                    <nameextension>Company</nameextension>
+                    <streetaddress>Testing street 1</streetaddress>
+                    <additionaladdressline>PL 101</additionaladdressline>
+                    <city>Helsinki</city>
+                    <postnumber>00100</postnumber>
+                    <country type="ISO-3166">FI</country>
+                    <customergroupname>Test customers</customergroupname>
+                    <phonenumber>040 123 456</phonenumber>
+                    <faxnumber>05 123456</faxnumber>
+                    <email>test@example.fi</email>
+                    <homepageuri>www.example.com</homepageuri>
+                    <isactive>1</isactive>
+                    <!--isactive>0</isactive-->
+                    <isprivatecustomer>0</isprivatecustomer>
+                    <!--isprivatecustomer>1</isprivatecustomer-->
+                    <emailinvoicingaddress>test@example.fi</emailinvoicingaddress>
+                </customerbaseinformation>
+                <customerfinvoicedetails>
+                    <finvoiceaddress>FI109700021497</finvoiceaddress>
+                    <finvoiceroutercode>NDEAFIHH</finvoiceroutercode>
+                </customerfinvoicedetails>
+                <customerdeliverydetails>
+                    <deliveryname>Example Company</deliveryname>
+                    <deliverystreetaddress>Example street 1</deliverystreetaddress>
+                    <deliverycity>Helsinki</deliverycity>
+                    <deliverypostnumber>00110</deliverypostnumber>
+                    <deliverycountry type="ISO-3166">FI</deliverycountry>
+                </customerdeliverydetails>
+                <customercontactdetails>
+                    <contactperson>Eric Example</contactperson>
+                    <contactpersonemail>eric.example@company.com</contactpersonemail>
+                    <contactpersonphone>050 123456</contactpersonphone>
+                </customercontactdetails>
+                <customeradditionalinformation>
+                    <comment>Comment about this customer</comment>
+                    <customeragreementidentifier>Agreement code</customeragreementidentifier>
+                    <customerreferencenumber>10702</customerreferencenumber>
+                    <invoicinglanguage>FI</invoicinglanguage>
+                    <!-- <invoicinglanguage>SE</invoicinglanguage> -->
+                    <!-- <invoicinglanguage>EN</invoicinglanguage> -->
+                    <invoiceprintchannelformat type="netvisor">1</invoiceprintchannelformat>
+                    <!--invoiceprintchannelformat type="netvisor">2</invoiceprintchannelformat-->
+                    <yourdefaultreference>Example reference</yourdefaultreference>
+                    <defaulttextbeforeinvoicelines>Default text before invoice lines</defaulttextbeforeinvoicelines>
+                    <defaulttextafterinvoicelines>Default text after invoice lines</defaulttextafterinvoicelines>
+                    <defaultpaymentterm type="customer">14 days net</defaultpaymentterm>
+                    <defaultsecondname type="customer">Second name</defaultsecondname>
+                    <paymentinterest>5</paymentinterest>
+                    <balancelimit>5000</balancelimit>
+                    <receivablesmanagementautomationrule type="netvisor">1</receivablesmanagementautomationrule>
+                    <factoringaccount type="netvisor">1</factoringaccount>
+                    <taxhandlingtype>countrygroup</taxhandlingtype>
+                    <defaultsalesperson>
+                        <salespersonid type="netvisor">2</salespersonid>
+                    </defaultsalesperson>
+                </customeradditionalinformation>
+                <customerdimensiondetails>
+                    <dimension>
+                        <dimensionname>Project</dimensionname>
+                        <dimensionitem>12345</dimensionitem>
+                    </dimension>
+                </customerdimensiondetails>
+            </customer>
+        </root>
+    </template>
+</odoo>

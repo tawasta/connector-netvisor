@@ -34,12 +34,20 @@ class NetvisorPartnerExportMapper(Component):
             [("odoo_id", "=", record.id), ("backend_id", "=", backend.id)]
         )
 
+        xml_string = self.env["ir.qweb"]._render(
+            "connector_netvisor.customer", values
+        )
+        print(xml_string)
+        return
+
         if binding:
             # Update existing record in Netvisor
-            client.customers.update(binding.external_id, values)
+            backend._api_request_post("customer.nv", values, {'method': 'Edit', 'id': binding.external_id})
             msg = _(f"Updated partner '{record.display_name}'")
         else:
-            res = client.customers.create(values)
+            # Create a new record to Netvisor
+            res = backend._api_request_post("customer.nv", values, {'method': 'Add'})
+            print(res)
 
             if res:
                 try:

@@ -46,6 +46,7 @@
         "data/ir_cron.xml",
         "data/job_channel.xml",
         "data/job_function.xml",
+        "data/template_customer.xml",
         "security/model_access.xml",
         "views/account_move.xml",
         "views/account_tax.xml",

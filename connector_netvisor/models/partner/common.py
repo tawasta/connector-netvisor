@@ -104,6 +104,7 @@ class Partner(models.Model):
             "phone",
             "mobile",
             "email",
+            "ref",
         ]
 
         if [i for i in values if i in triggers]:

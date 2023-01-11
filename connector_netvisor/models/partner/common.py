@@ -46,7 +46,7 @@ class Partner(models.Model):
         :return:
         """
         res = super().write(values)
-        auto_export = False
+        auto_export = self._get_auto_export(values)
         if auto_export and not self.env.context.get("skip_export"):
             for record in self:
                 self._event("on_partner_update").notify(record)
@@ -61,7 +61,7 @@ class Partner(models.Model):
         :return:
         """
         res = super().create(values)
-        auto_export = False
+        auto_export = True
         if auto_export and not self.env.context.get("skip_export"):
             self._event("on_partner_update").notify(res)
 
@@ -83,3 +83,31 @@ class Partner(models.Model):
             street = self.street or ""
 
         return street
+
+    def _get_auto_export(self, values):
+        """
+        Decide if we want to auto-export partner(s)
+        """
+        auto_export = False
+
+        # These fields will trigger the auto-export
+        triggers = [
+            "name",
+            "street",
+            "street2",
+            "city",
+            "state_id",
+            "zip",
+            "country_id",
+            "vat",
+            "business_code",
+            "phone",
+            "mobile",
+            "email",
+        ]
+
+        if [i for i in values if i in triggers]:
+            # If any fields match trigger fields
+            auto_export = True
+
+        return auto_export

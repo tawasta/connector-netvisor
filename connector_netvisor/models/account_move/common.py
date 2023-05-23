@@ -177,7 +177,8 @@ class AccountMove(models.Model):
         #  if Odoo is not in sync with Netvisor sequence
         #  E.g. invoices have been created in Netvisor
         for sales_invoice in sale_invoices:
-            sales_invoice.name = "INV/{}".format(sales_invoice.name)
+            if sales_invoice.name[0:3] != "INV":
+                sales_invoice.name = "INV/{}".format(sales_invoice.name)
 
         # Send invoice(s) to netvisor
         sale_invoices.action_netvisor_export_invoice()

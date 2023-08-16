@@ -94,7 +94,7 @@ class NetvisorInvoice(models.Model):
                 # record.odoo_id.button_draft()
                 pass
             elif invoice_status == "paid":
-                if record.payment_state == "paid":
+                if record.payment_state in ["paid", "reversed"]:
                     # Nothing to do
                     return
 

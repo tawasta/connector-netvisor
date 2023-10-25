@@ -101,6 +101,7 @@ class NetvisorInvoice(models.Model):
                 if record.payment_state in ["paid", "reversed"]:
                     # Already paid, nothing to do
                     record.netvisor_status = invoice_status
+                    return
 
                 # Set invoice as fully paid
                 # TODO: get correct payment date

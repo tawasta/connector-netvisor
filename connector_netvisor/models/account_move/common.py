@@ -23,6 +23,7 @@ class AccountMove(models.Model):
             ("unsent", "Unsent"),
             ("creditloss", "Credit loss"),
             ("rejected", "Rejected"),
+            ("requested", "Requested"),
             ("reminded", "Reminded"),
             ("dueforpayment", "Due for payment"),
         ],

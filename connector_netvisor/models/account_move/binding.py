@@ -134,5 +134,7 @@ class NetvisorInvoice(models.Model):
                     active_model="account.move", active_ids=record.odoo_id.ids
                 ).create(payment_values)._create_payments()
 
-            _logger.info(_("Updating record.name Netvisor status to {}").format(invoice_status))
+            _logger.info(
+                _("Updating record.name Netvisor status to {}").format(invoice_status)
+            )
             record.netvisor_status = invoice_status

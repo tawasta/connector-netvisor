@@ -34,6 +34,7 @@
     },
     "depends": [
         "account",
+        "account_invoice_overdue_interest",
         "connector",
         "product",
         "queue_job",

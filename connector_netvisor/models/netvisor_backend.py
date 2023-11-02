@@ -2,6 +2,7 @@ import uuid
 import requests
 import logging
 import hashlib
+import xmltodict
 
 from datetime import datetime
 
@@ -21,6 +22,7 @@ class NetvisorBackend(models.Model):
     _description = "Backend for Netvisor integration"
     rec_name = "partner"
 
+    # region Fields
     company_id = fields.Many2one(
         comodel_name="res.company",
         string="Company",
@@ -136,6 +138,7 @@ class NetvisorBackend(models.Model):
         "Will be automatically updated after fetching payments",
         default="2020-01-01",
     )
+    # endregion
 
     @api.onchange("environment")
     def onchange_environment(self):
@@ -194,11 +197,7 @@ class NetvisorBackend(models.Model):
         :return: Parser response dict
         """
         _logger.debug(_("Making a POST request to endpoint %s" % endpoint))
-
-        if not self.company_id.company_registry:
-            raise ValidationError(
-                _("Company registry is missing. Please provide and try again")
-            )
+        url = self._get_request_url(endpoint)
 
         if params is None:
             params = {}
@@ -206,20 +205,46 @@ class NetvisorBackend(models.Model):
         headers = self._get_authentication_headers(endpoint)
 
         response = requests.post(
-            url=endpoint,
-            json=values,
+            url=url,
+            data=values,
             headers=headers,
             params=params,
         )
 
-        print(response.status_code)
-        print(response.json())
+        res = self._parse_response(response)
 
-        return response
+        return res
+
+    def _api_request_get(self, endpoint, params=None):
+        """
+        Helper for requests.get method
+
+        :param endpoint: API Endpoint
+        :param params: Requests params
+        :return: Parser response dict
+        """
+        _logger.debug(_("Making a GET request to endpoint %s" % endpoint))
+        url = self._get_request_url(endpoint)
+
+        if params is None:
+            params = {}
+
+        headers = self._get_authentication_headers(endpoint)
+
+        response = requests.get(
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        res = self._parse_response(response)
+
+        return res
 
     def _get_mac(self, endpoint, timestamp, transaction_id):
+        url = self._get_request_url(endpoint)
         parameters = [
-            endpoint,
+            url,
             self.sender,
             self.customer,
             timestamp,
@@ -233,10 +258,15 @@ class NetvisorBackend(models.Model):
             p.encode('utf-8') if isinstance(p, str) else p
             for p in parameters
         )
-        print(joined_parameters)
-        return hashlib.sha256(joined_parameters).hexdigest()
+        #return hashlib.sha256(joined_parameters).hexdigest()
+        return hashlib.md5(joined_parameters).hexdigest()
 
     def _get_authentication_headers(self, endpoint):
+        if not self.company_id.company_registry:
+            raise ValidationError(
+                _("Company registry is missing. Please provide and try again")
+            )
+
         timestamp = datetime.now().isoformat(' ')[:-3]
         transaction_id = uuid.uuid4().hex
         mac = self._get_mac(endpoint, timestamp, transaction_id)
@@ -254,6 +284,30 @@ class NetvisorBackend(models.Model):
         }
 
         return headers
+
+    def _get_request_url(self, endpoint):
+        url = f"{self.host}/{endpoint}"
+
+        return url
+
+    def _parse_response(self, response):
+        text = xmltodict.parse(response.text)
+        root = text.get("Root")
+        response_status = root.get("ResponseStatus")
+
+        _logger.info(root.keys())
+        _logger.info(response_status)
+
+        if root.get("Replies"):
+            res = root.get("Replies")
+        elif root.get("Customerlist"):
+            res = root.get("Customerlist")
+        elif root.get("Customer"):
+            res = root.get("Customer")
+        else:
+            raise ValidationError(_("Response could not be parsed"))
+
+        return res
 
     def action_import_customers(self):
         """

@@ -28,13 +28,16 @@ class NetvisorPartnerImportMapper(Component):
         """
         netvisor_model = self.env["netvisor.partner"]
         odoo_model = self.env["res.partner"]
-        client = backend.authenticate()
-        partner = client.customers.get(netvisor_key)
+
+        endpoint = f"getcustomer.nv?id={netvisor_key}"
+        partner = backend._api_request_get(endpoint)
         values = self.map_record(partner).values()
         existing_record = False
 
         # Omit empty values to avoid removing existing information from Odoo
         values = {k: v for k, v in values.items() if v}
+
+        print(values)
 
         # Search for existing binding
         existing_binding = netvisor_model.search(
@@ -61,7 +64,7 @@ class NetvisorPartnerImportMapper(Component):
         binding_values = {"backend_id": backend.id, "external_id": netvisor_key}
 
         # 1. Search for existing partner by business and street
-        if not existing_record and values.get("business_code"):
+        if not existing_record and values.get("business_code") and values.get("street"):
             _logger.debug(_("Search for existing partner by business and street"))
             existing_record = odoo_model.search(
                 [
@@ -88,7 +91,7 @@ class NetvisorPartnerImportMapper(Component):
             existing_record = odoo_model.search([("email", "=ilike", values["email"])])
 
         # 5. Search for existing partner by exact name and street
-        if not existing_record and values.get("name"):
+        if not existing_record and values.get("name") and values.get("street"):
             _logger.debug(_("Search for existing partner by name and street"))
             existing_record = odoo_model.search(
                 [
@@ -130,15 +133,15 @@ class NetvisorPartnerImportMapper(Component):
     # Netvisor, Odoo
     @mapping
     def name(self, record):
-        res = {"name": record.get("customer_base_information", {}).get("name")}
+        res = {"name": record.get("CustomerBaseInformation", {}).get("Name")}
 
         return res
 
     @mapping
     def name_extension(self, record):
         res = {
-            "name_extension": record.get("customer_base_information", {}).get(
-                "name_extension"
+            "name_extension": record.get("CustomerBaseInformation", {}).get(
+                "NameExtension"
             )
         }
 
@@ -147,8 +150,8 @@ class NetvisorPartnerImportMapper(Component):
     @mapping
     def business_code(self, record):
         res = {}
-        business_code = record.get("customer_base_information", {}).get(
-            "external_identifier"
+        business_code = record.get("CustomerBaseInformation", {}).get(
+            "ExternalIdentifier"
         )
         if business_code:
             res.update({"business_code": business_code, "is_company": True})
@@ -157,14 +160,14 @@ class NetvisorPartnerImportMapper(Component):
 
     @mapping
     def active(self, record):
-        res = {"active": record.get("customer_base_information", {}).get("is_active")}
+        res = {"active": record.get("CustomerBaseInformation", {}).get("IsActive")}
 
         return res
 
     @mapping
     def street(self, record):
         res = {
-            "street": record.get("customer_base_information", {}).get("street_address")
+            "street": record.get("CustomerBaseInformation", {}).get("StreetAddress")
         }
 
         return res
@@ -172,8 +175,8 @@ class NetvisorPartnerImportMapper(Component):
     @mapping
     def street2(self, record):
         res = {
-            "street2": record.get("customer_base_information", {}).get(
-                "additional_street_address"
+            "street2": record.get("CustomerBaseInformation", {}).get(
+                "AdditionalStreetAddress"
             )
         }
 
@@ -181,20 +184,20 @@ class NetvisorPartnerImportMapper(Component):
 
     @mapping
     def city(self, record):
-        res = {"city": record.get("customer_base_information", {}).get("city")}
+        res = {"city": record.get("CustomerBaseInformation", {}).get("City")}
 
         return res
 
     @mapping
     def zip(self, record):
-        res = {"zip": record.get("customer_base_information", {}).get("post_number")}
+        res = {"zip": record.get("CustomerBaseInformation", {}).get("PostNumber")}
 
         return res
 
     @mapping
     def country_id(self, record):
         Country = self.env["res.country"]
-        country_code = record.get("customer_base_information", {}).get("country")
+        country_code = record.get("CustomerBaseInformation", {}).get("Country")
         res = {}
 
         if country_code:
@@ -212,7 +215,7 @@ class NetvisorPartnerImportMapper(Component):
     @mapping
     def comment(self, record):
         res = {
-            "comment": record.get("customer_additional_information", {}).get("comment")
+            "comment": record.get("CustomerBaseInformation", {}).get("Comment")
         }
 
         return res
@@ -220,8 +223,8 @@ class NetvisorPartnerImportMapper(Component):
     @mapping
     def ref(self, record):
         res = {
-            "ref": record.get("customer_additional_information", {}).get(
-                "reference_number"
+            "ref": record.get("CustomerBaseInformation", {}).get(
+                "ReferenceNumber"
             )
         }
 
@@ -230,22 +233,22 @@ class NetvisorPartnerImportMapper(Component):
     @mapping
     def website(self, record):
         res = {
-            "website": record.get("customer_base_information", {}).get("home_page_uri")
+            "website": record.get("CustomerBaseInformation", {}).get("HomePageUri")
         }
 
         return res
 
     @mapping
     def email(self, record):
-        res = {"email": record.get("customer_base_information", {}).get("email")}
+        res = {"email": record.get("CustomerBaseInformation", {}).get("Email")}
 
         return res
 
     @mapping
     def email_invoicing_address(self, record):
         res = {
-            "email_invoicing_address": record.get("customer_base_information", {}).get(
-                "email_invoicing_address"
+            "email_invoicing_address": record.get("CustomerBaseInformation", {}).get(
+                "EmailInvoicingAddress"
             )
         }
 
@@ -253,15 +256,15 @@ class NetvisorPartnerImportMapper(Component):
 
     @mapping
     def phone(self, record):
-        res = {"phone": record.get("customer_base_information", {}).get("phone_number")}
+        res = {"phone": record.get("CustomerBaseInformation", {}).get("PhoneNumber")}
 
         return res
 
     @mapping
     def edicode(self, record):
         res = {
-            "edicode": record.get("customer_finvoice_details", {}).get(
-                "finvoice_address"
+            "edicode": record.get("CustomerFinvoiceDetails", {}).get(
+                "FinvoiceAddress"
             )
         }
 
@@ -270,8 +273,8 @@ class NetvisorPartnerImportMapper(Component):
     @mapping
     def einvoice_operator_id(self, record):
         res = {}
-        operator_code = record.get("customer_finvoice_details", {}).get(
-            "finvoice_router_code"
+        operator_code = record.get("CustomerFinvoiceDetails", {}).get(
+            "FinvoiceRouterCode"
         )
         operator_id = self.env["res.partner.operator.einvoice"].search(
             [("identifier", "=", operator_code)]

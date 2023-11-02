@@ -88,14 +88,19 @@ class NetvisorInvoice(models.Model):
             if record.netvisor_status == invoice_status:
                 # Nothing to do
                 return
+            elif record.state == "cancel":
+                # Cancelled invoices should not be opened by Netvisor, nothing to do
+                pass
             elif invoice_status == "unsent":
                 # Set to draft
-                # Generally we don't want to do this
+                # Generally we don't want Netvisor to reset invoice to draft,
+                # so this is disabled for now
                 # record.odoo_id.button_draft()
                 pass
             elif invoice_status == "paid":
-                if record.payment_state == "paid":
-                    # Nothing to do
+                if record.payment_state in ["paid", "reversed"]:
+                    # Already paid, nothing to do
+                    record.netvisor_status = invoice_status
                     return
 
                 # Set invoice as fully paid
@@ -111,7 +116,7 @@ class NetvisorInvoice(models.Model):
                 payment_amount = record.amount_residual
 
                 # This will currently set today as payment date
-                # It is usually incorrect but we don't have the correct data here
+                # It is usually incorrect, but we don't have the correct data here
                 payment_date = datetime.date.today()
 
                 payment_values = {
@@ -130,4 +135,7 @@ class NetvisorInvoice(models.Model):
                     active_model="account.move", active_ids=record.odoo_id.ids
                 ).create(payment_values)._create_payments()
 
+            _logger.info(
+                _("Updating record.name Netvisor status to {}").format(invoice_status)
+            )
             record.netvisor_status = invoice_status

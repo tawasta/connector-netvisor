@@ -343,6 +343,7 @@ class NetvisorBackend(models.Model):
         bindings = netvisor_model.search(
             [
                 ("odoo_id", "!=", False),
+                ("netvisor_status", "not in", ["paid", "rejected"]),
             ]
         )
         _logger.debug(_(f"Updating status for invoices: {bindings.ids}"))

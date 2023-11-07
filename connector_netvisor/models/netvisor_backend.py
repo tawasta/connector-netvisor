@@ -294,9 +294,13 @@ class NetvisorBackend(models.Model):
         text = xmltodict.parse(response.text)
         root = text.get("Root")
         response_status = root.get("ResponseStatus")
+        response_status_list = response_status.get("Status")
 
         _logger.info(root.keys())
         _logger.info(response_status)
+
+        if response_status_list and response_status_list[0] == "FAILED":
+            raise ValidationError(response_status_list[1])
 
         if root.get("Replies"):
             res = root.get("Replies")
@@ -305,7 +309,7 @@ class NetvisorBackend(models.Model):
         elif root.get("Customer"):
             res = root.get("Customer")
         else:
-            raise ValidationError(_("Response could not be parsed"))
+            raise ValidationError(_("Netvisor API response could not be parsed!"))
 
         return res
 

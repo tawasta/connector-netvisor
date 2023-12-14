@@ -222,8 +222,10 @@ class NetvisorInvoiceExportMapper(Component):
 
     @mapping
     def delivery_address_post_number(self, record):
-        if record.partner_shipping_id:        
-            return {"delivery_address_post_number": record.partner_shipping_id.zip or ""}
+        if record.partner_shipping_id:
+            return {
+                "delivery_address_post_number": record.partner_shipping_id.zip or ""
+            }
         else:
             return
 
@@ -233,7 +235,7 @@ class NetvisorInvoiceExportMapper(Component):
             return {"delivery_address_town": record.partner_shipping_id.city or ""}
         else:
             return
-            
+
     @mapping
     def delivery_address_country_code(self, record):
         # TODO: add type to netvisor-api-client

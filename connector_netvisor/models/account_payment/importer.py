@@ -49,7 +49,7 @@ class NetvisorPaymentImportMapper(Component):
 
         invoice_number = record.get("invoice_number")
         if not invoice_number:
-            raise ValidationError("Payment doesn't include invoice number")
+            raise ValidationError(_("Payment doesn't include invoice number"))
 
         invoice = self.env["account.move"].search(
             [

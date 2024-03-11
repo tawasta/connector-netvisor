@@ -48,6 +48,9 @@ class NetvisorPaymentImportMapper(Component):
         binding_values = {"backend_id": backend.id, "external_id": netvisor_key}
 
         invoice_number = record.get("invoice_number")
+        if not invoice_number:
+            raise ValidationError("Payment doesn't include invoice number")
+
         invoice = self.env["account.move"].search(
             [
                 ("name", "=", invoice_number),

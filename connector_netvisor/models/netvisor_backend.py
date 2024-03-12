@@ -1,11 +1,11 @@
-import uuid
-import requests
-import logging
 import hashlib
-import xmltodict
-
+import logging
+import urllib.parse
+import uuid
 from datetime import datetime
 
+import requests
+import xmltodict
 from netvisor_api_client import Netvisor
 from netvisor_api_client.exc import AuthenticationFailed
 
@@ -187,6 +187,7 @@ class NetvisorBackend(models.Model):
         )
 
         return client
+
     def _api_request_post(self, endpoint, values, params=None):
         """
         Helper for requests.post method
@@ -196,19 +197,17 @@ class NetvisorBackend(models.Model):
         :param params: Requests params
         :return: Parser response dict
         """
-        _logger.debug(_("Making a POST request to endpoint %s" % endpoint))
-        url = self._get_request_url(endpoint)
-
+        _logger.debug(_("Making a POST request to endpoint {}".format(endpoint)))
         if params is None:
             params = {}
 
-        headers = self._get_authentication_headers(endpoint)
+        url = self._get_request_url(endpoint, params)
+        headers = self._get_authentication_headers(url)
 
         response = requests.post(
             url=url,
             data=values,
             headers=headers,
-            params=params,
         )
 
         res = self._parse_response(response)
@@ -223,26 +222,23 @@ class NetvisorBackend(models.Model):
         :param params: Requests params
         :return: Parser response dict
         """
-        _logger.debug(_("Making a GET request to endpoint %s" % endpoint))
-        url = self._get_request_url(endpoint)
-
+        _logger.debug(_("Making a GET request to endpoint {}".format(endpoint)))
         if params is None:
             params = {}
 
-        headers = self._get_authentication_headers(endpoint)
+        url = self._get_request_url(endpoint, params)
+        headers = self._get_authentication_headers(url)
 
         response = requests.get(
             url=url,
             headers=headers,
-            params=params,
         )
 
         res = self._parse_response(response)
 
         return res
 
-    def _get_mac(self, endpoint, timestamp, transaction_id):
-        url = self._get_request_url(endpoint)
+    def _get_mac(self, url, timestamp, transaction_id):
         parameters = [
             url,
             self.sender,
@@ -254,50 +250,58 @@ class NetvisorBackend(models.Model):
             self.customer_key,
             self.partner_key,
         ]
-        joined_parameters = b'&'.join(
-            p.encode('utf-8') if isinstance(p, str) else p
-            for p in parameters
+        joined_parameters = b"&".join(
+            p.encode("utf-8") if isinstance(p, str) else p for p in parameters
         )
-        #return hashlib.sha256(joined_parameters).hexdigest()
+        # SHA256 is used in documentation, but doesn't seem to be working
+        # return hashlib.sha256(joined_parameters).hexdigest()
         return hashlib.md5(joined_parameters).hexdigest()
 
-    def _get_authentication_headers(self, endpoint):
+    def _get_authentication_headers(self, url):
         if not self.company_id.company_registry:
             raise ValidationError(
                 _("Company registry is missing. Please provide and try again")
             )
 
-        timestamp = datetime.now().isoformat(' ')[:-3]
+        timestamp = datetime.now().isoformat(" ")[:-3]
         transaction_id = uuid.uuid4().hex
-        mac = self._get_mac(endpoint, timestamp, transaction_id)
+        mac = self._get_mac(url, timestamp, transaction_id)
 
         headers = {
-            'Content-type': "text/plain",
-            'X-Netvisor-Authentication-Sender': self.sender,
-            'X-Netvisor-Authentication-CustomerId': self.customer,
-            'X-Netvisor-Authentication-PartnerId': self.partner,
-            'X-Netvisor-Authentication-Timestamp': timestamp,
-            'X-Netvisor-Interface-Language': self.language,
-            'X-Netvisor-Organisation-ID': self.company_id.company_registry,
-            'X-Netvisor-Authentication-TransactionId': transaction_id,
-            'X-Netvisor-Authentication-MAC': mac,
+            "Content-type": "text/plain",
+            "X-Netvisor-Authentication-Sender": self.sender,
+            "X-Netvisor-Authentication-CustomerId": self.customer,
+            "X-Netvisor-Authentication-PartnerId": self.partner,
+            "X-Netvisor-Authentication-Timestamp": timestamp,
+            "X-Netvisor-Interface-Language": self.language,
+            "X-Netvisor-Organisation-ID": self.company_id.company_registry,
+            "X-Netvisor-Authentication-TransactionId": transaction_id,
+            "X-Netvisor-Authentication-MAC": mac,
         }
 
         return headers
 
-    def _get_request_url(self, endpoint):
+    def _get_request_url(self, endpoint, params):
         url = f"{self.host}/{endpoint}"
+        if params:
+            url = f"{url}?{urllib.parse.urlencode(params)}"
 
         return url
 
     def _parse_response(self, response):
         text = xmltodict.parse(response.text)
         root = text.get("Root")
+
+        status_code = response.status_code
+
+        if status_code == 404:
+            raise ValidationError(_("This endpoint doesn't seem to exist."))
+
         response_status = root.get("ResponseStatus")
         response_status_list = response_status.get("Status")
 
-        _logger.info(root.keys())
-        _logger.info(response_status)
+        _logger.debug(root.keys())
+        _logger.debug(response_status)
 
         if response_status_list and response_status_list[0] == "FAILED":
             raise ValidationError(response_status_list[1])
@@ -308,6 +312,11 @@ class NetvisorBackend(models.Model):
             res = root.get("Customerlist")
         elif root.get("Customer"):
             res = root.get("Customer")
+        elif root.get("SalesPaymentList"):
+            res = root.get("SalesPaymentList").get("SalesPayment")
+        elif root.keys() and len(root.keys()) == 1:
+            # Some endpoints just return the ResponseStatus
+            res = {}
         else:
             raise ValidationError(_("Netvisor API response could not be parsed!"))
 

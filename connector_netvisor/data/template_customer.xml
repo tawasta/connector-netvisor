@@ -17,19 +17,26 @@
                     <additionaladdressline t-esc="partner.street2 or ''" />
                     <city t-esc="partner.city or ''" />
                     <postnumber t-esc="partner.zip or ''" />
-                    <country type="ISO-3166" t-esc="partner.country_id.code or ''" />
+                    <country
+            type="ISO-3166"
+            t-esc="partner.country_id.code or ''"
+          />
                     <!-- <customergroupname>Test customers</customergroupname> -->
-                    <phonenumber t-esc="partner.phone or ''"/>
+                    <phonenumber t-esc="partner.phone or ''" />
                     <!-- <faxnumber>05 123456</faxnumber> -->
-                    <email t-esc="partner.email or ''"/>
+                    <email t-esc="partner.email or ''" />
                     <homepageuri t-esc="partner.website or ''" />
                     <isactive t-esc="1 if partner.active else 0" />
-                    <isprivatecustomer t-esc="0 if partner.is_company else 1"/>
-                    <emailinvoicingaddress t-esc="partner.email_invoicing_address or ''" />
+                    <isprivatecustomer t-esc="0 if partner.is_company else 1" />
+                    <emailinvoicingaddress
+            t-esc="partner.email_invoicing_address or ''"
+          />
                 </customerbaseinformation>
-                <customerfinvoicedetails>
-                    <finvoiceaddress t-esc="partner.email or ''" />
-                    <finvoiceroutercode t-esc="partner.einvoice_operator_id.identifier or ''" />
+                <customerfinvoicedetails t-if="partner.edicode">
+                    <finvoiceaddress t-esc="partner.edicode or ''" />
+                    <finvoiceroutercode
+            t-esc="partner.einvoice_operator_id.identifier or ''"
+          />
                 </customerfinvoicedetails>
                 <!-- Not implemented, as Odoo does not have a single delivery address for a company
                 <customerdeliverydetails>

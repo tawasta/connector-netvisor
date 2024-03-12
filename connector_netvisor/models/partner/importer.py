@@ -37,8 +37,6 @@ class NetvisorPartnerImportMapper(Component):
         # Omit empty values to avoid removing existing information from Odoo
         values = {k: v for k, v in values.items() if v}
 
-        print(values)
-
         # Search for existing binding
         existing_binding = netvisor_model.search(
             [
@@ -166,9 +164,7 @@ class NetvisorPartnerImportMapper(Component):
 
     @mapping
     def street(self, record):
-        res = {
-            "street": record.get("CustomerBaseInformation", {}).get("StreetAddress")
-        }
+        res = {"street": record.get("CustomerBaseInformation", {}).get("StreetAddress")}
 
         return res
 
@@ -214,27 +210,19 @@ class NetvisorPartnerImportMapper(Component):
 
     @mapping
     def comment(self, record):
-        res = {
-            "comment": record.get("CustomerBaseInformation", {}).get("Comment")
-        }
+        res = {"comment": record.get("CustomerBaseInformation", {}).get("Comment")}
 
         return res
 
     @mapping
     def ref(self, record):
-        res = {
-            "ref": record.get("CustomerBaseInformation", {}).get(
-                "ReferenceNumber"
-            )
-        }
+        res = {"ref": record.get("CustomerBaseInformation", {}).get("ReferenceNumber")}
 
         return res
 
     @mapping
     def website(self, record):
-        res = {
-            "website": record.get("CustomerBaseInformation", {}).get("HomePageUri")
-        }
+        res = {"website": record.get("CustomerBaseInformation", {}).get("HomePageUri")}
 
         return res
 
@@ -263,9 +251,7 @@ class NetvisorPartnerImportMapper(Component):
     @mapping
     def edicode(self, record):
         res = {
-            "edicode": record.get("CustomerFinvoiceDetails", {}).get(
-                "FinvoiceAddress"
-            )
+            "edicode": record.get("CustomerFinvoiceDetails", {}).get("FinvoiceAddress")
         }
 
         return res

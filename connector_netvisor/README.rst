@@ -10,11 +10,6 @@ Integration between Odoo and Netvisor
 
 Configuration
 =============
-Currently you have to install ``netvisor-api-client`` with
-
-.. code-block:: ini
-
-    pip3 install https://github.com/Tawasta/netvisor-api-client/archive/backports.zip
 
 **IMPORTANT!**
 Never user more than one (1) worker for root.netvisor.export_invoice channel.

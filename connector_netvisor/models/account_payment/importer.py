@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 
 from odoo import _
 from odoo.exceptions import ValidationError
@@ -47,7 +48,10 @@ class NetvisorPaymentImportMapper(Component):
         # No existing binding
         binding_values = {"backend_id": backend.id, "external_id": netvisor_key}
 
-        invoice_number = record.get("invoice_number")
+        invoice_number = record.get("InvoiceNumber").get("#text")
+        if not invoice_number:
+            raise ValidationError(_("Payment doesn't include invoice number"))
+
         invoice = self.env["account.move"].search(
             [
                 ("name", "=", invoice_number),
@@ -88,10 +92,24 @@ class NetvisorPaymentImportMapper(Component):
 
     # Netvisor, Odoo
     direct = [
-        ("sum", "amount"),
-        ("reference_number", "ref"),
-        ("date", "date"),
+        ("ReferenceNumber", "ref"),
     ]
+
+    @mapping
+    def amount(self, record):
+        amount = record.get("Sum").replace(",", ".")
+
+        res = {"amount": amount}
+
+        return res
+
+    @mapping
+    def date(self, record):
+        date = datetime.strptime(record.get("Date"), "%d.%m.%Y")
+
+        res = {"date": date}
+
+        return res
 
     @mapping
     def payment_method_id(self, record):

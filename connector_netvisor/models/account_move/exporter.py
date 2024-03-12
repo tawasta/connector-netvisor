@@ -27,33 +27,7 @@ class NetvisorInvoiceExportMapper(Component):
         :param record: Account move record
         :return:
         """
-        if not record.netvisor_send:
-            return _("Netvisor sending is disabled for this invoice")
-
-        if record.amount_total_signed == 0:
-            return _("Zero sum invoice. Skip sending")
-
-        for line in record.invoice_line_ids:
-            # Check if there are multiple taxes per line
-            taxes = line.tax_ids
-            if len(taxes) > 1:
-                raise MappingError(
-                    _(f"Please define only one tax for invoice line '{line.name}'")
-                )
-            elif len(taxes) < 1:
-                raise MappingError(
-                    _(f"Please define one tax for invoice line '{line.name}'")
-                )
-
-            tax = taxes[0]
-
-            if tax.netvisor_code == "-":
-                raise ValidationError(
-                    _(
-                        f"The tax '{tax.name}' is misconfigured. "
-                        f"Please configure 'Netvisor VAT code' for that"
-                    )
-                )
+        self._validate(record)
 
         # Force record company for property fields
         if record.company_id:
@@ -69,7 +43,8 @@ class NetvisorInvoiceExportMapper(Component):
             record.netvisor_status = "rejected"
 
         xml_string = self.env["ir.qweb"]._render(
-            "connector_netvisor.netvisor_salesinvoice", {"invoice": record, "backend": backend}
+            "connector_netvisor.netvisor_salesinvoice",
+            {"invoice": record, "backend": backend},
         )
 
         binding_model = self.env["netvisor.invoice"]
@@ -93,7 +68,7 @@ class NetvisorInvoiceExportMapper(Component):
 
                 msg = _(f"Updated invoice '{record.name}'")
             else:
-                endpoint = f"salesinvoice.nv?method=add"
+                endpoint = "salesinvoice.nv?method=add"
                 res = backend._api_request_post(endpoint, xml_string)
                 if res:
                     binding = binding_model.create(
@@ -143,9 +118,38 @@ class NetvisorInvoiceExportMapper(Component):
 
         return msg
 
+    def _validate(self, record):
+        if not record.netvisor_send:
+            return _("Netvisor sending is disabled for this invoice")
+
+        if record.amount_total_signed == 0:
+            return _("Zero sum invoice. Skip sending")
+
+        for line in record.invoice_line_ids:
+            # Check if there are multiple taxes per line
+            taxes = line.tax_ids
+            if len(taxes) > 1:
+                raise MappingError(
+                    _(f"Please define only one tax for invoice line '{line.name}'")
+                )
+            elif len(taxes) < 1:
+                raise MappingError(
+                    _(f"Please define one tax for invoice line '{line.name}'")
+                )
+
+            tax = taxes[0]
+
+            if tax.netvisor_code == "-":
+                raise ValidationError(
+                    _(
+                        f"The tax '{tax.name}' is misconfigured. "
+                        f"Please configure 'Netvisor VAT code' for that"
+                    )
+                )
+
     def update_status(self, backend, record):
         """Update invoice status to Netvisor"""
-        client = backend.authenticate()
+        backend.authenticate()
         binding_model = self.env["netvisor.invoice"]
         binding = binding_model.search(
             [("odoo_id", "=", record.id), ("backend_id", "=", backend.id)]
@@ -155,27 +159,35 @@ class NetvisorInvoiceExportMapper(Component):
         if record.payment_state in ["paid", "reversed"]:
             netvisor_status = "paid"
 
-        client.sales_invoices.update_status(binding.external_id, netvisor_status)
+        values = {}
+        endpoint = "updatesalesinvoicestatus.nv?netvisorkey={}&status={}".format(
+            binding.external_id, netvisor_status
+        )
+        backend._api_request_post(endpoint, values)
+
         record.netvisor_status = netvisor_status
         return f"Updated status to {netvisor_status}"
 
     def match_credit_note(self, binding):
         """Match credit note"""
-        client = binding.backend_id.authenticate()
+
         if binding.reversed_entry_id and binding.reversed_entry_id.netvisor_bind_ids:
             if len(binding.reversed_entry_id.netvisor_bind_ids) > 1:
                 raise ValidationError(
                     _("Multiple bindings for one invoice is not supported.")
                 )
             reversed_binding = binding.reversed_entry_id.netvisor_bind_ids[0]
+            backend = binding.backend_id
+            endpoint = "matchcreditnote.nv"
 
             try:
-                res = client.sales_invoices.match_credit_note(
-                    {
-                        "credit_note_netvisor_key": binding.external_id,
-                        "invoice_netvisor_key": reversed_binding.external_id,
-                    }
+                xml_string = self.env["ir.qweb"]._render(
+                    "connector_netvisor.netvisor_matchcreditnote",
+                    {"invoice": binding, "reverse": reversed_binding},
                 )
+
+                res = backend._api_request_post(endpoint, xml_string)
+
             except InvalidData as e:
                 raise RetryableJobError(
                     _("Refund invoice not found. It may not be sent in Netvisor yet")
@@ -259,4 +271,3 @@ class NetvisorInvoiceExportMapper(Component):
             )
 
         return {"invoice_lines": invoice_lines}
-

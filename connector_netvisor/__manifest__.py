@@ -29,7 +29,7 @@
     "application": True,
     "installable": True,
     "external_dependencies": {
-        "python": ["cachetools", "netvisor_api_client"],
+        "python": ["cachetools", "xmltodict"],
         "bin": [],
     },
     "depends": [
@@ -53,6 +53,8 @@
         "data/job_channel.xml",
         "data/job_function.xml",
         "data/template_customer.xml",
+        "data/template_match_credit_note.xml",
+        "data/template_product.xml",
         "data/template_sales_invoice.xml",
         "security/model_access.xml",
         "views/account_move.xml",

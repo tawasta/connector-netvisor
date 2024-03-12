@@ -40,7 +40,9 @@ class NetvisorPartner(models.Model):
         # which has a list of actual customers.
         for records in customers.values():
             for record in records:
-                job_desc = _("Netvisor: import customer '{}'".format(record.get("Name")))
+                job_desc = _(
+                    "Netvisor: import customer '{}'".format(record.get("Name"))
+                )
                 self.with_delay(description=job_desc).netvisor_import_customer(
                     record.get("Netvisorkey"), backend.company_id
                 )

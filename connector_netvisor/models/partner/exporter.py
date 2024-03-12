@@ -4,7 +4,6 @@ from odoo import _
 from odoo.exceptions import UserError
 
 from odoo.addons.component.core import Component
-from odoo.addons.connector.components.mapper import mapping
 
 
 class NetvisorPartnerExportMapper(Component):

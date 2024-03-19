@@ -10,7 +10,10 @@
                 <field name="name_extension" />
             </field>
 
-            <xpath expr="//page[@name='sales_purchases']//field[@name='user_id']" position="after">
+            <xpath
+        expr="//page[@name='sales_purchases']//field[@name='user_id']"
+        position="after"
+      >
                 <field name="email_invoicing_address" widget="email" />
             </xpath>
 

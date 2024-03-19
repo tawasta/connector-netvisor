@@ -10,9 +10,9 @@
                 <field name="name_extension" />
             </field>
 
-            <field name="website" position="before">
+            <xpath expr="//page[@name='sales_purchases']//field[@name='user_id']" position="after">
                 <field name="email_invoicing_address" widget="email" />
-            </field>
+            </xpath>
 
             <xpath expr="//notebook/page[last()]" position="after">
                 <page

@@ -12,7 +12,19 @@ class ResPartner(models.Model):
         """
         res = super().create_company()
 
-        if hasattr(self, "company_email") and self.company_email:
-            self.parent_id.email_invoicing_address = self.company_email
+        vals = {}
+        if self.email_invoicing_address:
+            vals = {
+                "email_invoicing_address": self.email_invoicing_address,
+                "email": False,
+            }
+
+        elif hasattr(self, "company_email") and self.company_email:
+            vals = {
+                "email_invoicing_address": self.company_email,
+                "email": False,
+            }
+
+        self.parent_id.write(vals)
 
         return res

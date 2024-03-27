@@ -7,7 +7,8 @@ class WebsiteSaleNetvisor(WebsiteSale):
         Save company email to parent company
         """
 
-        checkout["email_invoicing_address"] = all_values.get("company_email", "")
+        # Don't set email to company, use email_invoicing_address instead
+        checkout["email_invoicing_address"] = all_values.pop("company_email", "")
 
         res = super()._checkout_form_save(mode, checkout, all_values)
 

@@ -7,7 +7,6 @@ from datetime import datetime
 import requests
 import xmltodict
 from netvisor_api_client import Netvisor
-from netvisor_api_client.exc import AuthenticationFailed
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -154,16 +153,22 @@ class NetvisorBackend(models.Model):
         :return:
         """
         self.ensure_one()
-        client = self.authenticate()
 
-        try:
-            # Try to list customers
-            client.customers.list()
-            # TODO: use something else than a error popup
-            raise ValidationError(_("Authentication successful"))
-        except AuthenticationFailed as e:
-            _logger.error(e)
-            raise ValidationError(_("Authentication failed!\n{}".format(e))) from e
+        # Try to list customers
+        endpoint = "productlist.nv"
+        self._api_request_get(endpoint)
+
+        title = _("Authentication successful!")
+        message = _("Everything seems properly set up.")
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": title,
+                "message": message,
+                "sticky": False,
+            },
+        }
 
     def authenticate(self):
         """

@@ -6,7 +6,6 @@ from datetime import datetime
 
 import requests
 import xmltodict
-from netvisor_api_client import Netvisor
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -170,29 +169,6 @@ class NetvisorBackend(models.Model):
             },
         }
 
-    def authenticate(self):
-        """
-        Start an API session
-        :return: Netvisor client
-        """
-        if not self.company_id.company_registry:
-            raise ValidationError(
-                _("Company registry is missing. Please provide and try again")
-            )
-
-        client = Netvisor(
-            host=self.host,
-            sender=self.sender,
-            partner_id=self.partner,
-            partner_key=self.partner_key,
-            customer_id=self.customer,
-            customer_key=self.customer_key,
-            organization_id=self.company_id.company_registry,
-            language=self.language,
-        )
-
-        return client
-
     def _api_request_post(self, endpoint, values, params=None):
         """
         Helper for requests.post method
@@ -321,6 +297,8 @@ class NetvisorBackend(models.Model):
             res = root.get("Product")
         elif root.get("ProductList"):
             res = root.get("ProductList").get("Product")
+        elif root.get("SalesInvoice"):
+            res = root.get("SalesInvoice")
         elif root.get("SalesPaymentList"):
             res = root.get("SalesPaymentList").get("SalesPayment")
         elif root.keys() and len(root.keys()) == 1:

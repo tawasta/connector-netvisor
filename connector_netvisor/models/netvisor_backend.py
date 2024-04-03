@@ -312,6 +312,10 @@ class NetvisorBackend(models.Model):
             res = root.get("Customerlist")
         elif root.get("Customer"):
             res = root.get("Customer")
+        elif root.get("Product"):
+            res = root.get("Product")
+        elif root.get("ProductList"):
+            res = root.get("ProductList").get("Product")
         elif root.get("SalesPaymentList"):
             res = root.get("SalesPaymentList").get("SalesPayment")
         elif root.keys() and len(root.keys()) == 1:

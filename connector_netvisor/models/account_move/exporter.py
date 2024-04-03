@@ -1,14 +1,11 @@
 import logging
 
-from netvisor_api_client.exc import InvalidData
-
 from odoo import _
 from odoo.exceptions import ValidationError
 
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
 from odoo.addons.connector.exception import MappingError
-from odoo.addons.queue_job.exception import RetryableJobError
 
 _logger = logging.getLogger(__name__)
 
@@ -60,36 +57,32 @@ class NetvisorInvoiceExportMapper(Component):
             )
             return _("Updating invoices to Netvisor is not allowed")
 
-        try:
-            if binding:
-                # Update invoice
-                endpoint = f"salesinvoice.nv?method=edit&id={binding.external_id}"
-                backend._api_request_post(endpoint, xml_string)
+        if binding:
+            # Update invoice
+            endpoint = f"salesinvoice.nv?method=edit&id={binding.external_id}"
+            backend._api_request_post(endpoint, xml_string)
 
-                msg = _(f"Updated invoice '{record.name}'")
+            msg = _(f"Updated invoice '{record.name}'")
+        else:
+            endpoint = "salesinvoice.nv?method=add"
+            res = backend._api_request_post(endpoint, xml_string)
+            if res:
+                binding = binding_model.create(
+                    {
+                        "backend_id": backend.id,
+                        "external_id": res.get("InsertedDataIdentifier"),
+                        "odoo_id": record.id,
+                    }
+                )
+
+                msg = _("Created invoice '{}'".format(record.display_name))
             else:
-                endpoint = "salesinvoice.nv?method=add"
-                res = backend._api_request_post(endpoint, xml_string)
-                if res:
-                    binding = binding_model.create(
-                        {
-                            "backend_id": backend.id,
-                            "external_id": res.get("InsertedDataIdentifier"),
-                            "odoo_id": record.id,
-                        }
+                raise MappingError(
+                    _(
+                        "Something went wrong when exporting invoice. "
+                        "Please see log for more details"
                     )
-
-                    msg = _("Created invoice '{}'".format(record.display_name))
-                else:
-                    raise MappingError(
-                        _(
-                            "Something went wrong when exporting invoice. "
-                            "Please see log for more details"
-                        )
-                    )
-        except InvalidData as e:
-            _logger.error(e)
-            raise ValidationError(_("Invalid data: {}".format(e))) from e
+                )
 
         # Save sent XML for debugging purposes
         xml_name = "%s_netvisor_salesinvoice.xml" % (record.name.replace("/", "_"))
@@ -180,18 +173,12 @@ class NetvisorInvoiceExportMapper(Component):
             backend = binding.backend_id
             endpoint = "matchcreditnote.nv"
 
-            try:
-                xml_string = self.env["ir.qweb"]._render(
-                    "connector_netvisor.netvisor_matchcreditnote",
-                    {"invoice": binding, "reverse": reversed_binding},
-                )
+            xml_string = self.env["ir.qweb"]._render(
+                "connector_netvisor.netvisor_matchcreditnote",
+                {"invoice": binding, "reverse": reversed_binding},
+            )
 
-                res = backend._api_request_post(endpoint, xml_string)
-
-            except InvalidData as e:
-                raise RetryableJobError(
-                    _("Refund invoice not found. It may not be sent in Netvisor yet")
-                ) from e
+            res = backend._api_request_post(endpoint, xml_string)
 
         else:
             res = _("No refunded invoice to match")
@@ -218,19 +205,12 @@ class NetvisorInvoiceExportMapper(Component):
         else:
             # Partner seems to be mandatory?
             raise ValidationError(
-                _(f"'{record.partner_id.name}' is not yet exported to Netvisor.")
+                _(
+                    "'{}' is not yet exported to Netvisor.".format(
+                        record.partner_id.name
+                    )
+                )
             )
-            # If partner identifier is not known, send all information
-            # res["invoicing_customer_name"] = record.partner_id.display_name
-            # res["invoicing_customer_address_line"] = record.partner_id.street or ""
-            # res["invoicing_customer_additional_address_line"] = (
-            #     record.partner_id.street2 or ""
-            # )
-            # res["invoicing_customer_post_number"] = record.partner_id.zip or ""
-            # res["invoicing_customer_town"] = record.partner_id.city or ""
-
-            # TODO: add type to netvisor-api-client
-            # res["invoicing_customer_country_code"] = record.partner_id.country_id.code
         return res
 
     @mapping

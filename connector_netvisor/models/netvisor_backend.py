@@ -293,6 +293,8 @@ class NetvisorBackend(models.Model):
             res = root.get("Customerlist")
         elif root.get("Customer"):
             res = root.get("Customer")
+        elif root.get("DimensionNameList"):
+            res = root.get("DimensionNameList").get("DimensionName")
         elif root.get("Product"):
             res = root.get("Product")
         elif root.get("ProductList"):
@@ -429,3 +431,18 @@ class NetvisorBackend(models.Model):
         netvisor_model.with_delay(description=job_desc).netvisor_import_payments(
             self.company_id.id
         )
+
+    def action_import_dimensions(self):
+        """
+        Import dimensions from Netvisor
+        :return:
+        """
+        _logger.debug(_("Importing dimensions from Netvisor"))
+        netvisor_model = self.env["netvisor.dimension"]
+
+        for record in self:
+            job_desc = _(
+                "Netvisor: import dimensions for {}".format(record.company_id.name)
+            )
+
+            netvisor_model.with_delay(description=job_desc).netvisor_import_dimensions()

@@ -168,6 +168,28 @@
                                 <field name="print_channel_format_type" />
                             </group>
                         </page>
+
+                        <page name="dimensions" string="Dimensions">
+                            <group
+                name="dimensions"
+                string="Import"
+                colspan="2"
+              >
+                                <p class="oe_grey oe_inline">
+                                    Import or update all dimensions from Netvisor.
+                                    <br />
+                                    If dimension doesn't exist, one will be created.
+                                    If dimension exists (name match), it will be updated.
+                                </p>
+                                <button
+                  name="action_import_dimensions"
+                  type="object"
+                  class="oe_highlight"
+                  string="Import dimensions"
+                />
+                            </group>
+                        </page>
+
                     </notebook>
 
                 </sheet>

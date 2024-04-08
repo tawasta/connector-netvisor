@@ -5,7 +5,9 @@ class Partner(models.Model):
     _inherit = "res.partner"
 
     name_extension = fields.Char(string="Name extension")
-    email_invoicing_address = fields.Char(string="Invoicing email")
+    email_invoicing_address = fields.Char(
+        string="Invoicing email", help="Netvisor invoicing email"
+    )
 
     netvisor_bind_ids = fields.One2many(
         comodel_name="netvisor.partner",

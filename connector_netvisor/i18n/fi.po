@@ -1571,7 +1571,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_netvisor.field_res_partner__email_invoicing_address
 #: model:ir.model.fields,field_description:connector_netvisor.field_res_users__email_invoicing_address
 msgid "Invoicing email"
-msgstr ""
+msgstr "Laskutussähköposti"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__message_is_follower

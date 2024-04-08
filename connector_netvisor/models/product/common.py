@@ -36,6 +36,19 @@ class Product(models.Model):
                 # Immediate sending
                 netvisor_model.netvisor_export_product(record, company_id)
 
+    def action_netvisor_import_record(self, company_id=False):
+        for record in self:
+            netvisor_model = self.env["netvisor.product"]
+
+            if not company_id and record.company_id:
+                company_id = record.company_id.id
+
+            if company_id:
+                netvisor_model = netvisor_model.with_context(company_id=company_id)
+
+            for binding in record.netvisor_bind_ids:
+                netvisor_model.netvisor_import_product(binding.external_id, company_id)
+
     def write(self, values):
         """
         Override to force product create or update on each write

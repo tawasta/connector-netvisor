@@ -30,8 +30,8 @@ class NetvisorProduct(models.Model):
         :return:
         """
         backend = self.get_netvisor_backend(company)
-        client = backend.authenticate()
-        records = client.products.list()
+        endpoint = "productlist.nv"
+        records = backend._api_request_get(endpoint)
 
         if backend.company_id:
             self = self.with_context(company_id=backend.company_id.id)
@@ -39,11 +39,11 @@ class NetvisorProduct(models.Model):
         for record in records:
             job_desc = _(
                 "Netvisor: import product '{}'".format(
-                    record.get("product_code") or record.get("name")
+                    record.get("NetvisorKey") or record.get("Name")
                 )
             )
             self.with_delay(description=job_desc).netvisor_import_product(
-                record.get("netvisor_key"), backend.company_id
+                record.get("NetvisorKey"), backend.company_id
             )
 
     def netvisor_export_products(self):

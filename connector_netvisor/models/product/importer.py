@@ -26,8 +26,10 @@ class NetvisorProductImportMapper(Component):
         """
         netvisor_model = self.env["netvisor.product"]
         odoo_model = self.env["product.product"]
-        client = backend.authenticate()
-        product = client.products.get(netvisor_key)
+
+        endpoint = f"getproduct.nv?id={netvisor_key}"
+        product = backend._api_request_get(endpoint)
+
         values = self.map_record(product).values()
         values["company_id"] = backend.company_id.id
 
@@ -102,15 +104,15 @@ class NetvisorProductImportMapper(Component):
 
     @mapping
     def name(self, record):
-        res = {"name": record.get("product_base_information", {}).get("name")}
+        res = {"name": record.get("ProductBaseInformation", {}).get("Name")}
 
         return res
 
     @mapping
     def description_sale(self, record):
         res = {
-            "description_sale": record.get("product_base_information", {}).get(
-                "description"
+            "description_sale": record.get("ProductBaseInformation", {}).get(
+                "Description"
             )
         }
 
@@ -119,58 +121,55 @@ class NetvisorProductImportMapper(Component):
     @mapping
     def default_code(self, record):
         res = {
-            "default_code": record.get("product_base_information", {}).get(
-                "product_code"
-            )
+            "default_code": record.get("ProductBaseInformation", {}).get("ProductCode")
         }
 
         return res
 
     @mapping
     def weight(self, record):
-        res = {"weight": record.get("product_base_information", {}).get("unit_weight")}
+        res = {"weight": record.get("ProductBaseInformation", {}).get("UnitWeight")}
 
         return res
 
     @mapping
     def sale_ok(self, record):
         res = {
-            "sale_ok": record.get("product_base_information", {}).get(
-                "is_sales_product"
-            )
+            "sale_ok": record.get("ProductBaseInformation", {}).get("IsSalesProduct")
         }
 
         return res
 
     @mapping
     def standard_price(self, record):
-        res = {
-            "standard_price": record.get("product_base_information", {}).get(
-                "purchase_price"
-            )
-        }
+        standard_price = record.get("ProductBaseInformation", {}).get("PurchasePrice")
+
+        if standard_price:
+            res = {"standard_price": float(standard_price.replace(",", "."))}
 
         return res
 
     @mapping
     def active(self, record):
-        res = {"active": record.get("product_base_information", {}).get("is_active")}
+        res = {"active": record.get("ProductBaseInformation", {}).get("IsActive")}
 
         return res
 
     @mapping
     def lst_price(self, record):
-        res = {
-            "lst_price": record.get("product_base_information", {})
-            .get("unit_price")
-            .get("amount")
-        }
+        lst_price = (
+            record.get("ProductBaseInformation", {}).get("UnitPrice").get("#text")
+        )
+        if lst_price:
+            lst_price = float(lst_price.replace(",", "."))
+
+        res = {"lst_price": lst_price}
 
         return res
 
     @mapping
     def categ_id(self, record):
-        category_name = record.get("product_base_information", {}).get("product_group")
+        category_name = record.get("ProductBaseInformation", {}).get("ProductGroup")
 
         if not category_name:
             return
@@ -186,7 +185,7 @@ class NetvisorProductImportMapper(Component):
 
     @mapping
     def uom_id(self, record):
-        uom_name = record.get("product_base_information", {}).get("unit")
+        uom_name = record.get("ProductBaseInformation", {}).get("Unit")
 
         if not uom_name:
             return
@@ -205,7 +204,7 @@ class NetvisorProductImportMapper(Component):
 
     @mapping
     def taxes_id(self, record):
-        tax = record.get("product_book_keeping_details", {}).get("default_vat_percent")
+        tax = record.get("ProductBookKeepingDetails", {}).get("DefaultVatPercent")
 
         if not tax:
             return
@@ -230,8 +229,8 @@ class NetvisorProductImportMapper(Component):
 
     @mapping
     def property_account_income_id(self, record):
-        account_number = record.get("product_book_keeping_details", {}).get(
-            "default_domestic_account_number"
+        account_number = record.get("ProductBookKeepingDetails", {}).get(
+            "DefaultDomesticAccountNumber"
         )
 
         if not account_number:

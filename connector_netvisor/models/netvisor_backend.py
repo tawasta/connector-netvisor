@@ -1,7 +1,11 @@
+import hashlib
 import logging
+import urllib.parse
+import uuid
+from datetime import datetime
 
-from netvisor_api_client import Netvisor
-from netvisor_api_client.exc import AuthenticationFailed
+import requests
+import xmltodict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -16,6 +20,7 @@ class NetvisorBackend(models.Model):
     _description = "Backend for Netvisor integration"
     rec_name = "partner"
 
+    # region Fields
     company_id = fields.Many2one(
         comodel_name="res.company",
         string="Company",
@@ -131,6 +136,7 @@ class NetvisorBackend(models.Model):
         "Will be automatically updated after fetching payments",
         default="2020-01-01",
     )
+    # endregion
 
     @api.onchange("environment")
     def onchange_environment(self):
@@ -146,39 +152,164 @@ class NetvisorBackend(models.Model):
         :return:
         """
         self.ensure_one()
-        client = self.authenticate()
 
-        try:
-            # Try to list customers
-            client.customers.list()
-            # TODO: use something else than a error popup
-            raise ValidationError(_("Authentication successful"))
-        except AuthenticationFailed as e:
-            _logger.error(e)
-            raise ValidationError(_("Authentication failed!\n{}".format(e))) from e
+        # Try to list customers
+        endpoint = "productlist.nv"
+        self._api_request_get(endpoint)
 
-    def authenticate(self):
+        title = _("Authentication successful!")
+        message = _("Everything seems properly set up.")
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": title,
+                "message": message,
+                "sticky": False,
+            },
+        }
+
+    def _api_request_post(self, endpoint, values, params=None):
         """
-        Start an API session
-        :return: Netvisor client
+        Helper for requests.post method
+
+        :param endpoint: API Endpoint
+        :param values: Requests data
+        :param params: Requests params
+        :return: Parser response dict
         """
+        _logger.debug(_("Making a POST request to endpoint {}".format(endpoint)))
+        if params is None:
+            params = {}
+
+        url = self._get_request_url(endpoint, params)
+        headers = self._get_authentication_headers(url)
+
+        response = requests.post(
+            url=url,
+            data=values,
+            headers=headers,
+        )
+
+        res = self._parse_response(response)
+
+        return res
+
+    def _api_request_get(self, endpoint, params=None):
+        """
+        Helper for requests.get method
+
+        :param endpoint: API Endpoint
+        :param params: Requests params
+        :return: Parser response dict
+        """
+        _logger.debug(_("Making a GET request to endpoint {}".format(endpoint)))
+        if params is None:
+            params = {}
+
+        url = self._get_request_url(endpoint, params)
+        headers = self._get_authentication_headers(url)
+
+        response = requests.get(
+            url=url,
+            headers=headers,
+        )
+
+        res = self._parse_response(response)
+
+        return res
+
+    def _get_mac(self, url, timestamp, transaction_id):
+        parameters = [
+            url,
+            self.sender,
+            self.customer,
+            timestamp,
+            self.language,
+            self.company_id.company_registry,
+            transaction_id,
+            self.customer_key,
+            self.partner_key,
+        ]
+        joined_parameters = b"&".join(
+            p.encode("utf-8") if isinstance(p, str) else p for p in parameters
+        )
+        # SHA256 is used in documentation, but doesn't seem to be working
+        # return hashlib.sha256(joined_parameters).hexdigest()
+        return hashlib.md5(joined_parameters).hexdigest()
+
+    def _get_authentication_headers(self, url):
         if not self.company_id.company_registry:
             raise ValidationError(
                 _("Company registry is missing. Please provide and try again")
             )
 
-        client = Netvisor(
-            host=self.host,
-            sender=self.sender,
-            partner_id=self.partner,
-            partner_key=self.partner_key,
-            customer_id=self.customer,
-            customer_key=self.customer_key,
-            organization_id=self.company_id.company_registry,
-            language=self.language,
-        )
+        timestamp = datetime.now().isoformat(" ")[:-3]
+        transaction_id = uuid.uuid4().hex
+        mac = self._get_mac(url, timestamp, transaction_id)
 
-        return client
+        headers = {
+            "Content-type": "text/plain",
+            "X-Netvisor-Authentication-Sender": self.sender,
+            "X-Netvisor-Authentication-CustomerId": self.customer,
+            "X-Netvisor-Authentication-PartnerId": self.partner,
+            "X-Netvisor-Authentication-Timestamp": timestamp,
+            "X-Netvisor-Interface-Language": self.language,
+            "X-Netvisor-Organisation-ID": self.company_id.company_registry,
+            "X-Netvisor-Authentication-TransactionId": transaction_id,
+            "X-Netvisor-Authentication-MAC": mac,
+        }
+
+        return headers
+
+    def _get_request_url(self, endpoint, params):
+        url = f"{self.host}/{endpoint}"
+        if params:
+            url = f"{url}?{urllib.parse.urlencode(params)}"
+
+        return url
+
+    def _parse_response(self, response):
+        text = xmltodict.parse(response.text)
+        root = text.get("Root")
+
+        status_code = response.status_code
+
+        if status_code == 404:
+            raise ValidationError(_("This endpoint doesn't seem to exist."))
+
+        response_status = root.get("ResponseStatus")
+        response_status_list = response_status.get("Status")
+
+        _logger.debug(root.keys())
+        _logger.debug(response_status)
+
+        if response_status_list and response_status_list[0] == "FAILED":
+            raise ValidationError(response_status_list[1])
+
+        if root.get("Replies"):
+            res = root.get("Replies")
+        elif root.get("Customerlist"):
+            res = root.get("Customerlist")
+        elif root.get("Customer"):
+            res = root.get("Customer")
+        elif root.get("DimensionNameList"):
+            res = root.get("DimensionNameList").get("DimensionName")
+        elif root.get("Product"):
+            res = root.get("Product")
+        elif root.get("ProductList"):
+            res = root.get("ProductList").get("Product")
+        elif root.get("SalesInvoice"):
+            res = root.get("SalesInvoice")
+        elif root.get("SalesPaymentList"):
+            res = root.get("SalesPaymentList").get("SalesPayment")
+        elif root.keys() and len(root.keys()) == 1:
+            # Some endpoints just return the ResponseStatus
+            res = {}
+        else:
+            raise ValidationError(_("Netvisor API response could not be parsed!"))
+
+        return res
 
     def action_import_customers(self):
         """
@@ -300,3 +431,18 @@ class NetvisorBackend(models.Model):
         netvisor_model.with_delay(description=job_desc).netvisor_import_payments(
             self.company_id.id
         )
+
+    def action_import_dimensions(self):
+        """
+        Import dimensions from Netvisor
+        :return:
+        """
+        _logger.debug(_("Importing dimensions from Netvisor"))
+        netvisor_model = self.env["netvisor.dimension"]
+
+        for record in self:
+            job_desc = _(
+                "Netvisor: import dimensions for {}".format(record.company_id.name)
+            )
+
+            netvisor_model.with_delay(description=job_desc).netvisor_import_dimensions()

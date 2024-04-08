@@ -4,7 +4,6 @@ from odoo import _
 from odoo.exceptions import UserError
 
 from odoo.addons.component.core import Component
-from odoo.addons.connector.components.mapper import mapping
 
 
 class NetvisorPartnerExportMapper(Component):
@@ -26,27 +25,31 @@ class NetvisorPartnerExportMapper(Component):
         if record.company_id:
             record = record.with_company(record.company_id.id)
 
-        values = self.map_record(record).values()
-        client = backend.authenticate()
         binding_model = self.env["netvisor.partner"]
 
         binding = binding_model.search(
             [("odoo_id", "=", record.id), ("backend_id", "=", backend.id)]
         )
 
+        xml_string = self.env["ir.qweb"]._render(
+            "connector_netvisor.netvisor_customer", {"partner": record}
+        )
+
         if binding:
             # Update existing record in Netvisor
-            client.customers.update(binding.external_id, values)
+            endpoint = f"customer.nv?method=edit&id={binding.external_id}"
+            backend._api_request_post(endpoint, xml_string)
             msg = _(f"Updated partner '{record.display_name}'")
         else:
-            res = client.customers.create(values)
+            # Create a new record to Netvisor
+            res = backend._api_request_post("customer.nv?method=add", xml_string)
 
             if res:
                 try:
                     binding_model.create(
                         {
                             "backend_id": backend.id,
-                            "external_id": res,
+                            "external_id": res.get("InsertedDataIdentifier"),
                             "odoo_id": record.id,
                         }
                     )
@@ -64,68 +67,3 @@ class NetvisorPartnerExportMapper(Component):
                 )
 
         return msg
-
-    @mapping
-    def customer_base_information(self, record):
-        if (
-            record.commercial_partner_id.id != record.id
-            and record.commercial_partner_id.ref != record.ref
-        ):
-            # Using "ref" as internal identifier is somewhat open to
-            # interpretation. Ref can also be used for customer-specific
-            # reference number.
-            ref = record.ref
-        else:
-            # Skip sending ref if commercial partner (contact company) has the same ref.
-            # Netvisor won't allow duplicate customer references
-            ref = ""
-
-        res = {
-            "customer_base_information": {
-                "name": record.name or "",
-                "name_extension": record.name_extension or "",
-                "internal_identifier": ref,
-                "external_identifier": record.business_code or "",
-                "is_active": record.active or "",
-                "street_address": record.street or "",
-                "additional_address_line": record.street2 or "",
-                "city": record.city or "",
-                "post_number": record.zip or "",
-                "country": record.country_id.code or "",
-                "home_page_uri": record.website or "",
-                "email": record.email or "",
-                "email_invoicing_address": record.email_invoicing_address or "",
-                "phone_number": record.phone or "",
-            }
-        }
-
-        return res
-
-    @mapping
-    def customer_additional_information(self, record):
-        res = {
-            "customer_additional_information": {
-                "comment": record.comment or "",
-                # "reference_number": record.ref or "",
-            }
-        }
-
-        return res
-
-    @mapping
-    def customer_finvoice_details(self, record):
-        res = {}
-        if (
-            record.company_type == "company"
-            and record.edicode
-            and record.einvoice_operator_id
-        ):
-            res = {
-                "customer_finvoice_details": {
-                    "finvoice_address": record.edicode or "",
-                    "finvoice_router_code": record.einvoice_operator_id.identifier
-                    or "",
-                }
-            }
-
-        return res

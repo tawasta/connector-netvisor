@@ -106,7 +106,7 @@ class AccountMove(models.Model):
             # Only use direct send when validating one invoice
             # Otherwise we might end up with a situation where the first
             # invoice(s) are sent, but one of the following invoices end up
-            # with API error and will rollback the whole action in Odoo,
+            # with API error and will roll back the whole action in Odoo,
             # even though some invoices were sent to Netvisor
             netvisor_model = self.env["netvisor.invoice"].sudo()
             netvisor_model.netvisor_export_invoice(self)

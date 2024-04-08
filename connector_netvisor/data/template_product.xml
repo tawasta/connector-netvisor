@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!--
+        Netvisor product XML document
+    -->
+    <template id="netvisor_product">
+        <root>
+            <product>
+                <productbaseinformation>
+                    <productcode t-esc="product.default_code or ''" />
+                    <productgroup t-esc="product.categ_id or ''" />
+                    <name t-esc="product.name or ''" />
+                    <description t-esc="product.description_sale or ''" />
+                    <unitprice type="net" t-esc="record.lst_price or 0" />
+                    <unit t-esc="record.uom_id.name" />
+                    <purchaseprice t-esc="record.standard_price" />
+                    <!--tariffheading>Code Complete</tariffheading-->
+                    <!--comissionpercentage>11</comissionpercentage-->
+                    <!--inventorybatchlinkingmode>4</inventorybatchlinkingmode-->
+                    <isactive t-esc="record.active" />
+                    <issalesproduct t-esc="record.sale_ok" />
+                    <!--inventoryenabled>1</inventoryenabled-->
+                    <!--countryoforigin type="ISO-3166">FI</countryoforigin-->
+                    <primaryeancode type="ean13" t-esc="record.barcode" />
+                    <!--secondaryeancode type="code128">1234567890</secondaryeancode-->
+                    <!--inventoryalertlimit>5</inventoryalertlimit-->
+                </productbaseinformation>
+                <productbookkeepingdetails>
+                    <!-- TODO: Check for multiple taxes -->
+                    <defaultvatpercentage
+            t-esc="record.tax_ids and record.tax_ids[0].amount or 0"
+          />
+                    <defaultdomesticaccountnumber
+            t-esc="record.property_account_invoice_id.code"
+          />
+                    <!--defaulteuaccountnumber>3360<defaulteuaccountnumber-->
+                    <!--defaultoutsideeuaccountnumber>3380</defaultoutsideeuaccountnumber-->
+                </productbookkeepingdetails>
+                <productadditionalinformation>
+                    <productnetweight t-esc="record.weight" />
+                    <!--<productgrossweight>15</productgrossweight>-->
+                    <productweightunit t-esc="record.uom_id.name" />
+                </productadditionalinformation>
+                <!--dimension>
+                    <dimensionname>Project</dimensionname>
+                    <dimensionitem>Project1</dimensionitem>
+                </dimension-->
+                <!--productpackageinformation>
+                    <packagewidth>7,3</packagewidth>
+                    <packageheight>15,0</packageheight>
+                    <packagelength>36,1</packagelength>
+                </productpackageinformation-->
+                <!--productcustomtags>
+                    <productcustomtag>
+                    <tagname>Lisätietokentän nimi</tagname>
+                    <tagvalue datatype="text">Lisätietokentän arvo</tagvalue>
+                    </productcustomtag>
+                </productcustomtags-->
+            </product>
+        </root>
+    </template>
+</odoo>

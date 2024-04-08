@@ -23,10 +23,11 @@ class NetvisorDimensionItemImportMapper(Component):
         """
         netvisor_model = self.env["netvisor.dimension.item"]
         odoo_model = self.env["account.analytic.tag"]
-        netvisor_key = dimension_item.get("netvisor_key")
+
+        netvisor_key = dimension_item.get("Netvisorkey")
         values = {
-            "analytic_dimension_id": dimension_item.get("dimension_id"),
-            "name": dimension_item.get("name"),
+            "analytic_dimension_id": dimension_item.get("DimensionId"),
+            "name": dimension_item.get("Name"),
         }
 
         # Search for an existing binding
@@ -67,8 +68,8 @@ class NetvisorDimensionItemImportMapper(Component):
                     )
                 )
 
-    # Netvisor, Odoo
+    # Netvisor, OdooF
     direct = [
-        ("dimension_id", "analytic_dimension_id"),
-        ("name", "name"),
+        ("DimensionId", "analytic_dimension_id"),
+        ("Name", "name"),
     ]

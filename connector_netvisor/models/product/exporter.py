@@ -1,10 +1,9 @@
 from psycopg2 import IntegrityError
 
 from odoo import _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 
 from odoo.addons.component.core import Component
-from odoo.addons.connector.components.mapper import mapping
 
 
 class NetvisorProductExportMapper(Component):
@@ -24,20 +23,23 @@ class NetvisorProductExportMapper(Component):
         # Force record company for property fields
         if record.company_id:
             record = record.with_company(record.company_id.id)
-        values = self.map_record(record).values()
-        client = backend.authenticate()
         binding_model = self.env["netvisor.product"]
 
         binding = binding_model.search(
             [("odoo_id", "=", record.id), ("backend_id", "=", backend.id)]
         )
 
+        xml_string = self.env["ir.qweb"]._render(
+            "connector_netvisor.netvisor_product", {"product": record}
+        )
+
         if binding:
             # Update existing record in Netvisor
-            client.products.update(binding.external_id, values)
+            endpoint = f"product.nv?method=edit&id={binding.external_id}"
+            backend._api_request_post(endpoint, xml_string)
             msg = _(f"Updated product '{record.display_name}'")
         else:
-            res = client.products.create(values)
+            res = backend._api_request_post("customer.nv?method=add", xml_string)
 
             if res:
                 try:
@@ -62,81 +64,3 @@ class NetvisorProductExportMapper(Component):
                 )
 
         return msg
-
-    @mapping
-    def product_base_information(self, record):
-        res = {
-            "product_base_information": {
-                "name": record.name or "",
-                "product_code": record.default_code or "",
-                "product_group": record.categ_id.name or "",
-                # TODO: logic for what description to use
-                "description": record.description_sale or "",
-                "unit_price": {"amount": record.lst_price, "type": "net"},
-                # "unit_weight": record.weight,
-                "unit": record.uom_id.name,
-                "purchase_price": record.standard_price,
-                # "tariff_heading": TODO,
-                # "comission_percentage": TODO,
-                "is_active": record.active,
-                "is_sales_product": record.sale_ok,
-                # "inventory_enabled": TODO,
-                # "country_of_origin": TODO,
-            }
-        }
-
-        return res
-
-    @mapping
-    def product_bookkeeping_details(self, record):
-        tax_ids = record.taxes_id
-
-        if not tax_ids:
-            tax = 0
-        elif len(tax_ids) == 1:
-            tax = tax_ids[0].amount
-        else:
-            raise ValidationError(_("Only one tax for product is supported"))
-
-        code = record.property_account_income_id.code or False
-
-        res = {
-            "product_bookkeeping_details": {
-                "default_vat_percentage": tax,
-            }
-        }
-
-        if code:
-            res["product_bookkeeping_details"]["default_domestic_account_number"] = code
-
-        return res
-
-    @mapping
-    def product_additional_information(self, record):
-        # Not implemented yet
-        return
-
-        # res = {}
-        #
-        # if record.weight:
-        #     res["product_additional_information"] = {
-        #         "product_gross_weight": {record.weight}
-        #     }
-        #
-        # # TODO: product_net_weight
-        # # TODO: product_weight_unit
-        #
-        # return res
-
-    @mapping
-    def product_package_information(self, record):
-        # {
-        #     "product_package_information": {
-        #         "package_width": "",
-        #         "package_height": "",
-        #         "package_length": "",
-        #     }
-        # }
-
-        # No mappings yet, so return nothing
-        return

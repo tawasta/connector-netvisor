@@ -31,9 +31,12 @@ class NetvisorInvoiceImportMapper(Component):
         if not binding:
             raise ValidationError(_("Please send the invoice to Netvisor first"))
 
-        client = backend.authenticate()
-        invoice = client.sales_invoices.get(binding.external_id)
-        invoice_status = invoice.get("invoice_status").lower().replace(" ", "")
+        endpoint = f"getsalesinvoice.nv?netvisorkey={binding.external_id}"
+        invoice = backend._api_request_get(endpoint)
+
+        invoice_status = (
+            invoice.get("InvoiceStatus").get("#text").lower().replace(" ", "")
+        )
 
         if record.netvisor_status != invoice_status:
             res = _(
@@ -50,7 +53,7 @@ class NetvisorInvoiceImportMapper(Component):
         """
         Update invoice details
         :param backend: Netvisor backend record
-        :param netvisor_key: Netvisor external id
+        :param record: Odoo record
         :return:
         """
         binding = record.netvisor_bind_ids.filtered(
@@ -60,16 +63,18 @@ class NetvisorInvoiceImportMapper(Component):
         if not binding:
             raise ValidationError(_("Please send the invoice to Netvisor first"))
 
-        client = backend.authenticate()
-        invoice = client.sales_invoices.get(binding.external_id)
-        invoice_status = invoice.get("invoice_status").lower().replace(" ", "")
-
-        binding.write(
-            {
-                "name": invoice.get("number"),
-                "payment_reference": invoice.get("reference_number"),
-                "netvisor_status": invoice_status,
-            }
+        endpoint = f"getsalesinvoice.nv?netvisorkey={binding.external_id}"
+        invoice = backend._api_request_get(endpoint)
+        invoice_status = (
+            invoice.get("InvoiceStatus").get("#text").lower().replace(" ", "")
         )
+
+        vals = {
+            "name": invoice.get("SalesInvoiceNumber"),
+            "payment_reference": invoice.get("SalesInvoiceReferencenumber"),
+            "netvisor_status": invoice_status,
+        }
+
+        binding.write(vals)
 
         return _("Updated details for {}".format(binding.odoo_id))

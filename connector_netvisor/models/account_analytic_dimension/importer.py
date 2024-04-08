@@ -27,13 +27,13 @@ class NetvisorDimensionImportMapper(Component):
         netvisor_model = self.env["netvisor.dimension"]
         odoo_model = self.env["account.analytic.dimension"]
         values = self.map_record(dimension).values()
-        netvisor_key = dimension.get("netvisor_key")
+        netvisor_key = dimension.get("Netvisorkey")
 
         if not netvisor_key:
             # As the response dict should always have at least netvisor_key and name,
             # this error should never trigger
             raise MappingError(
-                _("No netvisor key found for '{}'").format(dimension.get("name"))
+                _("No netvisor key found for '{}'").format(dimension.get("Name"))
             )
 
         # Search for an existing binding
@@ -71,10 +71,16 @@ class NetvisorDimensionImportMapper(Component):
 
         # Create individual jobs for creating the dimension items
         dimension_item = self.env["netvisor.dimension.item"]
-        for item in dimension.get("dimension_details"):
-            item["dimension_id"] = existing_record.id
+        dimension_detail = dimension.get("DimensionDetails").get("DimensionDetail")
+
+        if isinstance(dimension_detail, dict):
+            # If only one dimension detail is returned, it's not in a list
+            dimension_detail = [dimension_detail]
+
+        for item in dimension_detail:
+            item["DimensionId"] = existing_record.id
             job_desc = _(
-                "Netvisor: import dimension item '{}'".format(item.get("name"))
+                "Netvisor: import dimension item '{}'".format(item.get("Name"))
             )
             dimension_item.with_delay(
                 description=job_desc
@@ -84,7 +90,7 @@ class NetvisorDimensionImportMapper(Component):
 
     # Netvisor, Odoo
     direct = [
-        ("name", "name"),
+        ("Name", "name"),
     ]
 
     @mapping
@@ -92,6 +98,6 @@ class NetvisorDimensionImportMapper(Component):
         # Shorter codes would be nicer, but that would require a check for
         # overlapping codes. E.g. using four first letters of "Dimension A" and
         # "Dimension B" would end up with "DIME" as code for both
-        res = {"code": "".join(filter(str.isalnum, record.get("name"))).upper()}
+        res = {"code": "".join(filter(str.isalnum, record.get("Name"))).upper()}
 
         return res

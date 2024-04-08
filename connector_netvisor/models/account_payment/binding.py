@@ -35,7 +35,7 @@ class NetvisorPayment(models.Model):
         :return:
         """
         backend = self.get_netvisor_backend(company_id)
-        client = backend.authenticate()
+        endpoint = "salespaymentlist.nv"
 
         params = {
             "lastmodifiedstart": backend.payments_start_date.isoformat(),
@@ -43,32 +43,30 @@ class NetvisorPayment(models.Model):
             "limitbytype": "excludecreditloss",
         }
 
-        records = client.sales_payments.list(params=params)
+        records = backend._api_request_get(endpoint, params=params)
+
         if backend.company_id:
             self = self.with_company(backend.company_id.id)
 
-        count = 0
+        count = len(records)
 
-        if records:
-            count = len(records)
-
-            for record in records:
-                job_desc = _(
-                    "Netvisor: import payment for invoice '{}'".format(
-                        record.get("invoice_number")
-                    )
+        for record in records:
+            job_desc = _(
+                "Netvisor: import payment for invoice '{}'".format(
+                    record.get("InvoiceNumber").get("#text")
                 )
+            )
 
-                # Convert decimals to floats. Generally this isn't a great idea,
-                # but json.dumps() can't handle Decimals
+            # Convert decimals to floats. Generally this isn't a great idea,
+            # but json.dumps() can't handle Decimals
 
-                for k, v in record.items():
-                    if isinstance(record[k], Decimal):
-                        record[k] = float(v)
+            for k, v in record.items():
+                if isinstance(record[k], Decimal):
+                    record[k] = float(v)
 
-                self.with_delay(description=job_desc).netvisor_import_payment(
-                    record, backend.company_id
-                )
+            self.with_delay(description=job_desc).netvisor_import_payment(
+                record, backend.company_id
+            )
 
         backend.payments_start_date = fields.Datetime.now()
         return _(f"{count} payment import jobs done")

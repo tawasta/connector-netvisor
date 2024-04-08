@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!--
+        Netvisor match credit note XML document
+    -->
+    <template id="netvisor_matchcreditnote">
+        <root>
+            <matchcreditnote>
+                <creditnotenetvisorkey t-esc="invoice.external_id" />
+                <invoicenetvisorkey t-esc="reverse.external_id" />
+            </matchcreditnote>
+        </root>
+    </template>
+</odoo>

@@ -30,11 +30,11 @@ class NetvisorDimension(models.Model):
         :return:
         """
         backend = self.get_netvisor_backend()
-        client = backend.authenticate()
-        records = client.dimensions.list()
+        endpoint = "dimensionlist.nv"
+        records = backend._api_request_get(endpoint)
 
         for record in records:
-            job_desc = _("Netvisor: import dimension '{}'".format(record.get("name")))
+            job_desc = _("Netvisor: import dimension '{}'".format(record.get("Name")))
             self.with_delay(description=job_desc).netvisor_import_dimension(record)
 
     def netvisor_import_dimension(self, dimension):

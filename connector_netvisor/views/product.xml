@@ -18,6 +18,13 @@
               class="oe_highlight"
               string="Send to Netvisor"
             />
+                        <button
+              name="action_netvisor_import_record"
+              type="object"
+              class=""
+              string="Update from Netvisor"
+              attrs="{'invisible': [('netvisor_bind_ids', '=', False)]}"
+            />
                     </group>
 
                     <label for="netvisor_bind_ids" />

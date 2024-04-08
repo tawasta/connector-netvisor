@@ -44,7 +44,7 @@
                         <button
               name="action_netvisor_import_status"
               type="object"
-              class="oe_highlight"
+              class=""
               states="posted"
               help="Update status from Netvisor"
               string="Fetch status from Netvisor"

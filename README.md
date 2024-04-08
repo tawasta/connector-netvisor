@@ -11,6 +11,6 @@ Available addons
 addon | version | maintainers | summary
 --- | --- | --- | ---
 [connector_netvisor](connector_netvisor/) | 14.0.1.0.5 |  | Integration between Odoo and Netvisor
-[connector_netvisor_ecommerce](connector_netvisor_ecommerce/) | 14.0.1.0.0 |  | Use Netvisor with eCommerce
+[connector_netvisor_ecommerce](connector_netvisor_ecommerce/) | 14.0.1.0.2 |  | Use Netvisor with eCommerce
 
 [//]: # (end addons)

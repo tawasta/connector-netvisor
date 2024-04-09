@@ -142,7 +142,6 @@ class NetvisorInvoiceExportMapper(Component):
 
     def update_status(self, backend, record):
         """Update invoice status to Netvisor"""
-        backend.authenticate()
         binding_model = self.env["netvisor.invoice"]
         binding = binding_model.search(
             [("odoo_id", "=", record.id), ("backend_id", "=", backend.id)]

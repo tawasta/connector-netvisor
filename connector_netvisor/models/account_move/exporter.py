@@ -30,6 +30,14 @@ class NetvisorInvoiceExportMapper(Component):
         if record.company_id:
             record = record.with_company(record.company_id.id)
 
+        # Update partner information to Netvisor
+        record.partner_id.action_netvisor_export_record()
+        if (
+            record.partner_shipping_id
+            and record.partner_id != record.partner_shipping_id
+        ):
+            record.partner_shipping_id.action_netvisor_export_record()
+
         # Set correct states
         if record.reversed_entry_id and backend.auto_open_refunds:
             # Mark the to-be-created refund as open immediately

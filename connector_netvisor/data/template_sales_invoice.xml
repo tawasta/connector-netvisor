@@ -211,7 +211,9 @@
             t-if="file_ending in ['pdf','doc','xls','tif','jpg','gif','txt','xsl','html']"
           >
                         <mimeType t-esc="attachment.mimetype" />
-                        <attachmentDescription t-esc="attachment.description or attachment.name" />
+                        <attachmentDescription
+              t-esc="attachment.description or attachment.name"
+            />
                         <fileName t-esc="attachment.name" />
                         <documentData
               t-att-type="file_ending"

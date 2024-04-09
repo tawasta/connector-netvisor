@@ -27,16 +27,22 @@ class NetvisorInvoiceExportMapper(Component):
         self._validate(record)
 
         # Force record company for property fields
+        company_id = False
         if record.company_id:
-            record = record.with_company(record.company_id.id)
+            company_id = record.company_id.id
+            record = record.with_company(company_id)
 
         # Update partner information to Netvisor
-        record.partner_id.action_netvisor_export_record()
+        record.partner_id.action_netvisor_export_record(
+            use_queue=False, company_id=company_id
+        )
         if (
             record.partner_shipping_id
             and record.partner_id != record.partner_shipping_id
         ):
-            record.partner_shipping_id.action_netvisor_export_record()
+            record.partner_shipping_id.action_netvisor_export_record(
+                use_queue=False, company_id=company_id
+            )
 
         # Set correct states
         if record.reversed_entry_id and backend.auto_open_refunds:

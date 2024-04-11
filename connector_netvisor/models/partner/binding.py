@@ -36,16 +36,11 @@ class NetvisorPartner(models.Model):
         if backend.company_id:
             self = self.with_context(company_id=backend.company_id.id)
 
-        # The dict structure here is a bit weird. A CustomerList consists of one Customer,
-        # which has a list of actual customers.
-        for records in customers.values():
-            for record in records:
-                job_desc = _(
-                    "Netvisor: import customer '{}'".format(record.get("Name"))
-                )
-                self.with_delay(description=job_desc).netvisor_import_customer(
-                    record.get("Netvisorkey"), backend.company_id
-                )
+        for record in customers:
+            job_desc = _("Netvisor: import customer '{}'".format(record.get("Name")))
+            self.with_delay(description=job_desc).netvisor_import_customer(
+                record.get("Netvisorkey"), backend.company_id
+            )
 
     def netvisor_import_customer(self, netvisor_key, company=False):
         """

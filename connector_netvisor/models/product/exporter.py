@@ -39,7 +39,7 @@ class NetvisorProductExportMapper(Component):
             backend._api_request_post(endpoint, xml_string)
             msg = _(f"Updated product '{record.display_name}'")
         else:
-            res = backend._api_request_post("customer.nv?method=add", xml_string)
+            res = backend._api_request_post("product.nv?method=add", xml_string)
 
             if res:
                 try:

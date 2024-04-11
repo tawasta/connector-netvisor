@@ -287,28 +287,40 @@ class NetvisorBackend(models.Model):
         if response_status_list and response_status_list[0] == "FAILED":
             raise ValidationError(response_status_list[1])
 
+        # TODO: smarter response handling
         if root.get("Replies"):
             res = root.get("Replies")
-        elif root.get("Customerlist"):
-            res = root.get("Customerlist")
-        elif root.get("Customer"):
-            res = root.get("Customer")
-        elif root.get("DimensionNameList"):
-            res = root.get("DimensionNameList").get("DimensionName")
-        elif root.get("Product"):
-            res = root.get("Product")
-        elif root.get("ProductList"):
-            res = root.get("ProductList").get("Product")
-        elif root.get("SalesInvoice"):
-            res = root.get("SalesInvoice")
-        elif root.get("SalesPaymentList"):
-            res = root.get("SalesPaymentList").get("SalesPayment")
+        elif "Customerlist" in root:
+            res = root.get("Customerlist") and root["Customerlist"].get("Customer")
+            if isinstance(res, dict):
+                # Always put customer in a list
+                res = [res]
+        elif "Customer" in root:
+            res = root.get("Customer", {})
+        elif "DimensionNameList" in root:
+            res = root.get("DimensionNameList") and root["DimensionNameList"].get(
+                "DimensionName", {}
+            )
+        elif "Product" in root:
+            res = root.get("Product", {})
+        elif "ProductList" in root:
+            res = root.get("ProductList") and root["ProductList"].get("Product", {})
+        elif "SalesInvoice" in root:
+            res = root.get("SalesInvoice", {})
+        elif "SalesPaymentList" in root:
+            res = root.get("SalesPaymentList") and root["SalesPaymentList"].get(
+                "SalesPayment", {}
+            )
         elif root.keys() and len(root.keys()) == 1:
             # Some endpoints just return the ResponseStatus
             res = {}
         else:
             _logger.error(root)
             raise ValidationError(_("Netvisor API response could not be parsed!"))
+
+        if res is None:
+            # Return iterable response
+            res = {}
 
         return res
 

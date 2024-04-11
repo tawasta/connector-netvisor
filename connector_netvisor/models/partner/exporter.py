@@ -39,19 +39,29 @@ class NetvisorPartnerExportMapper(Component):
             "connector_netvisor.netvisor_customer", {"partner": record}
         )
 
+        if not binding:
+            # Try to get existing partner and create a binding
+            endpoint = "customerlist.nv"
+            params = {"keyword": record.ref}
+            customers = backend._api_request_get(endpoint, params)
+            _logger.warning("Overlapping partner(s) data: {}".format(customers))
+
+            if len(customers):
+                # Only one match found. Create a new binding
+                binding = binding_model.create(
+                    {
+                        "backend_id": backend.id,
+                        "external_id": customers[0].get("Netvisorkey"),
+                        "odoo_id": record.id,
+                    }
+                )
+
         if binding:
             # Update existing record in Netvisor
             endpoint = f"customer.nv?method=edit&id={binding.external_id}"
             backend._api_request_post(endpoint, xml_string)
             msg = _(f"Updated partner '{record.display_name}'")
         else:
-            # Try to get existing partner
-            endpoint = "customerlist.nv"
-            params = {"keyword": record.ref}
-            customers = backend._api_request_get(endpoint, params)
-            _logger.warning("Overlapping partner(s) data: {}".format(customers))
-
-        if not binding:
             # Create a new record to Netvisor
             res = backend._api_request_post("customer.nv?method=add", xml_string)
 

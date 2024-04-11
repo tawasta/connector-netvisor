@@ -60,7 +60,9 @@ class NetvisorPaymentImportMapper(Component):
         )
 
         if not invoice:
-            raise ValidationError(_("Can't find an invoice to match the payment to"))
+            # If invoice is not found, assume it's created outside Odoo,
+            # or has been deleted from Odoo, and doesn't need actions
+            return _("Can't find an invoice to match the payment to")
 
         if len(invoice) != 1:
             raise ValidationError(_(f"Found more than one invoice {invoice_number}"))

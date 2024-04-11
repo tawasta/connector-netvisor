@@ -57,7 +57,6 @@ class NetvisorInvoiceExportMapper(Component):
             "connector_netvisor.netvisor_salesinvoice",
             {"invoice": record, "backend": backend},
         )
-        print(xml_string)
 
         binding_model = self.env["netvisor.invoice"]
         _logger.debug(f"Using XML string {xml_string}")

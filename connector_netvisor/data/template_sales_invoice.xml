@@ -10,91 +10,91 @@
                 <!-- TODO: an option for Odoo to select the invoice number -->
                 <!--salesInvoiceNumber t-esc="invoice.name or ''" ></salesInvoiceNumber-->
                 <salesInvoiceDate
-                        format="ansi"
-                        t-esc="invoice.invoice_date.isoformat() or ''"
-                />
+          format="ansi"
+          t-esc="invoice.invoice_date.isoformat() or ''"
+        />
                 <salesInvoiceEventDate
-                        format="ansi"
-                        t-esc="invoice.date.isoformat() or ''"
-                />
+          format="ansi"
+          t-esc="invoice.date.isoformat() or ''"
+        />
                 <salesInvoiceDueDate
-                        format="ansi"
-                        t-esc="invoice.invoice_date_due.isoformat() or ''"
-                />
+          format="ansi"
+          t-esc="invoice.invoice_date_due.isoformat() or ''"
+        />
                 <!--salesInvoiceValueDate format="ansi">2018-5-31</salesInvoiceValueDate-->
                 <!--salesInvoiceDeliveryDate format="ansi">2023-05-22</salesInvoiceDeliveryDate-->
                 <!--salesInvoiceDeliveryToCustomerDate> format="ansi" type="date">2023-05-23</salesInvoiceDeliveryToCustomerDate-->
                 <!--salesInvoiceWaybillIdentifier>033000050143<salesInvoiceWaybillIdentifier-->
                 <!--salesInvoiceReferenceNumber>123456</salesInvoiceReferenceNumber-->
                 <salesInvoiceAmount
-                        t-att-iso4217currencyCode="invoice.currency_id.name"
-                        pricetype="customer"
-                        t-esc="invoice.amount_total_signed"
-                />
+          t-att-iso4217currencyCode="invoice.currency_id.name"
+          pricetype="customer"
+          t-esc="invoice.amount_total_signed"
+        />
                 <!--sellerIdentifier type="netvisor">1</sellerIdentifier-->
                 <!--sellerName>Sally Seller</sellerName-->
                 <invoiceType>invoice</invoiceType>
                 <salesInvoiceStatus
-                        type="netvisor"
-                        t-esc="invoice.netvisor_status or 'unsent'"
-                />
+          type="netvisor"
+          t-esc="invoice.netvisor_status or 'unsent'"
+        />
                 <!-- Ref will contain the information about refunded invoice -->
                 <salesInvoiceFreeTextBeforeLines
-                        t-esc="invoice.ref if invoice.move_type == 'out_refund' else ''"
-                />
+          t-esc="invoice.ref if invoice.move_type == 'out_refund' else ''"
+        />
                 <salesInvoiceFreeTextAfterLines
-                        t-esc="invoice.narration or ''"
-                />
-                <salesInvoiceOurReference t-esc="invoice.ref or ''"/>
+          t-esc="invoice.narration or ''"
+        />
+                <salesInvoiceOurReference t-esc="invoice.ref or ''" />
                 <!--salesInvoiceYourReference>Your reference</salesInvoiceYourReference-->
-                <salesInvoicePrivateComment t-esc="invoice.description or ''"/>
+                <salesInvoicePrivateComment t-esc="invoice.description or ''" />
                 <invoicingCustomeridentifier
-                        type="customer"
-                        t-if="invoice.partner_id.ref"
-                        t-esc="invoice.partner_id.ref"
-                />
+          type="customer"
+          t-if="invoice.partner_id.ref"
+          t-esc="invoice.partner_id.ref"
+        />
                 <t t-if="not invoice.partner_id.ref">
                     <invoicingCustomerName
-                            t-esc="invoice.partner_id.name or ''"
-                    />
+            t-esc="invoice.partner_id.name or ''"
+          />
                     <invoicingCustomerNameExtension
-                            t-esc="invoice.partner_id.name_extension or ''"
-                    />
+            t-esc="invoice.partner_id.name_extension or ''"
+          />
                     <invoicingCustomerAddressLine
-                            t-esc="invoice.partner_id.street or ''"
-                    />
+            t-esc="invoice.partner_id.street or ''"
+          />
                     <invoicingCustomerAdditionalAddressLine
-                            t-esc="invoice.partner_id.street2 or ''"
-                    />
+            t-esc="invoice.partner_id.street2 or ''"
+          />
                     <invoicingCustomerPostNumber
-                            t-esc="invoice.partner_id.zip or ''"
-                    />
+            t-esc="invoice.partner_id.zip or ''"
+          />
                     <invoicingCustomerTown
-                            t-esc="invoice.partner_id.city or ''"
-                    />
+            t-esc="invoice.partner_id.city or ''"
+          />
                     <invoicingCustomerCountryCode
-                            type="ISO-3316"
-                            t-esc="invoice.partner_id.country_id.code or ''"
-                    />
+            type="ISO-3316"
+            t-esc="invoice.partner_id.country_id.code or ''"
+          />
                 </t>
                 <!--officeidentifier>20</officeidentifier-->
                 <!--deliveryoffice type="netvisor">1041</deliveryoffice-->
                 <deliveryAddressName
-                        t-esc="invoice.partner_shipping_id.name or ''"
-                />
+          t-esc="invoice.partner_shipping_id.name or ''"
+        />
                 <deliveryAddressLine
-                        t-esc="invoice.partner_shipping_id.get_combined_street()"
-                />
+          t-esc="invoice.partner_shipping_id.get_combined_street()"
+        />
                 <deliveryAddressPostNumber
-                        t-esc="invoice.partner_shipping_id.zip or ''"
-                />
+          t-esc="invoice.partner_shipping_id.zip or ''"
+        />
                 <deliveryAddressTown
-                        t-esc="invoice.partner_shipping_id.city or ''"
-                />
+          t-esc="invoice.partner_shipping_id.city or ''"
+        />
                 <deliveryAddressCountryCode
-                        type="ISO-3316"
-                        t-esc="invoice.partner_shipping_id.country_id.code or ''"
-                />
+          type="ISO-3316"
+          t-esc="invoice.partner_shipping_id.country_id.code or ''"
+        />
                 <!--deliveryMethod>Installed</deliveryMethod-->
                 <!--deliveryTerm>According to the agreement</deliveryTerm-->
                 <!--salesInvoiceTaxHandlingType>countrygroup</salesInvoiceTaxHandlingType-->
@@ -106,62 +106,62 @@
                 <!--overrideVoucherSalesReceivablesAccountNumber>3000</overrideVoucherSalesReceivablesAccountNumber-->
                 <!--salesInvoiceAgreementIdentifier>123456</salesInvoiceAgreementIdentifier-->
                 <printChannelFormat
-                        t-att-type="backend.print_channel_format_type"
-                        t-esc="backend.print_channel_format"
-                />
+          t-att-type="backend.print_channel_format_type"
+          t-esc="backend.print_channel_format"
+        />
                 <!--secondName type="netvisor">123</secondName-->
-                <overrideRateOfOverdue t-esc="invoice.overdue_interest or 0"/>
-                <orderNumber t-esc="invoice.invoice_origin or ''"/>
+                <overrideRateOfOverdue t-esc="invoice.overdue_interest or 0" />
+                <orderNumber t-esc="invoice.invoice_origin or ''" />
                 <!--collectionCost>15</collectionCost-->
                 <!--isThirdPartySales>1</isThirdPartySales-->
                 <invoiceLines>
                     <invoiceLine
-                            t-foreach="invoice.invoice_line_ids"
-                            t-as="line"
-                    >
+            t-foreach="invoice.invoice_line_ids"
+            t-as="line"
+          >
                         <!-- Normal invoice lines -->
                         <salesInvoiceProductLine t-if="not line.display_type">
                             <productIdentifier
-                                    type="customer"
-                                    t-esc="line.product_id.default_code or ''"
-                            />
-                            <productName t-esc="line.name or ''"/>
+                type="customer"
+                t-esc="line.product_id.default_code or ''"
+              />
+                            <productName t-esc="line.name or ''" />
                             <productunitPrice
-                                    type="net"
-                                    t-esc="line.price_unit"
-                            />
+                type="net"
+                t-esc="line.price_unit"
+              />
                             <productUnitPurchasePrice
-                                    type="net"
-                                    t-esc="line.purchase_price"
-                            />
+                type="net"
+                t-esc="line.purchase_price"
+              />
                             <productVatPercentage
-                                    t-att-vatcode="line.tax_ids[0].netvisor_code"
-                                    t-esc="line.tax_ids[0].amount"
-                            />
+                t-att-vatcode="line.tax_ids[0].netvisor_code"
+                t-esc="line.tax_ids[0].amount"
+              />
                             <!-- Negative quantity for refunds -->
                             <salesInvoiceProductLineQuantity
-                                    t-esc="line.quantity if invoice.move_type != 'out_refund' else line.quantity * -1"
-                            />
+                t-esc="line.quantity if invoice.move_type != 'out_refund' else line.quantity * -1"
+              />
                             <salesInvoiceProductLineDiscountPercentage
-                                    t-esc="line.discount"
-                            />
+                t-esc="line.discount"
+              />
                             <salesInvoiceProductLineFreeText
-                                    t-esc="line.name or ''"
-                            />
+                t-esc="line.name or ''"
+              />
                             <!--salesInvoiceProductLineVatSum>24,00</salesInvoiceProductLineVatSum>
                             <salesInvoiceProductLineSum>100,00</salesInvoiceProductLineSum-->
                             <!--salesinvoiceproductlineinventoryid>2</salesinvoiceproductlineinventoryid-->
                             <accountingAccountSuggestion
-                                    t-esc="line.account_id.code or ''"
-                            />
+                t-esc="line.account_id.code or ''"
+              />
                             <dimension
-                                    t-foreach="line.analytic_tag_ids"
-                                    t-as="dimension"
-                            >
+                t-foreach="line.analytic_tag_ids"
+                t-as="dimension"
+              >
                                 <dimensionName
-                                        t-esc="dimension.analytic_dimension_id.name or ''"
-                                />
-                                <dimensionItem t-esc="dimension.name or ''"/>
+                  t-esc="dimension.analytic_dimension_id.name or ''"
+                />
+                                <dimensionItem t-esc="dimension.name or ''" />
                             </dimension>
                             <!--accrualrule>
                                 <startmonth></startmonth>
@@ -172,7 +172,7 @@
                         </salesInvoiceProductLine>
                         <!-- Comment lines -->
                         <salesInvoiceCommentLine t-else="">
-                            <comment t-esc="line.name or ''"/>
+                            <comment t-esc="line.name or ''" />
                         </salesInvoiceCommentLine>
                     </invoiceLine>
                 </invoiceLines>
@@ -199,25 +199,24 @@
                     </accrualVoucherEntry>
                 </salesInvoiceAccrual-->
                 <salesInvoiceAttachments t-if="invoice.attachment_ids">
-                    <t t-foreach="invoice.attachment_ids"
-                       t-as="attachment">
+                    <t t-foreach="invoice.attachment_ids" t-as="attachment">
                         <!-- Skip unsupported file types -->
                         <t
-                                t-set="file_ending"
-                                t-value="attachment.mimetype.split('/')[1]"
-                        />
+              t-set="file_ending"
+              t-value="attachment.mimetype.split('/')[1]"
+            />
                         <salesinvoiceattachment
-                                t-if="file_ending in ['pdf','doc','xls','tif','jpg','gif','txt','xsl','html']"
-                        >
-                            <mimeType t-esc="attachment.mimetype"/>
+              t-if="file_ending in ['pdf','doc','xls','tif','jpg','gif','txt','xsl','html']"
+            >
+                            <mimeType t-esc="attachment.mimetype" />
                             <attachmentDescription
-                                    t-esc="attachment.description or attachment.name"
-                            />
-                            <fileName t-esc="attachment.name"/>
+                t-esc="attachment.description or attachment.name"
+              />
+                            <fileName t-esc="attachment.name" />
                             <documentData
-                                    t-att-type="file_ending"
-                                    t-esc="attachment.datas"
-                            />
+                t-att-type="file_ending"
+                t-esc="attachment.datas"
+              />
                             <printByDefault>1</printByDefault>
                         </salesinvoiceattachment>
                     </t>

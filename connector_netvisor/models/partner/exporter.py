@@ -1,9 +1,13 @@
+import logging
+
 from psycopg2 import IntegrityError
 
 from odoo import _
 from odoo.exceptions import UserError
 
 from odoo.addons.component.core import Component
+
+_logger = logging.getLogger(__name__)
 
 
 class NetvisorPartnerExportMapper(Component):
@@ -41,6 +45,13 @@ class NetvisorPartnerExportMapper(Component):
             backend._api_request_post(endpoint, xml_string)
             msg = _(f"Updated partner '{record.display_name}'")
         else:
+            # Try to get existing partner
+            endpoint = "customerlist.nv"
+            params = {"keyword": record.ref}
+            customers = backend._api_request_get(endpoint, params)
+            _logger.warning("Overlapping partner(s) data: {}".format(customers))
+
+        if not binding:
             # Create a new record to Netvisor
             res = backend._api_request_post("customer.nv?method=add", xml_string)
 

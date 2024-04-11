@@ -198,29 +198,28 @@
                         <sum>1240,00</sum>
                     </accrualVoucherEntry>
                 </salesInvoiceAccrual-->
-                <salesInvoiceAttachments
-          t-foreach="invoice.attachment_ids"
-          t-as="attachment"
-        >
-                    <!-- Skip unsupported file types -->
-                    <t
-            t-set="file_ending"
-            t-value="attachment.mimetype.split('/')[1]"
-          />
-                    <salesinvoiceattachment
-            t-if="file_ending in ['pdf','doc','xls','tif','jpg','gif','txt','xsl','html']"
-          >
-                        <mimeType t-esc="attachment.mimetype" />
-                        <attachmentDescription
-              t-esc="attachment.description or attachment.name"
+                <salesInvoiceAttachments t-if="invoice.attachment_ids">
+                    <t t-foreach="invoice.attachment_ids" t-as="attachment">
+                        <!-- Skip unsupported file types -->
+                        <t
+              t-set="file_ending"
+              t-value="attachment.mimetype.split('/')[1]"
             />
-                        <fileName t-esc="attachment.name" />
-                        <documentData
-              t-att-type="file_ending"
-              t-esc="attachment.datas"
-            />
-                        <printByDefault>1</printByDefault>
-                    </salesinvoiceattachment>
+                        <salesinvoiceattachment
+              t-if="file_ending in ['pdf','doc','xls','tif','jpg','gif','txt','xsl','html']"
+            >
+                            <mimeType t-esc="attachment.mimetype" />
+                            <attachmentDescription
+                t-esc="attachment.description or attachment.name"
+              />
+                            <fileName t-esc="attachment.name" />
+                            <documentData
+                t-att-type="file_ending"
+                t-esc="attachment.datas"
+              />
+                            <printByDefault>1</printByDefault>
+                        </salesinvoiceattachment>
+                    </t>
                 </salesInvoiceAttachments>
             </salesInvoice>
         </root>

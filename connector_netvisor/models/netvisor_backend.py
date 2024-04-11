@@ -307,6 +307,7 @@ class NetvisorBackend(models.Model):
             # Some endpoints just return the ResponseStatus
             res = {}
         else:
+            _logger.error(root)
             raise ValidationError(_("Netvisor API response could not be parsed!"))
 
         return res

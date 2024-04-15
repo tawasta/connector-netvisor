@@ -1,6 +1,5 @@
 import hashlib
 import logging
-import urllib.parse
 import uuid
 from datetime import datetime
 
@@ -265,7 +264,8 @@ class NetvisorBackend(models.Model):
     def _get_request_url(self, endpoint, params):
         url = f"{self.host}/{endpoint}"
         if params:
-            url = f"{url}?{urllib.parse.urlencode(params)}"
+            query_string = "&".join(f"{key}={value}" for key, value in params.items())
+            url = f"{url}?{query_string}"
 
         return url
 

@@ -57,7 +57,7 @@
                 <customeradditionalinformation>
                     <comment t-esc="partner.comment or ''" />
                     <!--<customeragreementidentifier>Agreement code</customeragreementidentifier>-->
-                    <customerreferencenumber t-esc="partner.comment or ''" />
+                    <!--<customerreferencenumber t-esc="partner.comment or ''" />-->
                     <!--<invoicinglanguage>FI/SE/EN</invoicinglanguage>-->
                     <!--<invoiceprintchannelformat type="netvisor">1</invoiceprintchannelformat>-->
                     <!--<yourdefaultreference>Example reference</yourdefaultreference>-->

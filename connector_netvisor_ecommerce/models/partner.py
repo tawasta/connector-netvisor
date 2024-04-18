@@ -27,4 +27,8 @@ class ResPartner(models.Model):
 
         self.parent_id.write(vals)
 
+        if self.parent_id.email_invoicing_address:
+            # Remove invoicing address from contact
+            self.email_invoicing_address = False
+
         return res

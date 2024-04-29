@@ -10,7 +10,7 @@
                 <customerbaseinformation>
                     <internalidentifier t-esc="partner.ref or ''" />
                     <externalidentifier t-esc="partner.business_code or ''" />
-                    <organizationunitnumber t-esc="partner.edicode or ''" />
+                    <organizationunitnumber t-if="partner.type != 'contact'" t-esc="partner.edicode or ''" />
                     <name t-esc="partner.name or ''" />
                     <nameextension t-esc="partner.name_extension or ''" />
                     <streetaddress t-esc="partner.street or ''" />

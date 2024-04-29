@@ -43,6 +43,19 @@ class Partner(models.Model):
                 # Immediate sending
                 netvisor_model.netvisor_export_customer(record, company_id)
 
+    def action_netvisor_import_customer(self, company_id=False):
+        for record in self:
+            netvisor_model = self.env["netvisor.partner"]
+
+            if not company_id and record.company_id:
+                company_id = record.company_id.id
+
+            if company_id:
+                netvisor_model = netvisor_model.with_context(company_id=company_id)
+
+            for binding in record.netvisor_bind_ids:
+                netvisor_model.netvisor_import_customer(binding.external_id, company_id)
+
     def write(self, values):
         """
         Override to force partner create or update on each write

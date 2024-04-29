@@ -10,7 +10,10 @@
                 <customerbaseinformation>
                     <internalidentifier t-esc="partner.ref or ''" />
                     <externalidentifier t-esc="partner.business_code or ''" />
-                    <organizationunitnumber t-if="partner.type != 'contact'" t-esc="partner.edicode or ''" />
+                    <organizationunitnumber
+            t-if="partner.is_company"
+            t-esc="partner.edicode or ''"
+          />
                     <name t-esc="partner.name or ''" />
                     <nameextension t-esc="partner.name_extension or ''" />
                     <streetaddress t-esc="partner.street or ''" />
@@ -32,7 +35,9 @@
             t-esc="partner.email_invoicing_address or ''"
           />
                 </customerbaseinformation>
-                <customerfinvoicedetails t-if="partner.edicode">
+                <customerfinvoicedetails
+          t-if="partner.edicode and (partner.type == 'invoice' or partner.is_company)"
+        >
                     <finvoiceaddress t-esc="partner.edicode or ''" />
                     <finvoiceroutercode
             t-esc="partner.einvoice_operator_id.identifier or ''"

@@ -30,6 +30,12 @@
               class="oe_highlight"
               string="Send to Netvisor"
             />
+                        <button
+              name="action_netvisor_import_customer"
+              type="object"
+              class=""
+              string="Update from Netvisor"
+            />
                     </group>
 
                     <label for="netvisor_bind_ids" />

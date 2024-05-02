@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!--
+        Netvisor payment XML document
+    -->
+    <template id="netvisor_payment">
+        <root>
+            <payment>
+                <!-- TODO: reference support <bankpaymentmessagetype>FinnishReference</bankpaymentmessagetype>-->
+                <bankpaymentmessagetype>FreeText</bankpaymentmessagetype>
+                <bankpaymentmessage t-esc="record.ref" />
+                <recipient>
+                    <organizationcode
+            t-if="record.partner_id.business_code"
+            t-esc="record.partner_id.business_code"
+          />
+                    <name t-esc="record.partner_id.name" />
+                    <address t-esc="record.partner_id.street" />
+                    <postcode t-esc="record.partner_id.zip" />
+                    <town t-esc="record.partner_id.city" />
+                <country
+            type="ISO-3166"
+            t-esc="record.partner_id.country_id.code"
+          />
+                </recipient>
+                <sourcebankaccountnumber
+          t-esc="record.journal_id.bank_acc_number"
+        />
+                <destinationbankaccount>
+                    <bankname t-esc="record.partner_bank_id.bank_id.name" />
+                    <bankbranch t-esc="record.partner_bank_id.bank_id.bic" />
+                    <destinationbankaccountnumber
+            t-esc="record.partner_bank_id.acc_number"
+          />
+                </destinationbankaccount>
+                <duedate t-esc="record.date.isoformat()" />
+                <amount t-esc="record.amount" />
+            </payment>
+        </root>
+    </template>
+</odoo>

@@ -82,3 +82,19 @@ class NetvisorPayment(models.Model):
         with backend.work_on(self._name) as work:
             importer = work.component(usage="import.mapper")
             return importer.import_payment(backend, record)
+
+    def netvisor_export_payment(self, record, company=False):
+        """
+        Export a payment to Netvisor
+        :param record: Payment record
+        :param company: Company ID
+        :return:
+        """
+        if not company and record.company_id:
+            company = record.company_id.id
+
+        backend = self.get_netvisor_backend(company)
+
+        with backend.work_on(self._name) as work:
+            exporter = work.component(usage="export.mapper")
+            return exporter.export_payment(backend, record)

@@ -33,10 +33,10 @@ class WebsiteSaleNetvisor(WebsiteSale):
             checkout["use_transmit_method_snailmail"] = False
             # Ensure that invoicing email is in values
             checkout["email_invoicing_address"] = all_values.get("email")
-            if (
-                all_values.get("customer_invoice_transmit_method_id", 0)
-                == transmit_method_post_id
-            ):
+            if int(all_values.get("customer_invoice_transmit_method_id", 0)) in [
+                0,
+                transmit_method_post_id.id,
+            ]:
                 checkout[
                     "customer_invoice_transmit_method_id"
                 ] = transmit_method_email_id.id

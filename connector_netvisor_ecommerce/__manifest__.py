@@ -37,6 +37,7 @@
         "connector_netvisor",
         "website_sale",
         "website_sale_company_email",
+        "website_sale_invoice_transmit_method",
     ],
     "data": [
         "views/website_sale_checkout.xml",

@@ -26,7 +26,9 @@ class WebsiteSaleNetvisor(WebsiteSale):
                     .search([("code", "=", "post")])
                 )
                 checkout["customer_invoice_transmit_method_id"] = transmit_method_id.id
-                all_values["customer_invoice_transmit_method_id"] = transmit_method_id.id
+                all_values[
+                    "customer_invoice_transmit_method_id"
+                ] = transmit_method_id.id
         else:
             # Set helper field as unselected
             checkout["use_transmit_method_snailmail"] = False

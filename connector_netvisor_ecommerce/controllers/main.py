@@ -9,7 +9,7 @@ class WebsiteSaleNetvisor(WebsiteSale):
         Save company email to parent company
         """
         # Don't set email to company, use email_invoicing_address instead
-        checkout["email_invoicing_address"] = all_values.pop("company_email", "")
+        checkout["email_invoicing_address"] = checkout.pop("company_email", "")
 
         if all_values.get("use_transmit_method_snailmail"):
             # Remove invoicing email, if set
@@ -26,6 +26,9 @@ class WebsiteSaleNetvisor(WebsiteSale):
                     .search([("code", "=", "post")])
                 )
                 checkout["customer_invoice_transmit_method_id"] = transmit_method_id.id
+                all_values[
+                    "customer_invoice_transmit_method_id"
+                ] = transmit_method_id.id
         else:
             # Set helper field as unselected
             checkout["use_transmit_method_snailmail"] = False

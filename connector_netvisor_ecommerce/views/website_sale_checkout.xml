@@ -12,7 +12,10 @@
       position="after"
     >
             <t t-if="mode == ('new', 'billing') or mode == ('edit', 'billing')">
-                <div class="col-lg-12">
+                <div
+          class="col-lg-12 hide-company"
+          id="transmit_method_snailmail_div"
+        >
                     <div class="checkbox">
                       <label><input
                 type="checkbox"

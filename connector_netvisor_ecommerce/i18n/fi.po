@@ -36,7 +36,7 @@ msgstr "Näyttönimi"
 #. module: connector_netvisor_ecommerce
 #: model_terms:ir.ui.view,arch_db:connector_netvisor_ecommerce.address
 msgid "I want a paper invoice"
-msgstr "Haluan paperilaskun"
+msgstr "Haluan laskun postitse"
 
 #. module: connector_netvisor_ecommerce
 #: model:ir.model.fields,field_description:connector_netvisor_ecommerce.field_payment_transaction__id

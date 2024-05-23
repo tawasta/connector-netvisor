@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template
+    id="assets_frontend"
+    name="Snailmail checkbox assets"
+    inherit_id="website.assets_frontend"
+  >
+        <xpath expr="script[last()]" position="after">
+            <script
+        type="text/javascript"
+        src="/connector_netvisor_ecommerce/static/src/js/checkout.js"
+      />
+        </xpath>
+
+    </template>
+</odoo>

@@ -21,7 +21,7 @@
 {
     "name": "Netvisor Connector eCommerce support",
     "summary": "Use Netvisor with eCommerce",
-    "version": "14.0.1.1.0",
+    "version": "14.0.1.1.1",
     "category": "Sales",
     "website": "https://gitlab.com/tawasta/odoo/connector-netvisor",
     "author": "Tawasta",
@@ -40,6 +40,7 @@
         "website_sale_invoice_transmit_method",
     ],
     "data": [
+        "views/assets.xml",
         "views/website_sale_checkout.xml",
     ],
     "demo": [],

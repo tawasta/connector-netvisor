@@ -5,6 +5,11 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     company_email = fields.Char(string="Company email")
+    use_transmit_method_snailmail = fields.Boolean(
+        "Use snailmail (technical field)",
+        default=False,
+        copy=False,
+    )
 
     def create_company(self):
         """

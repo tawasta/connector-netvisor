@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="view_netvisor_backend_tree" model="ir.ui.view">
+        <field name="name">Netvisor backend tree view</field>
+        <field name="model">netvisor.backend</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="company_id" />
+                <field name="partner" />
+                <field name="partner_key" />
+            </tree>
+        </field>
+    </record>
+
+</odoo>

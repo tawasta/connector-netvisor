@@ -64,7 +64,7 @@ class NetvisorPaymentImportMapper(Component):
             return _("Can't find an invoice to match the payment to")
 
         if len(invoice) != 1:
-            raise ValidationError(_(f"Found more than one invoice {invoice_number}"))
+            raise ValidationError(_("Found more than one invoice {}".format(invoice_number)))
 
         if invoice.payment_state == "paid":
             return _("Invoice is already fully paid. Nothing to do")
@@ -89,7 +89,7 @@ class NetvisorPaymentImportMapper(Component):
         binding_values["odoo_id"] = payment.id
         netvisor_model.create(binding_values)
 
-        return _(f"Created payment '{payment.id}'")
+        return _("Created payment '{}'".format(payment.id))
 
     # Netvisor, Odoo
     direct = [

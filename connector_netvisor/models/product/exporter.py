@@ -37,7 +37,7 @@ class NetvisorProductExportMapper(Component):
             # Update existing record in Netvisor
             endpoint = f"product.nv?method=edit&id={binding.external_id}"
             backend._api_request_post(endpoint, xml_string)
-            msg = _(f"Updated product '{record.display_name}'")
+            msg = _("Updated product '{}'".format(record.display_name))
         else:
             res = backend._api_request_post("product.nv?method=add", xml_string)
 
@@ -54,7 +54,7 @@ class NetvisorProductExportMapper(Component):
                     # Binding already exists
                     pass
 
-                msg = _(f"Created product '{record.display_name}'")
+                msg = _("Created product '{}'".format(record.display_name))
             else:
                 raise UserError(
                     _(

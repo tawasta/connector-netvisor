@@ -39,12 +39,14 @@ class NetvisorInvoiceImportMapper(Component):
 
         if record.netvisor_status != invoice_status:
             res = _(
-                f"Updated status from '{record.netvisor_status}' to '{invoice_status}'"
+                "Updated status from '{}' to '{}'".format(
+                    record.netvisor_status, invoice_status
+                )
             )
             binding.action_update_invoice_status(invoice_status)
 
         else:
-            res = _(f"Status '{invoice_status}' is up to date. Nothing to do")
+            res = _("Status '{}' is up to date. Nothing to do".format(invoice_status))
 
         return res
 

@@ -60,7 +60,7 @@ class NetvisorPartnerExportMapper(Component):
             # Update existing record in Netvisor
             endpoint = f"customer.nv?method=edit&id={binding.external_id}"
             backend._api_request_post(endpoint, xml_string)
-            msg = _(f"Updated partner '{record.display_name}'")
+            msg = _("Updated partner '{}'".format(record.display_name))
         else:
             # Create a new record to Netvisor
             res = backend._api_request_post("customer.nv?method=add", xml_string)
@@ -78,7 +78,7 @@ class NetvisorPartnerExportMapper(Component):
                     # Binding already exists
                     pass
 
-                msg = _(f"Created partner '{record.display_name}'")
+                msg = _("Created partner '{}'".format(record.display_name))
             else:
                 raise UserError(
                     _(

@@ -51,7 +51,7 @@ class NetvisorPaymentExportMapper(Component):
                     # Binding already exists
                     pass
 
-                msg = _(f"Created payment '{record.display_name}'")
+                msg = _("Created payment '{}'".format(record.display_name))
             else:
                 raise UserError(
                     _(

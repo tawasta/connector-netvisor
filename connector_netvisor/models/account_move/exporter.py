@@ -78,7 +78,7 @@ class NetvisorInvoiceExportMapper(Component):
 
         if binding and not backend.customer_invoice_allow_updating:
             _logger.info(
-                _(f"Updating invoices is disabled. Not sending '{record.name}'.")
+                _("Updating invoices is disabled. Not sending '{}'.".format(record.name))
             )
             return _("Updating invoices to Netvisor is not allowed")
 
@@ -87,7 +87,7 @@ class NetvisorInvoiceExportMapper(Component):
             endpoint = f"salesinvoice.nv?method=edit&id={binding.external_id}"
             backend._api_request_post(endpoint, xml_string)
 
-            msg = _(f"Updated invoice '{record.name}'")
+            msg = _("Updated invoice '{}'".format(record.name))
         else:
             endpoint = "salesinvoice.nv?method=add"
             res = backend._api_request_post(endpoint, xml_string)
@@ -123,14 +123,14 @@ class NetvisorInvoiceExportMapper(Component):
         )
 
         # Update Odoo invoice information
-        job_desc = _(f"Import invoice details for {binding.odoo_id.name}")
+        job_desc = _("Import invoice details for {}".format(binding.odoo_id.name))
         binding.with_delay(description=job_desc).netvisor_import_invoice_details(
             binding.odoo_id
         )
 
         if binding.reversed_entry_id:
             # Match credit note to the original invoice
-            job_desc = _(f"Mark invoice {binding.reversed_entry_id.name} as reversed")
+            job_desc = _("Mark invoice {} as reversed".format(binding.reversed_entry_id.name))
 
             binding.with_delay(description=job_desc).netvisor_match_credit_note()
 
@@ -148,22 +148,22 @@ class NetvisorInvoiceExportMapper(Component):
             taxes = line.tax_ids
             if len(taxes) > 1:
                 raise MappingError(
-                    _(f"Please define only one tax for invoice line '{line.name}'")
+                    _("Please define only one tax for invoice line '{}'".format(line.name))
                 )
             elif len(taxes) < 1:
                 raise MappingError(
-                    _(f"Please define one tax for invoice line '{line.name}'")
+                    _("Please define one tax for invoice line '{}'".format(line.name))
                 )
 
             tax = taxes[0]
 
             if tax.netvisor_code == "-":
-                raise ValidationError(
-                    _(
-                        f"The tax '{tax.name}' is misconfigured. "
-                        f"Please configure 'Netvisor VAT code' for that"
+                err = _(
+                    "The tax '{}' is misconfigured. Please configure 'Netvisor VAT code' for that".format(
+                        tax.name
                     )
                 )
+                raise ValidationError(err)
 
     def update_status(self, backend, record):
         """Update invoice status to Netvisor"""

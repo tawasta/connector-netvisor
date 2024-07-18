@@ -58,11 +58,12 @@ class NetvisorInvoiceExportMapper(Component):
         analytic_accounts = self.env["account.analytic.account"].search([])
         dimensions = dict([(r.id, (r.plan_id.name, r.name)) for r in analytic_accounts])
         for line in record.invoice_line_ids:
-            for ad in line.analytic_distribution.values():
-                if ad != 100.0:
-                    raise ValidationError(
-                        _("Only 100% analytic distribution is supported by Netvisor!")
-                    )
+            if line.analytic_distribution:
+                for ad in line.analytic_distribution.values():
+                    if ad != 100.0:
+                        raise ValidationError(
+                            _("Only 100% analytic distribution is supported by Netvisor!")
+                        )
 
         xml_string = self.env["ir.qweb"]._render(
             "connector_netvisor.netvisor_salesinvoice",
@@ -144,6 +145,9 @@ class NetvisorInvoiceExportMapper(Component):
             return _("Zero sum invoice. Skip sending")
 
         for line in record.invoice_line_ids:
+            if line.display_type in ['line_section', 'line_note']:
+                continue
+
             # Check if there are multiple taxes per line
             taxes = line.tax_ids
             if len(taxes) > 1:

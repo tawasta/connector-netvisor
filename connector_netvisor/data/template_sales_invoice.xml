@@ -140,6 +140,7 @@
                                 t-esc="line.account_id.code or ''"
                             />
                             <dimension
+                                t-if="line.analytic_distribution"
                                 t-foreach="list(line.analytic_distribution.keys())[0].split(',')"
                                 t-as="dimension"
                             >

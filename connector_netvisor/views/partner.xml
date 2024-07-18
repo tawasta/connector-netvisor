@@ -6,10 +6,6 @@
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">
 
-            <field name="type" position="before">
-                <field name="name_extension" />
-            </field>
-
             <xpath
                 expr="//page[@name='sales_purchases']//field[@name='user_id']"
                 position="after"

@@ -43,6 +43,7 @@
         "product",
         "queue_job",
         "sale",
+        "res_partner_name_extension",
         "l10n_fi_edicode",
     ],
     "post_init_hook": "init_netvisor_data",

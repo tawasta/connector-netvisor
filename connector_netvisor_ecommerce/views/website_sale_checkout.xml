@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template
+        id="address"
+        inherit_id="website_sale.address"
+        name="Show paper invoice checkbox"
+        customize_show="True"
+        active="True"
+    >
+        <xpath expr="//input[@id='shipping_use_same']/../../../.." position="after">
+            <t t-if="mode == ('new', 'billing') or mode == ('edit', 'billing')">
+                <div class="col-lg-12 hide-company" id="transmit_method_snailmail_div">
+                    <div class="form-check form-switch mt-2 mb-3">
+                      <label><input
+                                type="checkbox"
+                                id="transmit_method_snailmail"
+                                name="use_transmit_method_snailmail"
+                                value="1"
+                                t-att-checked="'use_transmit_method_snailmail' in checkout and checkout['use_transmit_method_snailmail']"
+                                class="form-check-input mr8"
+                            />I want a paper invoice</label>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

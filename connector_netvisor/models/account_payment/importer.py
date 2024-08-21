@@ -64,7 +64,9 @@ class NetvisorPaymentImportMapper(Component):
             return _("Can't find an invoice to match the payment to")
 
         if len(invoice) != 1:
-            raise ValidationError(_("Found more than one invoice {}".format(invoice_number)))
+            raise ValidationError(
+                _("Found more than one invoice {}".format(invoice_number))
+            )
 
         if invoice.payment_state == "paid":
             return _("Invoice is already fully paid. Nothing to do")

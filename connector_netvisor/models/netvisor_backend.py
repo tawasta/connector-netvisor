@@ -417,7 +417,9 @@ class NetvisorBackend(models.Model):
         _logger.debug(_("Updating status for invoices: {}".format(bindings.ids)))
 
         for binding in bindings:
-            job_desc = _("Update status from Netvisor for invoice {}".format(binding.name))
+            job_desc = _(
+                "Update status from Netvisor for invoice {}".format(binding.name)
+            )
 
             binding.with_delay(description=job_desc).netvisor_import_status(
                 binding.odoo_id

@@ -62,7 +62,9 @@ class NetvisorInvoiceExportMapper(Component):
                 for ad in line.analytic_distribution.values():
                     if ad != 100.0:
                         raise ValidationError(
-                            _("Only 100% analytic distribution is supported by Netvisor!")
+                            _(
+                                "Only 100% analytic distribution is supported by Netvisor!"
+                            )
                         )
 
         xml_string = self.env["ir.qweb"]._render(
@@ -79,7 +81,11 @@ class NetvisorInvoiceExportMapper(Component):
 
         if binding and not backend.customer_invoice_allow_updating:
             _logger.info(
-                _("Updating invoices is disabled. Not sending '{}'.".format(record.name))
+                _(
+                    "Updating invoices is disabled. Not sending '{}'.".format(
+                        record.name
+                    )
+                )
             )
             return _("Updating invoices to Netvisor is not allowed")
 
@@ -131,7 +137,9 @@ class NetvisorInvoiceExportMapper(Component):
 
         if binding.reversed_entry_id:
             # Match credit note to the original invoice
-            job_desc = _("Mark invoice {} as reversed".format(binding.reversed_entry_id.name))
+            job_desc = _(
+                "Mark invoice {} as reversed".format(binding.reversed_entry_id.name)
+            )
 
             binding.with_delay(description=job_desc).netvisor_match_credit_note()
 
@@ -145,14 +153,18 @@ class NetvisorInvoiceExportMapper(Component):
             return _("Zero sum invoice. Skip sending")
 
         for line in record.invoice_line_ids:
-            if line.display_type in ['line_section', 'line_note']:
+            if line.display_type in ["line_section", "line_note"]:
                 continue
 
             # Check if there are multiple taxes per line
             taxes = line.tax_ids
             if len(taxes) > 1:
                 raise MappingError(
-                    _("Please define only one tax for invoice line '{}'".format(line.name))
+                    _(
+                        "Please define only one tax for invoice line '{}'".format(
+                            line.name
+                        )
+                    )
                 )
             elif len(taxes) < 1:
                 raise MappingError(

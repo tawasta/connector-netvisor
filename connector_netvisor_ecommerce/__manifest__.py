@@ -21,7 +21,7 @@
 {
     "name": "Netvisor Connector eCommerce support",
     "summary": "Use Netvisor with eCommerce",
-    "version": "17.0.1.0.0",
+    "version": "17.0.1.0.1",
     "category": "Sales",
     "website": "https://gitlab.com/tawasta/odoo/connector-netvisor",
     "author": "Tawasta",

@@ -17,11 +17,8 @@ class PaymentTransaction(models.Model):
 
         return res
 
-    def _create_payment(self, add_payment_vals=False):
-        if not add_payment_vals:
-            add_payment_vals = {}
-
-        res = super()._create_payment(add_payment_vals)
+    def _create_payment(self, **extra_create_values):
+        res = super()._create_payment(**extra_create_values)
         self.invoice_ids.action_netvisor_export_status()
 
         return res

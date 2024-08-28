@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!--
+        Netvisor customer XML document
+    -->
+    <template id="netvisor_customer">
+        <root>
+            <customer>
+                <customerbaseinformation>
+                    <internalidentifier t-esc="partner.ref or ''" />
+                    <externalidentifier t-esc="partner.company_registry or ''" />
+                    <organizationunitnumber
+                        t-if="partner.is_company"
+                        t-esc="partner.edicode or ''"
+                    />
+                    <name t-esc="partner.name or ''" />
+                    <nameextension t-esc="partner.name_extension or ''" />
+                    <streetaddress t-esc="partner.street or ''" />
+                    <additionaladdressline t-esc="partner.street2 or ''" />
+                    <city t-esc="partner.city or ''" />
+                    <postnumber t-esc="partner.zip or ''" />
+                    <country type="ISO-3166" t-esc="partner.country_id.code or ''" />
+                    <!-- <customergroupname>Test customers</customergroupname> -->
+                    <phonenumber t-esc="partner.phone or ''" />
+                    <!-- <faxnumber>05 123456</faxnumber> -->
+                    <email t-esc="partner.email or ''" />
+                    <homepageuri t-esc="partner.website or ''" />
+                    <isactive t-esc="1 if partner.active else 0" />
+                    <isprivatecustomer t-esc="0 if partner.is_company else 1" />
+                    <emailinvoicingaddress
+                        t-esc="partner.email_invoicing_address or ''"
+                    />
+                </customerbaseinformation>
+                <customerfinvoicedetails
+                    t-if="partner.edicode and (partner.type == 'invoice' or partner.is_company)"
+                >
+                    <finvoiceaddress t-esc="partner.edicode or ''" />
+                    <finvoiceroutercode
+                        t-esc="partner.einvoice_operator_id.identifier or ''"
+                    />
+                </customerfinvoicedetails>
+                <!-- Not implemented, as Odoo does not have a single delivery address for a company
+                <customerdeliverydetails>
+                    <deliveryname>Example Company</deliveryname>
+                    <deliverystreetaddress>Example street 1</deliverystreetaddress>
+                    <deliverycity>Helsinki</deliverycity>
+                    <deliverypostnumber>00110</deliverypostnumber>
+                    <deliverycountry type="ISO-3166">FI</deliverycountry>
+                </customerdeliverydetails>
+                -->
+                <!-- Not implemented, as Odoo does not have a single contact information for a company
+                <customercontactdetails>
+                    <contactperson>Eric Example</contactperson>
+                    <contactpersonemail>eric.example@company.com</contactpersonemail>
+                    <contactpersonphone>050 123456</contactpersonphone>
+                </customercontactdetails>
+                -->
+                <customeradditionalinformation>
+                    <comment t-esc="partner.comment or ''" />
+                    <!--<customeragreementidentifier>Agreement code</customeragreementidentifier>-->
+                    <!--<customerreferencenumber t-esc="partner.comment or ''" />-->
+                    <!--<invoicinglanguage>FI/SE/EN</invoicinglanguage>-->
+                    <!--<invoiceprintchannelformat type="netvisor">1</invoiceprintchannelformat>-->
+                    <!--<yourdefaultreference>Example reference</yourdefaultreference>-->
+                    <!--<defaulttextbeforeinvoicelines>Default text before invoice lines</defaulttextbeforeinvoicelines>-->
+                    <!--<defaulttextafterinvoicelines>Default text after invoice lines</defaulttextafterinvoicelines>-->
+                    <!--<defaultpaymentterm type="customer">14 days net</defaultpaymentterm>-->
+                    <!--<defaultsecondname type="customer">Second name</defaultsecondname>-->
+                    <paymentinterest t-esc="partner.overdue_interest or ''" />
+                    <!--<balancelimit>5000</balancelimit>-->
+                    <!--<receivablesmanagementautomationrule type="netvisor">1</receivablesmanagementautomationrule>-->
+                    <!--<factoringaccount type="netvisor">1</factoringaccount>-->
+                    <!--<taxhandlingtype>countrygroup</taxhandlingtype>-->
+                    <!--
+                    <defaultsalesperson>
+                        <salespersonid type="netvisor">2</salespersonid>
+                    </defaultsalesperson>
+                    -->
+                </customeradditionalinformation>
+                <!--
+                <customerdimensiondetails>
+                    <dimension>
+                        <dimensionname>Project</dimensionname>
+                        <dimensionitem>12345</dimensionitem>
+                    </dimension>
+                </customerdimensiondetails>
+                -->
+            </customer>
+        </root>
+    </template>
+</odoo>

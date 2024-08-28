@@ -5,4 +5,12 @@ Invoicing
 =========
 
 [//]: # (addons)
+
+Available addons
+----------------
+addon | version | maintainers | summary
+--- | --- | --- | ---
+[connector_netvisor](connector_netvisor/) | 17.0.1.1.0 |  | Integration between Odoo and Netvisor
+[connector_netvisor_ecommerce](connector_netvisor_ecommerce/) | 17.0.1.0.1 |  | Use Netvisor with eCommerce
+
 [//]: # (end addons)

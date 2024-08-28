@@ -46,7 +46,7 @@ class NetvisorProductExportMapper(Component):
                     binding_model.create(
                         {
                             "backend_id": backend.id,
-                            "external_id": res,
+                            "external_id": res.get("InsertedDataIdentifier"),
                             "odoo_id": record.id,
                         }
                     )

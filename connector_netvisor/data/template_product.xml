@@ -9,38 +9,38 @@
             <product>
                 <productbaseinformation>
                     <productcode t-esc="product.default_code or ''" />
-                    <productgroup t-esc="product.categ_id or ''" />
+                    <productgroup t-esc="product.categ_id.name or ''" />
                     <name t-esc="product.name or ''" />
                     <description t-esc="product.description_sale or ''" />
-                    <unitprice type="net" t-esc="record.lst_price or 0" />
-                    <unit t-esc="record.uom_id.name" />
-                    <purchaseprice t-esc="record.standard_price" />
+                    <unitprice type="net" t-esc="product.lst_price or 0" />
+                    <unit t-esc="product.uom_id.name" />
+                    <purchaseprice t-esc="product.standard_price" />
                     <!--tariffheading>Code Complete</tariffheading-->
                     <!--comissionpercentage>11</comissionpercentage-->
                     <!--inventorybatchlinkingmode>4</inventorybatchlinkingmode-->
-                    <isactive t-esc="record.active" />
-                    <issalesproduct t-esc="record.sale_ok" />
+                    <isactive t-esc="product.active and 1 or 0" />
+                    <issalesproduct t-esc="product.sale_ok and 1 or 0" />
                     <!--inventoryenabled>1</inventoryenabled-->
                     <!--countryoforigin type="ISO-3166">FI</countryoforigin-->
-                    <primaryeancode type="ean13" t-esc="record.barcode" />
+                    <primaryeancode type="ean13" t-esc="product.barcode" />
                     <!--secondaryeancode type="code128">1234567890</secondaryeancode-->
                     <!--inventoryalertlimit>5</inventoryalertlimit-->
                 </productbaseinformation>
                 <productbookkeepingdetails>
                     <!-- TODO: Check for multiple taxes -->
                     <defaultvatpercentage
-                        t-esc="record.tax_ids and record.tax_ids[0].amount or 0"
+                        t-esc="product.taxes_id and product.taxes_id[0].amount or 0"
                     />
                     <defaultdomesticaccountnumber
-                        t-esc="record.property_account_invoice_id.code"
+                        t-esc="product.property_account_income_id.code"
                     />
                     <!--defaulteuaccountnumber>3360<defaulteuaccountnumber-->
                     <!--defaultoutsideeuaccountnumber>3380</defaultoutsideeuaccountnumber-->
                 </productbookkeepingdetails>
-                <productadditionalinformation>
-                    <productnetweight t-esc="record.weight" />
+                <productadditionalinformation t-if="product.weight">
+                    <productnetweight t-esc="product.weight" />
                     <!--<productgrossweight>15</productgrossweight>-->
-                    <productweightunit t-esc="record.uom_id.name" />
+                    <productweightunit t-esc="product.uom_id.name" />
                 </productadditionalinformation>
                 <!--dimension>
                     <dimensionname>Project</dimensionname>

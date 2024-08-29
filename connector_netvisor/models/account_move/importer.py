@@ -15,10 +15,9 @@ class NetvisorInvoiceImportMapper(Component):
     _inherit = "base.import.mapper"
     _apply_on = ["netvisor.invoice"]
 
-    def update_status(self, backend, record):
+    def update_status(self, record):
         """
         Update invoice status
-        :param backend: Netvisor backend record
         :param netvisor_key: Netvisor external id
         :return:
         """
@@ -31,7 +30,7 @@ class NetvisorInvoiceImportMapper(Component):
             raise ValidationError(_("Please send the invoice to Netvisor first"))
 
         endpoint = f"getsalesinvoice.nv?netvisorkey={binding.external_id}"
-        invoice = backend._api_request_get(endpoint)
+        invoice = binding.backend_id._api_request_get(endpoint)
 
         invoice_status = (
             invoice.get("InvoiceStatus").get("#text").lower().replace(" ", "")

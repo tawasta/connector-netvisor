@@ -68,7 +68,7 @@ class NetvisorInvoice(models.Model):
 
         with backend.work_on(self._name) as work:
             exporter = work.component(usage="export.mapper")
-            return exporter.update_status(backend, record)
+            return exporter.update_status(record)
 
     def netvisor_match_credit_note(self):
         """

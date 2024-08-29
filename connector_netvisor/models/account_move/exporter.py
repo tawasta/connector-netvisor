@@ -181,22 +181,19 @@ class NetvisorInvoiceExportMapper(Component):
                 )
                 raise ValidationError(err)
 
-    def update_status(self, backend, record):
+    def update_status(self, record):
         """Update invoice status to Netvisor"""
-        binding_model = self.env["netvisor.invoice"]
-        binding = binding_model.search(
-            [("odoo_id", "=", record.id), ("backend_id", "=", backend.id)]
-        )
         netvisor_status = record.netvisor_status
 
         if record.payment_state in ["paid", "reversed"]:
             netvisor_status = "paid"
 
         values = {}
-        endpoint = "updatesalesinvoicestatus.nv?netvisorkey={}&status={}".format(
-            binding.external_id, netvisor_status
-        )
-        backend._api_request_post(endpoint, values)
+        for binding in record.netvisor_bind_ids:
+            endpoint = "updatesalesinvoicestatus.nv?netvisorkey={}&status={}".format(
+                binding.external_id, netvisor_status
+            )
+            binding.backend_id._api_request_post(endpoint, values)
 
         record.netvisor_status = netvisor_status
         return f"Updated status to {netvisor_status}"

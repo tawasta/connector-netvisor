@@ -12,7 +12,7 @@
                     <productgroup t-esc="product.categ_id or ''" />
                     <name t-esc="product.name or ''" />
                     <description t-esc="product.description_sale or ''" />
-                    <unitprice type="net" t-esc="record.lst_price or 0" />
+                    <unitprice type="net" t-esc="product.lst_price or 0" />
                     <unit t-esc="product.uom_id.name" />
                     <purchaseprice t-esc="product.standard_price" />
                     <!--tariffheading>Code Complete</tariffheading-->

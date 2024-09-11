@@ -115,7 +115,7 @@
                                 type="customer"
                                 t-esc="line.product_id.default_code or ''"
                             />
-                            <productName t-esc="line.name or ''" />
+                            <productName t-esc="line.name[0:200] or ''" />
                             <productunitPrice type="net" t-esc="line.price_unit" />
                             <productUnitPurchasePrice
                                 type="net"

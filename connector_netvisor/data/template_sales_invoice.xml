@@ -139,8 +139,8 @@
                             <accountingAccountSuggestion
                                 t-esc="line.account_id.code or ''"
                             />
+                            <t t-if="line.analytic_distribution">
                             <dimension
-                                t-if="line.analytic_distribution"
                                 t-foreach="list(line.analytic_distribution.keys())[0].split(',')"
                                 t-as="dimension"
                             >
@@ -151,6 +151,7 @@
                                     t-esc="dimensions[int(dimension)][1] or ''"
                                 />
                             </dimension>
+                            </t>
                             <!--accrualrule>
                                 <startmonth></startmonth>
                                 <startyear></startyear>

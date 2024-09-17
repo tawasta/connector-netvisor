@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <record id="role_accrual_rule_user" model="ir.model.access">
+        <field name="name">Accrual rule user</field>
+        <field
+            name="model_id"
+            ref="connector_netvisor_accrual.model_account_accrual_rule"
+        />
+        <field name="group_id" ref="account.group_account_invoice" />
+        <field name="perm_read" eval="1" />
+        <field name="perm_write" eval="1" />
+        <field name="perm_create" eval="1" />
+        <field name="perm_unlink" eval="0" />
+    </record>
+
+    <record id="role_accrual_rule_manager" model="ir.model.access">
+        <field name="name">Accrual rule manager</field>
+        <field
+            name="model_id"
+            ref="connector_netvisor_accrual.model_account_accrual_rule"
+        />
+        <field name="group_id" ref="account.group_account_manager" />
+        <field name="perm_read" eval="1" />
+        <field name="perm_write" eval="1" />
+        <field name="perm_create" eval="1" />
+        <field name="perm_unlink" eval="0" />
+    </record>
+
+</odoo>

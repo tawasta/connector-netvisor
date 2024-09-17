@@ -141,23 +141,17 @@
                             />
                             <t t-if="line.analytic_distribution">
                             <dimension
-                                t-foreach="list(line.analytic_distribution.keys())[0].split(',')"
-                                t-as="dimension"
-                            >
+                                    t-foreach="list(line.analytic_distribution.keys())[0].split(',')"
+                                    t-as="dimension"
+                                >
                                 <dimensionName
-                                    t-esc="dimensions[int(dimension)][0] or ''"
-                                />
+                                        t-esc="dimensions[int(dimension)][0] or ''"
+                                    />
                                 <dimensionItem
-                                    t-esc="dimensions[int(dimension)][1] or ''"
-                                />
+                                        t-esc="dimensions[int(dimension)][1] or ''"
+                                    />
                             </dimension>
                             </t>
-                            <!--accrualrule>
-                                <startmonth></startmonth>
-                                <startyear></startyear>
-                                <endmonth></endmonth>
-                                <endyear></endyear>
-                            </accrualrule-->
                         </salesInvoiceProductLine>
                         <!-- Comment lines -->
                         <salesInvoiceCommentLine t-else="">

@@ -115,7 +115,7 @@
                                 type="customer"
                                 t-esc="line.product_id.default_code or ''"
                             />
-                            <productName t-esc="line.name or ''" />
+                            <productName t-esc="line.name[0:200] or ''" />
                             <productunitPrice type="net" t-esc="line.price_unit" />
                             <productUnitPurchasePrice
                                 type="net"
@@ -139,24 +139,19 @@
                             <accountingAccountSuggestion
                                 t-esc="line.account_id.code or ''"
                             />
+                            <t t-if="line.analytic_distribution">
                             <dimension
-                                t-if="line.analytic_distribution"
-                                t-foreach="list(line.analytic_distribution.keys())[0].split(',')"
-                                t-as="dimension"
-                            >
+                                    t-foreach="list(line.analytic_distribution.keys())[0].split(',')"
+                                    t-as="dimension"
+                                >
                                 <dimensionName
-                                    t-esc="dimensions[int(dimension)][0] or ''"
-                                />
+                                        t-esc="dimensions[int(dimension)][0] or ''"
+                                    />
                                 <dimensionItem
-                                    t-esc="dimensions[int(dimension)][1] or ''"
-                                />
+                                        t-esc="dimensions[int(dimension)][1] or ''"
+                                    />
                             </dimension>
-                            <!--accrualrule>
-                                <startmonth></startmonth>
-                                <startyear></startyear>
-                                <endmonth></endmonth>
-                                <endyear></endyear>
-                            </accrualrule-->
+                            </t>
                         </salesInvoiceProductLine>
                         <!-- Comment lines -->
                         <salesInvoiceCommentLine t-else="">

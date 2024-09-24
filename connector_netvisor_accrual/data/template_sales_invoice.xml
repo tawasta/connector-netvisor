@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template
+        id="netvisor_salesinvoice"
+        inherit_id="connector_netvisor.netvisor_salesinvoice"
+    >
+        <xpath expr="//invoiceLines" position="after">
+            <accrualrule t-if="invoice.accrual_rule_id">
+                <startmonth t-esc="invoice.accrual_rule_id.start_month" />
+                <startyear t-esc="invoice.accrual_rule_id.start_year" />
+                <endmonth
+                    t-esc="invoice.accrual_rule_id.end_month"
+                    t-if="invoice.accrual_rule_id.end_month"
+                />
+                <endyear
+                    t-esc="invoice.accrual_rule_id.start_year"
+                    t-if="invoice.accrual_rule_id.start_year"
+                />
+            </accrualrule>
+        </xpath>
+    </template>
+</odoo>

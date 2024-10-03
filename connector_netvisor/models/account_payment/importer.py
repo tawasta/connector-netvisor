@@ -29,7 +29,7 @@ class NetvisorPaymentImportMapper(Component):
         payment_values = self.map_record(record).values()
         payment_values["company_id"] = backend.company_id.id
 
-        netvisor_key = record.get("netvisor_key")
+        netvisor_key = record.get("NetvisorKey")
 
         # Search for existing binding
         existing_binding = netvisor_model.search(
@@ -79,6 +79,7 @@ class NetvisorPaymentImportMapper(Component):
         payment_register_values = payment_values.copy()
         payment_register_values["communication"] = payment_register_values.pop("ref")
         payment_register_values["payment_date"] = payment_register_values.pop("date")
+        payment_register_values.pop("payment_method")
 
         # noinspection PyProtectedMember
         payment = (
@@ -115,13 +116,9 @@ class NetvisorPaymentImportMapper(Component):
         return res
 
     @mapping
-    def payment_method_id(self, record):
-        # This will currently fetch the first appicable method
-        payment_method = self.env["account.payment.method"].search(
-            [("payment_type", "=", "inbound")], limit=1
-        )
-
-        res = {"payment_method_id": payment_method.id}
+    def payment_method(self, record):
+        # Only inbound payments are currently supported
+        res = {"payment_method": "inbound"}
 
         return res
 

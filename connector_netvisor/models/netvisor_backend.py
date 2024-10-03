@@ -1,9 +1,9 @@
 import hashlib
 import logging
 import uuid
-from datetime import datetime
+import httpx
 
-import requests
+from datetime import datetime
 import xmltodict
 
 from odoo import _, api, fields, models
@@ -169,7 +169,7 @@ class NetvisorBackend(models.Model):
 
     def _api_request_post(self, endpoint, values, params=None):
         """
-        Helper for requests.post method
+        Helper for httpx.post method
 
         :param endpoint: API Endpoint
         :param values: Requests data
@@ -183,10 +183,11 @@ class NetvisorBackend(models.Model):
         url = self._get_request_url(endpoint, params)
         headers = self._get_authentication_headers(url)
 
-        response = requests.post(
+        response = httpx.post(
             url=url,
             data=values,
             headers=headers,
+            timeout=10,
         )
 
         res = self._parse_response(response)
@@ -195,7 +196,7 @@ class NetvisorBackend(models.Model):
 
     def _api_request_get(self, endpoint, params=None):
         """
-        Helper for requests.get method
+        Helper for httpx.get method
 
         :param endpoint: API Endpoint
         :param params: Requests params
@@ -208,7 +209,7 @@ class NetvisorBackend(models.Model):
         url = self._get_request_url(endpoint, params)
         headers = self._get_authentication_headers(url)
 
-        response = requests.get(
+        response = httpx.get(
             url=url,
             headers=headers,
         )

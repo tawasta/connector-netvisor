@@ -277,7 +277,13 @@ class NetvisorBackend(models.Model):
         if status_code == 404:
             raise ValidationError(_("This endpoint doesn't seem to exist."))
 
-        response_status = root.get("ResponseStatus")
+        try:
+            response_status = root.get("ResponseStatus")
+        except AttributeError as e:
+            raise Exception(
+                "Error while trying to parse response '{}': '{}'".format(root, e)
+            )
+
         response_status_list = response_status.get("Status")
 
         _logger.debug(root.keys())
@@ -292,7 +298,7 @@ class NetvisorBackend(models.Model):
         elif "Customerlist" in root:
             res = root.get("Customerlist") and root["Customerlist"].get("Customer")
             if isinstance(res, dict):
-                # Always put customer in a list
+                # Always put customers in a list
                 res = [res]
         elif "Customer" in root:
             res = root.get("Customer", {})
@@ -300,16 +306,25 @@ class NetvisorBackend(models.Model):
             res = root.get("DimensionNameList") and root["DimensionNameList"].get(
                 "DimensionName", {}
             )
+            if isinstance(res, dict):
+                # Always put dimensions in a list
+                res = [res]
         elif "Product" in root:
             res = root.get("Product", {})
         elif "ProductList" in root:
             res = root.get("ProductList") and root["ProductList"].get("Product", {})
+            if isinstance(res, dict):
+                # Always put products in a list
+                res = [res]
         elif "SalesInvoice" in root:
             res = root.get("SalesInvoice", {})
         elif "SalesPaymentList" in root:
             res = root.get("SalesPaymentList") and root["SalesPaymentList"].get(
                 "SalesPayment", {}
             )
+            if isinstance(res, dict):
+                # Always put payments in a list
+                res = [res]
         elif root.keys() and len(root.keys()) == 1:
             # Some endpoints just return the ResponseStatus
             res = {}

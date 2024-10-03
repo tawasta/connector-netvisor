@@ -9,7 +9,11 @@ class WebsiteSaleNetvisor(WebsiteSale):
         Save company email to parent company
         """
         # Don't set email to company, use email_invoicing_address instead
-        checkout["email_invoicing_address"] = checkout.pop("company_email", "")
+        company_email = all_values.pop("company_email", "")
+        checkout["email_invoicing_address"] = company_email
+        all_values["email_invoicing_address"] = company_email
+
+        transmit_method = checkout.get("customer_invoice_transmit_method_id")
 
         transmit_method_post_id = (
             request.env["transmit.method"].sudo().search([("code", "=", "post")])
@@ -18,31 +22,14 @@ class WebsiteSaleNetvisor(WebsiteSale):
             request.env["transmit.method"].sudo().search([("code", "=", "mail")])
         )
 
-        if all_values.get("use_transmit_method_snailmail"):
-            # Remove invoicing email, if set
+        if transmit_method and transmit_method == transmit_method_post_id:
+            # Remove invoicing email if using post
             checkout["email_invoicing_address"] = False
-            # Set helper field as selected
-            checkout["use_transmit_method_snailmail"] = True
-            # Update transmit method
-            checkout["customer_invoice_transmit_method_id"] = transmit_method_post_id.id
-            all_values[
-                "customer_invoice_transmit_method_id"
-            ] = transmit_method_post_id.id
-        else:
-            # Set helper field as unselected
-            checkout["use_transmit_method_snailmail"] = False
+            all_values["email_invoicing_address"] = False
+        elif transmit_method and transmit_method == transmit_method_email_id:
             # Ensure that invoicing email is in values
-            checkout["email_invoicing_address"] = all_values.get("email")
-            if int(all_values.get("customer_invoice_transmit_method_id", 0)) in [
-                0,
-                transmit_method_post_id.id,
-            ]:
-                checkout[
-                    "customer_invoice_transmit_method_id"
-                ] = transmit_method_email_id.id
-                all_values[
-                    "customer_invoice_transmit_method_id"
-                ] = transmit_method_email_id.id
+            if not checkout.get("email_invoicing_address"):
+                checkout["email_invoicing_address"] = all_values.get("email")
 
         res = super()._checkout_form_save(mode, checkout, all_values)
 

@@ -48,7 +48,7 @@ class NetvisorInvoice(models.Model):
 
         with backend.work_on(self._name) as work:
             importer = work.component(usage="import.mapper")
-            return importer.update_status(backend, record)
+            return importer.update_status(record)
 
     def netvisor_import_invoice_details(self, record):
         """

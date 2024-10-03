@@ -124,7 +124,6 @@ class NetvisorInvoice(models.Model):
                     "group_payment": True,
                     "payment_difference_handling": "open",
                     "currency_id": record.currency_id.id,
-                    "payment_method_id": payment_method.id,
                     "payment_date": payment_date,
                 }
 

@@ -42,7 +42,9 @@
                 <salesInvoiceFreeTextBeforeLines
                     t-esc="invoice.ref if invoice.move_type == 'out_refund' else ''"
                 />
-                <salesInvoiceFreeTextAfterLines t-esc="invoice.narration or ''" />
+                <salesInvoiceFreeTextAfterLines
+                    t-esc="invoice.narration_plaintext or ''"
+                />
                 <salesInvoiceOurReference t-esc="invoice.ref or ''" />
                 <!--salesInvoiceYourReference>Your reference</salesInvoiceYourReference-->
                 <salesInvoicePrivateComment t-esc="invoice.description or ''" />

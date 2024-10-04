@@ -2,6 +2,7 @@ import logging
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools import html2plaintext
 
 _logger = logging.getLogger(__name__)
 
@@ -52,6 +53,12 @@ class AccountMove(models.Model):
         compute="_compute_attachment_ids",
     )
 
+    narration_plaintext = fields.Char(
+        string="Narration plaintext",
+        _compute="_compute_narration_plaintext",
+        help="Helper field for narration",
+    )
+
     @api.depends("posted_before", "state", "journal_id", "date")
     def _compute_name(self):
         for record in self:
@@ -73,6 +80,10 @@ class AccountMove(models.Model):
             )
 
             record.attachment_ids = attachment_ids
+
+    def _compute_narration_plaintext(self):
+        for record in self:
+            record.narration_plaintext = record(html2plaintext(record.narration))
 
     @api.model
     def _get_invoice_in_payment_state(self):

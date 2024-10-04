@@ -26,6 +26,12 @@ class NetvisorInvoiceExportMapper(Component):
         """
         self._validate(record)
 
+        if not record.netvisor_send:
+            return _("Netvisor sending is disabled for this invoice")
+
+        if record.amount_total_signed == 0:
+            return _("Zero sum invoice. Skip sending")
+
         # Force record company for property fields
         company_id = False
         if record.company_id:
@@ -146,12 +152,6 @@ class NetvisorInvoiceExportMapper(Component):
         return msg
 
     def _validate(self, record):
-        if not record.netvisor_send:
-            return _("Netvisor sending is disabled for this invoice")
-
-        if record.amount_total_signed == 0:
-            return _("Zero sum invoice. Skip sending")
-
         for line in record.invoice_line_ids:
             if line.display_type in ["line_section", "line_note"]:
                 continue

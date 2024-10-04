@@ -1,4 +1,5 @@
 from odoo import _, api, fields, models
+from odoo.tools import html2plaintext
 
 
 class Partner(models.Model):
@@ -8,11 +9,21 @@ class Partner(models.Model):
         string="Invoicing email", help="Netvisor invoicing email"
     )
 
+    comment_plaintext = fields.Char(
+        string="Notes plaintext",
+        _compute="_compute_notes_plaintext",
+        help="Helper field for comment",
+    )
+
     netvisor_bind_ids = fields.One2many(
         comodel_name="netvisor.partner",
         inverse_name="odoo_id",
         string="Netvisor Bindings",
     )
+
+    def _compute_notes_plaintext(self):
+        for record in self:
+            record.comment_plaintext = html2plaintext(record.comment)
 
     def action_netvisor_export_record(self, use_queue=True, company_id=False):
         """

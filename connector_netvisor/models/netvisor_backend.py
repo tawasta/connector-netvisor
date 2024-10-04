@@ -273,6 +273,9 @@ class NetvisorBackend(models.Model):
         text = xmltodict.parse(response.text)
         root = text.get("Root")
 
+        if not root:
+            _logger.warning("Root element not found: {}".format(text))
+
         status_code = response.status_code
 
         if status_code == 404:

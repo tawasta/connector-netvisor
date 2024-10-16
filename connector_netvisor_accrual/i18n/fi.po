@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0-20240826\n"
+"Project-Id-Version: Odoo Server 17.0-20240924\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-17 13:56+0000\n"
-"PO-Revision-Date: 2024-09-17 16:57+0300\n"
+"POT-Creation-Date: 2024-10-16 08:56+0000\n"
+"PO-Revision-Date: 2024-10-16 12:01+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -18,11 +18,10 @@ msgstr ""
 "X-Generator: Poedit 3.5\n"
 
 #. module: connector_netvisor_accrual
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_bank_statement_line__accrual_rule_id
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_move__accrual_rule_id
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_payment__accrual_rule_id
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_netvisor_invoice__accrual_rule_id
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_netvisor_payment__accrual_rule_id
+#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_move_line__accrual_rule_id
+#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_netvisor_product__accrual_rule_id
+#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_product_product__accrual_rule_id
+#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_product_template__accrual_rule_id
 msgid "Accrual rule"
 msgstr "Jaksotussääntö"
 
@@ -42,18 +41,6 @@ msgid "Active"
 msgstr "Aktiivinen"
 
 #. module: connector_netvisor_accrual
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__end_month__4
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__start_month__4
-msgid "April"
-msgstr "Huhtikuu"
-
-#. module: connector_netvisor_accrual
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__end_month__8
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__start_month__8
-msgid "August"
-msgstr "Elokuu"
-
-#. module: connector_netvisor_accrual
 #: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__create_uid
 msgid "Created by"
 msgstr "Luonut"
@@ -64,36 +51,14 @@ msgid "Created on"
 msgstr "Luotu"
 
 #. module: connector_netvisor_accrual
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__end_month__12
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__start_month__12
-msgid "December"
-msgstr "Joulukuu"
-
-#. module: connector_netvisor_accrual
 #: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
 
 #. module: connector_netvisor_accrual
-#: model_terms:ir.ui.view,arch_db:connector_netvisor_accrual.view_accrual_rule_form
-msgid "End"
-msgstr "Loppu"
-
-#. module: connector_netvisor_accrual
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__end_month
-msgid "End month"
-msgstr "Päättymiskuukausi"
-
-#. module: connector_netvisor_accrual
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__end_year
-msgid "End year"
-msgstr "Päättymisvuosi"
-
-#. module: connector_netvisor_accrual
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__end_month__2
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__start_month__2
-msgid "February"
-msgstr "Helmikuu"
+#: model:ir.model.fields,help:connector_netvisor_accrual.field_account_accrual_rule__period_length
+msgid "How many months in the accrual period"
+msgstr "Kuinka monelle kuukaudelle jaksotus tehdään"
 
 #. module: connector_netvisor_accrual
 #: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__id
@@ -101,27 +66,9 @@ msgid "ID"
 msgstr "ID"
 
 #. module: connector_netvisor_accrual
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__end_month__1
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__start_month__1
-msgid "January"
-msgstr "Tammikuu"
-
-#. module: connector_netvisor_accrual
-#: model:ir.model,name:connector_netvisor_accrual.model_account_move
-msgid "Journal Entry"
-msgstr "Päiväkirjan kirjaus"
-
-#. module: connector_netvisor_accrual
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__end_month__7
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__start_month__7
-msgid "July"
-msgstr "Heinäkuu"
-
-#. module: connector_netvisor_accrual
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__end_month__6
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__start_month__6
-msgid "June"
-msgstr "Kesäkuu"
+#: model:ir.model,name:connector_netvisor_accrual.model_account_move_line
+msgid "Journal Item"
+msgstr "Päiväkirjatapahtuma"
 
 #. module: connector_netvisor_accrual
 #: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__write_uid
@@ -134,51 +81,23 @@ msgid "Last Updated on"
 msgstr "Viimeksi päivitetty"
 
 #. module: connector_netvisor_accrual
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__end_month__3
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__start_month__3
-msgid "March"
-msgstr "Marraskuu"
-
-#. module: connector_netvisor_accrual
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__end_month__5
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__start_month__5
-msgid "May"
-msgstr "Toukokuu"
-
-#. module: connector_netvisor_accrual
 #: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__name
 msgid "Name"
 msgstr "Nimi"
 
 #. module: connector_netvisor_accrual
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__end_month__11
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__start_month__11
-msgid "November"
-msgstr "Marraskuu"
+#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__period_length
+msgid "Period (months)"
+msgstr "Jakso (kuukautta)"
 
 #. module: connector_netvisor_accrual
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__end_month__10
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__start_month__10
-msgid "October"
-msgstr "Lokakuu"
+#: model:ir.model,name:connector_netvisor_accrual.model_product_template
+msgid "Product"
+msgstr "Tuote"
 
 #. module: connector_netvisor_accrual
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__end_month__9
-#: model:ir.model.fields.selection,name:connector_netvisor_accrual.selection__account_accrual_rule__start_month__9
-msgid "September"
-msgstr "Syyskuu"
-
-#. module: connector_netvisor_accrual
-#: model_terms:ir.ui.view,arch_db:connector_netvisor_accrual.view_accrual_rule_form
-msgid "Start"
-msgstr "Alku"
-
-#. module: connector_netvisor_accrual
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__start_month
-msgid "Start month"
-msgstr "Alkamiskuukausi"
-
-#. module: connector_netvisor_accrual
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__start_year
-msgid "Start year"
-msgstr "Alkamisvuosi"
+#: model:ir.model.fields,help:connector_netvisor_accrual.field_netvisor_product__accrual_rule_id
+#: model:ir.model.fields,help:connector_netvisor_accrual.field_product_product__accrual_rule_id
+#: model:ir.model.fields,help:connector_netvisor_accrual.field_product_template__accrual_rule_id
+msgid "Use accrual rule for invoice lines with this product"
+msgstr "Käytä jaksotussäänötä laskuriveille, joilla on tämä tuote"

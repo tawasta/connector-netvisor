@@ -41,6 +41,7 @@
         "security/model_access.xml",
         "views/account_move.xml",
         "views/accrual_rule.xml",
+        "views/product_template.xml",
     ],
     "assets": {},
     "demo": [],

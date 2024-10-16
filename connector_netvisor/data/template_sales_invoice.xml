@@ -141,7 +141,7 @@
                             <accountingAccountSuggestion
                                 t-esc="line.account_id.code or ''"
                             />
-                            <t t-if="line.analytic_distribution">
+                            <t t-if="line.analytic_distribution" id="dimension_wrapper">
                             <dimension
                                     t-foreach="list(line.analytic_distribution.keys())[0].split(',')"
                                     t-as="dimension"

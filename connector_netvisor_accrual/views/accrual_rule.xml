@@ -19,15 +19,8 @@
                         </h1>
                     </div>
 
-                    <group name="date_range">
-                        <group name="start" string="Start">
-                            <field name="start_month" />
-                            <field name="start_year" />
-                        </group>
-                        <group name="end" string="End">
-                            <field name="end_month" />
-                            <field name="end_year" />
-                        </group>
+                    <group name="length">
+                        <field name="period_length" />
                     </group>
                 </sheet>
             </form>

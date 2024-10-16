@@ -1,19 +1,5 @@
 from odoo import fields, models
-
-MONTHS = [
-    ("1", "January"),
-    ("2", "February"),
-    ("3", "March"),
-    ("4", "April"),
-    ("5", "May"),
-    ("6", "June"),
-    ("7", "July"),
-    ("8", "August"),
-    ("9", "September"),
-    ("10", "October"),
-    ("11", "November"),
-    ("12", "December"),
-]
+from dateutil.relativedelta import relativedelta
 
 
 class AccrualRule(models.Model):
@@ -23,8 +9,31 @@ class AccrualRule(models.Model):
     name = fields.Char()
     active = fields.Boolean(default=True)
 
-    start_month = fields.Selection(selection=MONTHS, string="Start month")
-    start_year = fields.Integer(string="Start year")
+    period_length = fields.Integer(
+        string="Period (months)",
+        help="How many months in the accrual period",
+    )
 
-    end_month = fields.Selection(selection=MONTHS, string="End month")
-    end_year = fields.Integer(string="End year")
+    def get_accrual_start_month(self, start_date):
+        self.ensure_one()
+        res = start_date.month
+
+        return res
+
+    def get_accrual_start_year(self, start_date):
+        self.ensure_one()
+        res = start_date.year
+
+        return res
+
+    def get_accrual_end_month(self, start_date):
+        self.ensure_one()
+        res = (start_date + relativedelta(months=self.period_length)).month
+
+        return res
+
+    def get_accrual_end_year(self, start_date):
+        self.ensure_one()
+        res = (start_date + relativedelta(months=self.period_length)).year
+
+        return res

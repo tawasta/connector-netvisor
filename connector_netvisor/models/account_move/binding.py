@@ -40,6 +40,47 @@ class NetvisorInvoice(models.Model):
             exporter = work.component(usage="export.mapper")
             return exporter.export_invoice(backend, record)
 
+    def netvisor_import_purchase_invoices(self, company=False):
+        """
+        Import all products from Netvisor
+        :return:
+        """
+        backend = self.get_netvisor_backend(company)
+        endpoint = "purchaseinvoicelist.nv"
+
+        params = {
+            "lastmodifiedstart": backend.purchases_start_date.isoformat(),
+            # "paymentstatus": "unpaid",
+            # "invoicestatus": "open",
+        }
+
+        records = backend._api_request_get(endpoint, params=params)
+
+        if backend.company_id:
+            self = self.with_context(company_id=backend.company_id.id)
+
+        for record in records:
+            job_desc = _(
+                "Netvisor: import purchase invoice '{}'".format(
+                    record.get("NetvisorKey") or record.get("Name")
+                )
+            )
+            self.with_delay(description=job_desc).netvisor_import_purchase_invoice(
+                record.get("NetvisorKey"), backend.company_id
+            )
+
+    def netvisor_import_purchase_invoice(self, record, company_id=False):
+        """
+        Import a purchase invoice from Netvisor
+        :param record: Purchase invoice record
+        :return:
+        """
+        backend = self.get_netvisor_backend(company_id)
+
+        with backend.work_on(self._name) as work:
+            importer = work.component(usage="import.mapper")
+            return importer.import_purchase_invoice(backend, record)
+
     def netvisor_import_status(self, record):
         """
         Update status from Netvisor

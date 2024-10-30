@@ -44,6 +44,10 @@
                                     name="customer_invoice_allow_updating"
                                     widget="boolean_toggle"
                                 />
+                                <field
+                                    name="customer_invoice_use_delivery_address"
+                                    widget="boolean_toggle"
+                                />
                             </group>
                         </page>
 

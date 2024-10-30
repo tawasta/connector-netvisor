@@ -104,6 +104,12 @@ class NetvisorBackend(models.Model):
         default=False,
     )
 
+    customer_invoice_use_delivery_address = fields.Boolean(
+        string="Use delivery address",
+        help="Send customer invoice delivery address to Netvisor",
+        default=True,
+    )
+
     # Import / export settings
     customer_import_create = fields.Boolean(
         string="Create new customers on import",

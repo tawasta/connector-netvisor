@@ -48,11 +48,8 @@
                 <salesInvoiceOurReference t-esc="invoice.ref or ''" />
                 <!--salesInvoiceYourReference>Your reference</salesInvoiceYourReference-->
                 <salesInvoicePrivateComment t-esc="invoice.description or ''" />
-                <invoicingCustomeridentifier
-                    type="netvisor"
-                    t-if="invoice.partner_id.netvisor_bind_ids"
-                    t-esc="invoice.partner_id.netvisor_bind_ids[0].external_id"
-                />
+                <t t-set="partner_binding" t-value="invoice.partner_id.netvisor_bind_ids.filtered(lambda b: b.company_id == invoice.company_id.id)" />
+                <invoicingCustomeridentifier type="netvisor" t-if="partner_binding" t-esc="partner_binding[0].external_id"/>
                 <invoicingCustomeridentifier
                     type="customer"
                     t-elif="invoice.partner_id.ref"

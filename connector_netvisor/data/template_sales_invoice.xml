@@ -81,21 +81,27 @@
                     />
                 </t>
                 <!--officeidentifier>20</officeidentifier-->
-                <!--deliveryoffice type="netvisor">1041</deliveryoffice-->
-                <deliveryAddressName t-esc="invoice.partner_shipping_id.name or ''" />
-                <deliveryAddressLine
-                    t-esc="invoice.partner_shipping_id.get_combined_street()"
-                />
-                <deliveryAddressPostNumber
-                    t-esc="invoice.partner_shipping_id.zip or ''"
-                />
-                <deliveryAddressTown t-esc="invoice.partner_shipping_id.city or ''" />
-                <deliveryAddressCountryCode
-                    type="ISO-3316"
-                    t-esc="invoice.partner_shipping_id.country_id.code or ''"
-                />
-                <!--deliveryMethod>Installed</deliveryMethod-->
-                <!--deliveryTerm>According to the agreement</deliveryTerm-->
+                <t t-if="backend.customer_invoice_use_delivery_address">
+                    <!--deliveryoffice type="netvisor">1041</deliveryoffice-->
+                    <deliveryAddressName
+                        t-esc="invoice.partner_shipping_id.name or ''"
+                    />
+                    <deliveryAddressLine
+                        t-esc="invoice.partner_shipping_id.get_combined_street()"
+                    />
+                    <deliveryAddressPostNumber
+                        t-esc="invoice.partner_shipping_id.zip or ''"
+                    />
+                    <deliveryAddressTown
+                        t-esc="invoice.partner_shipping_id.city or ''"
+                    />
+                    <deliveryAddressCountryCode
+                        type="ISO-3316"
+                        t-esc="invoice.partner_shipping_id.country_id.code or ''"
+                    />
+                    <!--deliveryMethod>Installed</deliveryMethod-->
+                    <!--deliveryTerm>According to the agreement</deliveryTerm-->
+                </t>
                 <!--salesInvoiceTaxHandlingType>countrygroup</salesInvoiceTaxHandlingType-->
                 <!--paymentterm type="customerdefault">1</paymentterm-->
                 <!--<paymentTermNetDays t-esc="(invoice.invoice_date_due - invoice.invoice_date).days" />-->

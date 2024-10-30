@@ -210,7 +210,7 @@
                             <fileName t-esc="attachment.name" />
                             <documentData
                                 t-att-type="file_ending"
-                                t-esc="attachment.datas"
+                                t-raw="attachment.datas_utf8"
                             />
                             <printByDefault>1</printByDefault>
                         </salesinvoiceattachment>

@@ -109,6 +109,15 @@ class AccountMove(models.Model):
 
         return res
 
+    def write(self, vals):
+        res = super().write(vals)
+
+        if vals.get("is_move_sent"):
+            # When invoice is set as sent
+            self.action_netvisor_export_status()
+
+        return res
+
     def action_netvisor_export_invoice(self):
         """
         Export (send) invoice(s) to Netvisor

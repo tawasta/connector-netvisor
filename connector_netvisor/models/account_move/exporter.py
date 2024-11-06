@@ -187,6 +187,8 @@ class NetvisorInvoiceExportMapper(Component):
 
         if record.payment_state in ["paid", "reversed"]:
             netvisor_status = "paid"
+        elif record.is_move_sent:
+            netvisor_status = "open"
 
         values = {}
         for binding in record.netvisor_bind_ids:

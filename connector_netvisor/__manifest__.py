@@ -38,6 +38,7 @@
         "account_invoice_description",
         "account_invoice_margin",
         "account_invoice_overdue_interest",
+        "account_invoice_transmit_method",
         "analytic",
         "connector",
         "product",

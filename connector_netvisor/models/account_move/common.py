@@ -209,7 +209,14 @@ class AccountMove(models.Model):
         #  E.g. invoices have been created in Netvisor
         for sales_invoice in sale_invoices:
             if sales_invoice.name[0:3] != "INV":
-                sales_invoice.name = "INV/{}".format(sales_invoice.name)
+                new_name = "INV/{}".format(sales_invoice.name)
+                i = 1
+                while self.search([("name", "=", new_name)]):
+                    # If there is an overlapping name, add a sequence number
+                    new_name = new_name + "_{}".format(i)
+                    i += 1
+
+                sales_invoice.name = new_name
 
         # Send invoice(s) to netvisor
         sale_invoices.action_netvisor_export_invoice()

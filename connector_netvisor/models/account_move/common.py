@@ -89,8 +89,15 @@ class AccountMove(models.Model):
         res = super().write(vals)
 
         if vals.get("is_move_sent"):
-            # When invoice is set as sent
-            self.action_netvisor_export_status()
+            for record in self:
+                if record.netvisor_status == "unsent":
+                    # When invoice is set as sent
+                    job_desc = _(
+                        "Set invoice '{}' as sent in Netvisor".format(record.name)
+                    )
+                    record.with_delay(
+                        description=job_desc
+                    ).action_netvisor_export_status()
 
         if vals.get("payment_id"):
             for record in self.filtered(lambda r: r.is_entry()):

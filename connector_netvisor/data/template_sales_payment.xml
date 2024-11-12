@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!--
+        Netvisor sales payment XML document
+    -->
+    <template id="netvisor_sales_payment">
+        <root>
+            <salespayment>
+                <sum t-esc="record.amount" t-att-currency="record.currency_id.name" />
+                <paymentdate t-esc="record.date.isoformat()" />
+                <t
+                    t-set="identifier"
+                    t-value="record.reconciled_invoice_ids[0].netvisor_bind_ids.filtered(lambda b: b.company_id == record.company_id).external_id"
+                />
+                <targetidentifier
+                    t-esc="identifier"
+                    type="netvisor"
+                    targettype="invoice"
+                />
+                <sourcename t-esc="record.ref" />
+                <paymentmethod t-esc="'pankkikortti'" type="alternative" />
+            </salespayment>
+        </root>
+    </template>
+</odoo>

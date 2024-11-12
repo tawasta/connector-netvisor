@@ -85,36 +85,30 @@ class AccountMove(models.Model):
         for record in self:
             record.narration_plaintext = record(html2plaintext(record.narration))
 
-    @api.model
-    def _get_invoice_in_payment_state(self):
-        # Mark the invoice as paid in Netvisor when it's marked as paid in Odoo
-        res = super()._get_invoice_in_payment_state()
-
-        if res == "paid":
-            # Set Netvisor invoice as paid
-            for record in self:
-                if record.move_type in ["out_invoice", "out_refund"]:
-                    for binding in record.netvisor_bind_ids:
-                        if binding.netvisor_status in ["paid", "dueforpayment"]:
-                            # No reason to update status to Netvisor
-                            continue
-
-                        job_desc = _(
-                            "Mark invoice {} as paid in Netvisor".format(record.name)
-                        )
-
-                        binding.with_delay(description=job_desc).netvisor_export_status(
-                            record
-                        )
-
-        return res
-
     def write(self, vals):
         res = super().write(vals)
 
         if vals.get("is_move_sent"):
-            # When invoice is set as sent
-            self.action_netvisor_export_status()
+            for record in self:
+                if record.netvisor_status == "unsent":
+                    # When invoice is set as sent
+                    job_desc = _(
+                        "Set invoice '{}' as sent in Netvisor".format(record.name)
+                    )
+                    record.with_delay(
+                        description=job_desc
+                    ).action_netvisor_export_status()
+
+        if vals.get("payment_id"):
+            for record in self.filtered(lambda r: r.is_entry()):
+                job_desc = _(
+                    "Send payment '{}' to Netvisor".format(record.payment_id.id)
+                )
+
+                # Send the payment to Netvisor
+                record.payment_id.with_delay(
+                    description=job_desc
+                ).action_netvisor_export_record()
 
         return res
 

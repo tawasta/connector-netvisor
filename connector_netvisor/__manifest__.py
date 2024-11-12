@@ -57,6 +57,7 @@
         "data/template_payment.xml",
         "data/template_product.xml",
         "data/template_sales_invoice.xml",
+        "data/template_sales_payment.xml",
         "security/model_access.xml",
         "views/account_move.xml",
         "views/account_tax.xml",

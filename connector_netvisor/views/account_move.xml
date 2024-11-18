@@ -10,12 +10,8 @@
             </xpath>
 
             <xpath expr="//notebook/page[last()]" position="after">
-                <page
-                    string="Netvisor"
-                    name="netvisor"
-                    groups="queue_job.group_queue_job_manager"
-                >
-                    <group col="1">
+                <page string="Netvisor" name="netvisor" groups="base.group_no_one">
+                    <group col="1" groups="queue_job.group_queue_job_manager">
                         <button
                             name="action_netvisor_export_invoice"
                             type="object"

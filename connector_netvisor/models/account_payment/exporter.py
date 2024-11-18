@@ -53,7 +53,7 @@ class NetvisorPaymentExportMapper(Component):
             raise RetryableJobError(_("Reconciled invoice is not yet sent to Netvisor"))
 
         if binding:
-            raise ValidationError(_("This payment is already sent to Netvisor!"))
+            return _("This payment is already sent to Netvisor")
         else:
             # Export paid invoice status to allow allocating a payment in Netvisor
             for invoice in record.reconciled_invoice_ids:

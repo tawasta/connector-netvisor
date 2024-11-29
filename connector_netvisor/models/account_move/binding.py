@@ -120,6 +120,7 @@ class NetvisorInvoice(models.Model):
                     "payment_difference_handling": "open",
                     "currency_id": record.currency_id.id,
                     "payment_date": payment_date,
+                    "netvisor_send": False,
                 }
 
                 _logger.debug(_("Payment values: {}".format(payment_values)))

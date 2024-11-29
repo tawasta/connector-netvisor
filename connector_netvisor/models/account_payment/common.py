@@ -14,12 +14,21 @@ class AccountPayment(models.Model):
         string="Netvisor Bindings",
     )
 
+    netvisor_send = fields.Boolean(
+        string="Send to Netvisor",
+        help="Uncheck this to disable sending the payment to Netvisor",
+        default=True,
+    )
+
     def action_netvisor_export_record(self, use_queue=False, company_id=False):
         """
         Export payment(s) to Netvisor
         :return:
         """
         for record in self:
+            if not record.netvisor_send:
+                return _("'Send to Netvisor' is disabled. Payment was not sent")
+
             netvisor_model = self.env["netvisor.payment"]
 
             if not company_id and record.company_id:

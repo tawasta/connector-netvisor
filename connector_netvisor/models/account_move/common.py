@@ -193,10 +193,13 @@ class AccountMove(models.Model):
 
         res = super()._post(soft)
 
-        # Omit all moves that are not sale invoices
+        # Omit all moves that are not sale or purchase invoices
         # Also sort the invoices so the numbering will stay in order
         # (Netvisor should give the same number)
         sale_invoices = self.filtered(lambda r: r.is_sale_document()).sorted("name")
+        purchase_invoices = self.filtered(lambda r: r.is_purchase_document()).sorted(
+            "name"
+        )
 
         # Set temporary prefix for invoice to avoid confusion and conflicts,
         #  if Odoo is not in sync with Netvisor sequence
@@ -212,7 +215,10 @@ class AccountMove(models.Model):
 
                 sales_invoice.name = new_name
 
-        # Send invoice(s) to netvisor
+        # Send sale invoice(s) to Netvisor
         sale_invoices.action_netvisor_export_invoice()
+
+        # Send purchase invoice(s) to Netvisor
+        purchase_invoices.action_netvisor_export_invoice()
 
         return res

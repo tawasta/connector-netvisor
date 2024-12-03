@@ -73,8 +73,15 @@ class NetvisorInvoiceExportMapper(Component):
                             )
                         )
 
+        if record.is_sale_document():
+            template = "connector_netvisor.netvisor_salesinvoice"
+            endpoint = "salesinvoice.nv"
+        if record.is_purchase_document():
+            template = "connector_netvisor.netvisor_purchaseinvoice"
+            endpoint = "purchaseinvoice.nv"
+
         xml_string = self.env["ir.qweb"]._render(
-            "connector_netvisor.netvisor_salesinvoice",
+            template,
             {"invoice": record, "backend": backend, "dimensions": dimensions},
         )
 
@@ -97,12 +104,12 @@ class NetvisorInvoiceExportMapper(Component):
 
         if binding:
             # Update invoice
-            endpoint = f"salesinvoice.nv?method=edit&id={binding.external_id}"
+            endpoint = f"{endpoint}?method=edit&id={binding.external_id}"
             backend._api_request_post(endpoint, xml_string)
 
             msg = _("Updated invoice '{}'".format(record.name))
         else:
-            endpoint = "salesinvoice.nv?method=add"
+            endpoint = f"{endpoint}?method=add"
             res = backend._api_request_post(endpoint, xml_string)
             if res:
                 binding = binding_model.create(

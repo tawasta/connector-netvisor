@@ -104,6 +104,15 @@ class NetvisorBackend(models.Model):
         default=False,
     )
 
+    # Purchase invoice settings
+    purchases_start_date = fields.Datetime(
+        string="Import start date",
+        help="When fetching the purchase invoices, use this date as the "
+        "lower boundary for the invoice date. This field gets "
+        "automatically updated after a successful fetch.",
+        default="2020-01-01 00:00:00",
+    )
+
     customer_invoice_use_delivery_address = fields.Boolean(
         string="Use delivery address",
         help="Send customer invoice delivery address to Netvisor",
@@ -335,6 +344,15 @@ class NetvisorBackend(models.Model):
             if isinstance(res, dict):
                 # Always put payments in a list
                 res = [res]
+        elif "PurchaseInvoice" in root:
+            res = root.get("PurchaseInvoice", {})
+        elif "PurchaseInvoiceList" in root:
+            res = root.get("PurchaseInvoiceList") and root["PurchaseInvoiceList"].get(
+                "PurchaseInvoice", {}
+            )
+            if isinstance(res, dict):
+                # Always put invoices in a list
+                res = [res]
         elif root.keys() and len(root.keys()) == 1:
             # Some endpoints just return the ResponseStatus
             res = {}
@@ -417,6 +435,29 @@ class NetvisorBackend(models.Model):
             )
 
             netvisor_model.with_delay(description=job_desc).netvisor_export_products()
+
+    def action_import_purchase_invoices(self):
+        """
+        Import purchase invoices from Netvisor
+        :return:
+        """
+        _logger.debug(_("Importing purchase invoices from Netvisor"))
+        netvisor_model = self.env["netvisor.invoice"]
+
+        for record in self:
+            netvisor_model = netvisor_model.with_context(
+                company_id=record.company_id.id
+            )
+
+            job_desc = _(
+                "Netvisor: import purchase invoices for {}".format(
+                    record.company_id.name
+                )
+            )
+
+            netvisor_model.with_delay(
+                description=job_desc
+            ).netvisor_import_purchase_invoices(record.company_id)
 
     def action_cron_update_invoices_status(self):
         """

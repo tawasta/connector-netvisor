@@ -76,7 +76,7 @@ class NetvisorInvoiceExportMapper(Component):
         if record.is_sale_document():
             template = "connector_netvisor.netvisor_salesinvoice"
             endpoint = "salesinvoice.nv"
-        if record.is_purchase_document():
+        elif record.is_purchase_document():
             template = "connector_netvisor.netvisor_purchaseinvoice"
             endpoint = "purchaseinvoice.nv"
 

@@ -30,15 +30,22 @@ class NetvisorInvoiceImportMapper(Component):
         if not binding:
             raise ValidationError(_("Please send the invoice to Netvisor first"))
 
-        endpoint = f"getsalesinvoice.nv?netvisorkey={binding.external_id}"
+        if record.is_sale_document():
+            endpoint = f"getsalesinvoice.nv?netvisorkey={binding.external_id}"
+        elif record.is_purchase_document():
+            endpoint = f"getpurchaseinvoice.nv?netvisorkey={binding.external_id}"
+
         invoice = binding.backend_id._api_request_get(endpoint)
 
         if not invoice:
             return _("Invoice not found from Netvisor")
 
-        invoice_status = (
-            invoice.get("InvoiceStatus").get("#text").lower().replace(" ", "")
-        )
+        invoice_status = invoice.get("InvoiceStatus")
+        if isinstance(invoice_status, dict):
+            # Sales invoice returns a dict
+            invoice_status = invoice_status.get("#text")
+
+        invoice_status = invoice_status.lower().replace(" ", "")
 
         if record.netvisor_status != invoice_status:
             res = _(
@@ -67,16 +74,23 @@ class NetvisorInvoiceImportMapper(Component):
         if not binding:
             raise ValidationError(_("Please send the invoice to Netvisor first"))
 
-        endpoint = f"getsalesinvoice.nv?netvisorkey={binding.external_id}"
+        if record.is_sale_document():
+            endpoint = f"getsalesinvoice.nv?netvisorkey={binding.external_id}"
+        elif record.is_purchase_document():
+            endpoint = f"getpurchaseinvoice.nv?netvisorkey={binding.external_id}"
+
         invoice = backend._api_request_get(endpoint)
-        invoice_status = (
-            invoice.get("InvoiceStatus").get("#text").lower().replace(" ", "")
-        )
+        invoice_status = invoice.get("InvoiceStatus")
+        if isinstance(invoice_status, dict):
+            # Sales invoice returns a dict
+            invoice_status = invoice_status.get("#text")
 
         vals = {
-            "name": invoice.get("SalesInvoiceNumber"),
-            "payment_reference": invoice.get("SalesInvoiceReferencenumber"),
-            "netvisor_status": invoice_status,
+            "name": invoice.get("SalesInvoiceNumber")
+            or invoice.get("PurchaseInvoiceNumber"),
+            "payment_reference": invoice.get("SalesInvoiceReferencenumber")
+            or invoice.get("PurchaseInvoiceReferencenumber"),
+            "netvisor_status": invoice_status.lower().replace(" ", ""),
         }
 
         binding.write(vals)

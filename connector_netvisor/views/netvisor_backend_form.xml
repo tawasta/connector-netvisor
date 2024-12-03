@@ -51,7 +51,7 @@
                                     <field
                                         name="customer_invoice_use_delivery_address"
                                         widget="boolean_toggle"
-                                    />                                    
+                                    />
                                 </group>
                                 <group
                                     name="sale_invoices_group_print_settings"

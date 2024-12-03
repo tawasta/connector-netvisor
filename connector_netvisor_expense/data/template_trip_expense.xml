@@ -12,7 +12,7 @@
                 <customlines>
                     <customline>
                         <employeeidentifier
-                            t-esc="'TODO: palkansaajan numero'"
+                            t-esc="record.employee_id.identification_id or ''"
                             type="number"
                         />
                         <ratio t-esc="record.product_id.name" type="name" />

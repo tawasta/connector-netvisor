@@ -28,12 +28,15 @@
                     <homepageuri t-esc="partner.website or ''" />
                     <isactive t-esc="1 if partner.active else 0" />
                     <isprivatecustomer t-esc="0 if partner.is_company else 1" />
+                    <!-- If transmission method is "post", set invoicing address as false -->
                     <emailinvoicingaddress
-                        t-esc="partner.email_invoicing_address or ''"
+                        t-if="partner.customer_invoice_transmit_method_code != 'post'"
+                        t-esc="partner.email_invoicing_address or partner.email or ''"
                     />
+                    <emailinvoicingaddress t-else="" />
                 </customerbaseinformation>
                 <customerfinvoicedetails
-                    t-if="partner.edicode and (partner.type == 'invoice' or partner.is_company)"
+                    t-if="partner.customer_invoice_transmit_method_code == 'einvoice' and partner.edicode and (partner.type == 'invoice' or partner.is_company)"
                 >
                     <finvoiceaddress t-esc="partner.edicode or ''" />
                     <finvoiceroutercode

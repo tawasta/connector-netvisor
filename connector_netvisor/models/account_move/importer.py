@@ -33,6 +33,9 @@ class NetvisorInvoiceImportMapper(Component):
         endpoint = f"getsalesinvoice.nv?netvisorkey={binding.external_id}"
         invoice = binding.backend_id._api_request_get(endpoint)
 
+        if not invoice:
+            return _("Invoice not found from Netvisor")
+
         invoice_status = (
             invoice.get("InvoiceStatus").get("#text").lower().replace(" ", "")
         )

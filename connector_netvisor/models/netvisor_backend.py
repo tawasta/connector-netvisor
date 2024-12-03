@@ -111,6 +111,11 @@ class NetvisorBackend(models.Model):
         "lower boundary for the invoice date. This field gets "
         "automatically updated after a successful fetch.",
         default="2020-01-01 00:00:00",
+        
+    customer_invoice_use_delivery_address = fields.Boolean(
+        string="Use delivery address",
+        help="Send customer invoice delivery address to Netvisor",
+        default=True,
     )
 
     # Import / export settings

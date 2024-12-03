@@ -9,27 +9,9 @@
                 <attribute name="string">Send to Netvisor</attribute>
             </xpath>
 
-            <xpath
-                expr="//button[@name='action_invoice_sent'][1]"
-                position="attributes"
-            >
-                <attribute name="invisible">1</attribute>
-            </xpath>
-
-            <xpath
-                expr="//button[@name='action_invoice_sent'][2]"
-                position="attributes"
-            >
-                <attribute name="invisible">1</attribute>
-            </xpath>
-
             <xpath expr="//notebook/page[last()]" position="after">
-                <page
-                    string="Netvisor"
-                    name="netvisor"
-                    groups="queue_job.group_queue_job_manager"
-                >
-                    <group col="1">
+                <page string="Netvisor" name="netvisor" groups="base.group_no_one">
+                    <group col="1" groups="queue_job.group_queue_job_manager">
                         <button
                             name="action_netvisor_export_invoice"
                             type="object"

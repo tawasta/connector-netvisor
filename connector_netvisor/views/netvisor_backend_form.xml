@@ -34,7 +34,6 @@
                     </group>
 
                     <notebook>
-
                         <page name="sales_invoices" string="Sales invoices">
                             <group name="sale_invoices_group">
                                 <group
@@ -49,6 +48,10 @@
                                         name="customer_invoice_allow_updating"
                                         widget="boolean_toggle"
                                     />
+                                    <field
+                                        name="customer_invoice_use_delivery_address"
+                                        widget="boolean_toggle"
+                                    />                                    
                                 </group>
                                 <group
                                     name="sale_invoices_group_print_settings"

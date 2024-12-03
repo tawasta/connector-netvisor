@@ -11,12 +11,13 @@
                     type="object"
                     class="oe_highlight"
                     string="Send to Netvisor"
-                    invisible="state != 'posted'"
+                    invisible="netvisor_bind_ids or state != 'posted' or not netvisor_send"
                 />
             </button>
 
             <group name="group2" position="after">
-                <group name="netvisor" groups="queue_job.group_queue_job_manager">
+                <group name="netvisor" colspan="2">
+                    <field name="netvisor_send" widget="boolean_toggle" />
                     <label for="netvisor_bind_ids" />
                     <field name="netvisor_bind_ids" nolabel="1">
                         <tree create="false" delete="false">

@@ -85,27 +85,30 @@ class AccountMove(models.Model):
         for record in self:
             record.narration_plaintext = record(html2plaintext(record.narration))
 
-    @api.model
-    def _get_invoice_in_payment_state(self):
-        # Mark the invoice as paid in Netvisor when it's marked as paid in Odoo
-        res = super()._get_invoice_in_payment_state()
+    def write(self, vals):
+        res = super().write(vals)
 
-        if res == "paid":
-            # Set Netvisor invoice as paid
+        if vals.get("is_move_sent"):
             for record in self:
-                if record.move_type in ["out_invoice", "out_refund"]:
-                    for binding in record.netvisor_bind_ids:
-                        if binding.netvisor_status in ["paid", "dueforpayment"]:
-                            # No reason to update status to Netvisor
-                            continue
+                if record.netvisor_status == "unsent":
+                    # When invoice is set as sent
+                    job_desc = _(
+                        "Set invoice '{}' as sent in Netvisor".format(record.name)
+                    )
+                    record.with_delay(
+                        description=job_desc
+                    ).action_netvisor_export_status()
 
-                        job_desc = _(
-                            "Mark invoice {} as paid in Netvisor".format(record.name)
-                        )
+        if vals.get("payment_id"):
+            for record in self.filtered(lambda r: r.is_entry()):
+                job_desc = _(
+                    "Send payment '{}' to Netvisor".format(record.payment_id.id)
+                )
 
-                        binding.with_delay(description=job_desc).netvisor_export_status(
-                            record
-                        )
+                # Send the payment to Netvisor
+                record.payment_id.with_delay(
+                    description=job_desc
+                ).action_netvisor_export_record()
 
         return res
 
@@ -203,7 +206,14 @@ class AccountMove(models.Model):
         #  E.g. invoices have been created in Netvisor
         for sales_invoice in sale_invoices:
             if sales_invoice.name[0:3] != "INV":
-                sales_invoice.name = "INV/{}".format(sales_invoice.name)
+                new_name = "INV/{}".format(sales_invoice.name)
+                i = 1
+                while self.search([("name", "=", new_name)]):
+                    # If there is an overlapping name, add a sequence number
+                    new_name = new_name + "_{}".format(i)
+                    i += 1
+
+                sales_invoice.name = new_name
 
         # Send sale invoice(s) to Netvisor
         sale_invoices.action_netvisor_export_invoice()

@@ -149,11 +149,6 @@ class NetvisorInvoice(models.Model):
                 # TODO: get correct payment method
                 # TODO: get correct journal
 
-                # This will currently fetch the first appicable method
-                payment_method = self.env["account.payment.method"].search(
-                    [("payment_type", "=", "inbound")], limit=1
-                )
-
                 payment_amount = record.amount_residual
 
                 # This will currently set today as payment date
@@ -165,8 +160,8 @@ class NetvisorInvoice(models.Model):
                     "group_payment": True,
                     "payment_difference_handling": "open",
                     "currency_id": record.currency_id.id,
-                    "payment_method_id": payment_method.id,
                     "payment_date": payment_date,
+                    "netvisor_send": False,
                 }
 
                 _logger.debug(_("Payment values: {}".format(payment_values)))

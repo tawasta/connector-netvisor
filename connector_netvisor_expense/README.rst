@@ -2,11 +2,11 @@
    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
    :alt: License: AGPL-3
 
-=======================================
-Netvisor Connector Accrual rule support
-=======================================
+==================================
+Netvisor Connector Expense support
+==================================
 
-Add accrual rules to invoices
+Add support for travel expenses
 
 Configuration
 =============

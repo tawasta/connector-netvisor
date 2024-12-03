@@ -1,0 +1,103 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* connector_netvisor_accrual
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0-20240924\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-10-16 08:56+0000\n"
+"PO-Revision-Date: 2024-10-16 12:01+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.5\n"
+
+#. module: connector_netvisor_accrual
+#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_move_line__accrual_rule_id
+#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_netvisor_product__accrual_rule_id
+#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_product_product__accrual_rule_id
+#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_product_template__accrual_rule_id
+msgid "Accrual rule"
+msgstr "Jaksotussääntö"
+
+#. module: connector_netvisor_accrual
+#: model:ir.model,name:connector_netvisor_accrual.model_account_accrual_rule
+msgid "Accrual rule for invoices"
+msgstr "Laskujen jaksotussääntö"
+
+#. module: connector_netvisor_accrual
+#: model_terms:ir.ui.view,arch_db:connector_netvisor_accrual.view_accrual_rule_form
+msgid "Accrual rule name"
+msgstr "Jaksotussäännön nimi"
+
+#. module: connector_netvisor_accrual
+#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__active
+msgid "Active"
+msgstr "Aktiivinen"
+
+#. module: connector_netvisor_accrual
+#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__create_uid
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: connector_netvisor_accrual
+#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__create_date
+msgid "Created on"
+msgstr "Luotu"
+
+#. module: connector_netvisor_accrual
+#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: connector_netvisor_accrual
+#: model:ir.model.fields,help:connector_netvisor_accrual.field_account_accrual_rule__period_length
+msgid "How many months in the accrual period"
+msgstr "Kuinka monelle kuukaudelle jaksotus tehdään"
+
+#. module: connector_netvisor_accrual
+#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: connector_netvisor_accrual
+#: model:ir.model,name:connector_netvisor_accrual.model_account_move_line
+msgid "Journal Item"
+msgstr "Päiväkirjatapahtuma"
+
+#. module: connector_netvisor_accrual
+#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__write_uid
+msgid "Last Updated by"
+msgstr "Viimeksi päivittänyt"
+
+#. module: connector_netvisor_accrual
+#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__write_date
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: connector_netvisor_accrual
+#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__name
+msgid "Name"
+msgstr "Nimi"
+
+#. module: connector_netvisor_accrual
+#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__period_length
+msgid "Period (months)"
+msgstr "Jakso (kuukautta)"
+
+#. module: connector_netvisor_accrual
+#: model:ir.model,name:connector_netvisor_accrual.model_product_template
+msgid "Product"
+msgstr "Tuote"
+
+#. module: connector_netvisor_accrual
+#: model:ir.model.fields,help:connector_netvisor_accrual.field_netvisor_product__accrual_rule_id
+#: model:ir.model.fields,help:connector_netvisor_accrual.field_product_product__accrual_rule_id
+#: model:ir.model.fields,help:connector_netvisor_accrual.field_product_template__accrual_rule_id
+msgid "Use accrual rule for invoice lines with this product"
+msgstr "Käytä jaksotussäänötä laskuriveille, joilla on tämä tuote"

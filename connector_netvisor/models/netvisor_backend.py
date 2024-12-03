@@ -192,6 +192,7 @@ class NetvisorBackend(models.Model):
         :return: Parser response dict
         """
         _logger.debug(_("Making a POST request to endpoint {}".format(endpoint)))
+        _logger.debug(values)
         if params is None:
             params = {}
 

@@ -22,7 +22,7 @@
                             currencyrate="1"
                             t-esc="record.price_unit"
                         />
-                        <vatpercentage t-esc="record.tax_ids[0].amount" />
+                        <vatpercentage t-if="record.tax_ids" t-esc="record.tax_ids[0].amount" />
                         <linedescription t-esc="record.description or ''" />
                         <begindate t-esc="record.date.isoformat() or ''" />
                         <enddate t-esc="record.date.isoformat() or ''" />

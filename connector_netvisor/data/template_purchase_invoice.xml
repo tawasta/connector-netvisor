@@ -20,9 +20,9 @@
                 />
 
                 <vendorName t-esc="invoice.partner_id.name or ''" />
-                <vendorAddressLine
-                    t-esc="invoice.partner_id.street or '' + ' ' + invoice.partner_id.street2 or ''"
-                />
+                <t t-set="street" t-value="invoice.partner_id.street or ''" />
+                <t t-set="street2" t-value="invoice.partner_id.street2 or ''" />
+                <vendorAddressLine t-esc="street + ' ' + street2" />
                 <vendorPostNumber t-esc="invoice.partner_id.zip or ''" />
                 <vendorCity t-esc="invoice.partner_id.city or ''" />
                 <vendorCountry t-esc="invoice.partner_id.country_id.code or ''" />

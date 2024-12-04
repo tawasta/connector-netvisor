@@ -32,7 +32,11 @@ class NetvisorBackend(models.Model):
 
     environment = fields.Selection(
         string="Environment",
-        selection=[("test", "Test"), ("production", "Production")],
+        selection=[
+            ("test", "Test"),
+            ("production", "Production"),
+            ("disabled", "Disabled"),
+        ],
         default="test",
         required=True,
     )
@@ -191,8 +195,14 @@ class NetvisorBackend(models.Model):
         :param params: Requests params
         :return: Parser response dict
         """
+
         _logger.debug(_("Making a POST request to endpoint {}".format(endpoint)))
         _logger.debug(values)
+
+        if self.environment == "disabled":
+            _logger.info(_("Integration disabled. Not making the request"))
+            return {"error": "Integration is disabled"}
+
         if params is None:
             params = {}
 
@@ -219,6 +229,11 @@ class NetvisorBackend(models.Model):
         :return: Parser response dict
         """
         _logger.debug(_("Making a GET request to endpoint {}".format(endpoint)))
+
+        if self.environment == "disabled":
+            _logger.info(_("Integration disabled. Not making the request"))
+            return {"error": "Integration is disabled"}
+
         if params is None:
             params = {}
 

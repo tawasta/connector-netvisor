@@ -200,7 +200,7 @@ class NetvisorBackend(models.Model):
         _logger.debug(values)
 
         if self.environment == "disabled":
-            _logger.info(_("Integration disabled. Not making the request"))
+            _logger.warning(_("Integration disabled. Not making the request"))
             return {"error": "Integration is disabled"}
 
         if params is None:
@@ -231,7 +231,7 @@ class NetvisorBackend(models.Model):
         _logger.debug(_("Making a GET request to endpoint {}".format(endpoint)))
 
         if self.environment == "disabled":
-            _logger.info(_("Integration disabled. Not making the request"))
+            _logger.warning(_("Integration disabled. Not making the request"))
             return {"error": "Integration is disabled"}
 
         if params is None:

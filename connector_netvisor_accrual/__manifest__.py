@@ -21,7 +21,7 @@
 {
     "name": "Netvisor Connector Accrual rule support",
     "summary": "Add accrual rules to invoices",
-    "version": "17.0.1.0.0",
+    "version": "17.0.1.1.0",
     "category": "Sales",
     "website": "https://gitlab.com/tawasta/odoo/connector-netvisor",
     "author": "Tawasta",
@@ -34,14 +34,11 @@
         "bin": [],
     },
     "depends": [
+        "account_invoice_accrual_rule",
         "connector_netvisor",
     ],
     "data": [
         "data/template_sales_invoice.xml",
-        "security/model_access.xml",
-        "views/account_move.xml",
-        "views/accrual_rule.xml",
-        "views/product_template.xml",
     ],
     "assets": {},
     "demo": [],

@@ -256,30 +256,40 @@ class NetvisorInvoiceImportMapper(Component):
         price_unit = line.get("UnitPrice", 0)
         product_name = line.get("ProductName", "")
         product_code = line.get("ProductCode", "")
+        vat_percent = line.get("VatPercent", 0)
 
         if isinstance(price_unit, str):
             price_unit = float(price_unit.replace(",", "."))
 
+        if isinstance(vat_percent, str):
+            vat_percent = float(vat_percent.replace(",", "."))
+
+        if vat_percent:
+            # Price unit is returned as a gross price
+            price_unit = price_unit / (1 + vat_percent / 100)
+
         # In Odoo the invoice type dictates the sign, not the sign on the qty
         qty_factor = -1 if "refund" in move_type else 1
 
+        # TODO: Should there be some logic between ordered amount and delivered amount?
+        quantity = line.get("DeliveredAmount") or line.get("OrderedAmount") or 0
+
         line_values = {
+            "netvisor_key": line.get("NetvisorKey"),
             "name": line.get("Description", ""),
             "discount": line.get("DiscountPercentage", 0),
             "price_unit": price_unit,
             "purchase_price": line.get("PurchasePrice", 0),
-            "quantity": line.get("OrderedAmount", "") * qty_factor,
-            # TODO DeliveredAmount
+            "quantity": quantity * qty_factor,
         }
 
-        if line.get("VatPercent", False):
+        if vat_percent:
             AccountTax = self.env["account.tax"]
-            vatPercent = line["VatPercent"]
 
             tax_scope = "purchase" if move_type == "in_invoice" else "sale"
 
             tax_vals = {
-                "amount": vatPercent,
+                "amount": vat_percent,
                 "type_tax_use": tax_scope,
                 "price_include": False,
             }
@@ -287,7 +297,7 @@ class NetvisorInvoiceImportMapper(Component):
 
             if not tax:
                 # Tax not found in Odoo, create one
-                tax_vals["name"] = "{} %".format(vatPercent)
+                tax_vals["name"] = "{} %".format(vat_percent)
                 tax = AccountTax.create(tax_vals)
 
             line_values["tax_ids"] = [(4, tax.id)]

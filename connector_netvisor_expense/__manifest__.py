@@ -41,6 +41,7 @@
         "data/template_trip_expense.xml",
         "security/model_access.xml",
         "views/hr_expense.xml",
+        "views/hr_expense_sheet.xml",
     ],
     "assets": {},
     "demo": [],

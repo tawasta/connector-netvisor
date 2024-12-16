@@ -19,9 +19,9 @@
 ##############################################################################
 
 {
-    "name": "Netvisor Connector Accrual rule support",
-    "summary": "Add accrual rules to invoices",
-    "version": "17.0.1.1.0",
+    "name": "Netvisor Connector Expense support",
+    "summary": "Add support for travel expenses",
+    "version": "17.0.1.0.0",
     "category": "Sales",
     "website": "https://gitlab.com/tawasta/odoo/connector-netvisor",
     "author": "Tawasta",
@@ -34,11 +34,13 @@
         "bin": [],
     },
     "depends": [
-        "account_invoice_accrual_rule",
         "connector_netvisor",
+        "hr_expense",
     ],
     "data": [
-        "data/template_sales_invoice.xml",
+        "data/template_trip_expense.xml",
+        "security/model_access.xml",
+        "views/hr_expense.xml",
     ],
     "assets": {},
     "demo": [],

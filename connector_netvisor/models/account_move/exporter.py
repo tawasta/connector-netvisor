@@ -62,7 +62,9 @@ class NetvisorInvoiceExportMapper(Component):
         # Create a dict for dimensions items
         # Syntax {analytic_account_id: (analytic_plan_name, analytic_account_name)}
         analytic_accounts = self.env["account.analytic.account"].search([])
-        dimensions = dict([(r.id, (r.plan_id.name, r.name)) for r in analytic_accounts])
+        dimensions = dict(
+            [(r.id, (r.root_plan_id.name, r.name)) for r in analytic_accounts]
+        )
         for line in record.invoice_line_ids:
             if line.analytic_distribution:
                 for ad in line.analytic_distribution.values():
@@ -73,8 +75,18 @@ class NetvisorInvoiceExportMapper(Component):
                             )
                         )
 
+        update_allowed = False
+        if record.is_sale_document():
+            template = "connector_netvisor.netvisor_salesinvoice"
+            endpoint = "salesinvoice.nv"
+            update_allowed = backend.customer_invoice_allow_updating
+        elif record.is_purchase_document():
+            template = "connector_netvisor.netvisor_purchaseinvoice"
+            endpoint = "purchaseinvoice.nv"
+            update_allowed = backend.purchase_invoice_allow_updating
+
         xml_string = self.env["ir.qweb"]._render(
-            "connector_netvisor.netvisor_salesinvoice",
+            template,
             {"invoice": record, "backend": backend, "dimensions": dimensions},
         )
 
@@ -85,7 +97,7 @@ class NetvisorInvoiceExportMapper(Component):
             [("odoo_id", "=", record.id), ("backend_id", "=", backend.id)]
         )
 
-        if binding and not backend.customer_invoice_allow_updating:
+        if binding and not update_allowed:
             _logger.info(
                 _(
                     "Updating invoices is disabled. Not sending '{}'.".format(
@@ -97,12 +109,22 @@ class NetvisorInvoiceExportMapper(Component):
 
         if binding:
             # Update invoice
-            endpoint = f"salesinvoice.nv?method=edit&id={binding.external_id}"
+            if record.is_sale_document():
+                endpoint = f"{endpoint}?method=edit&id={binding.external_id}"
+            elif record.is_purchase_document():
+                endpoint = "purchaseinvoicepostingdata.nv"
+                template = "connector_netvisor.netvisor_purchaseinvoicepostingdata"
+
+                xml_string = self.env["ir.qweb"]._render(
+                    template,
+                    {"invoice": binding, "backend": backend, "dimensions": dimensions},
+                )
+
             backend._api_request_post(endpoint, xml_string)
 
             msg = _("Updated invoice '{}'".format(record.name))
         else:
-            endpoint = "salesinvoice.nv?method=add"
+            endpoint = f"{endpoint}?method=add"
             res = backend._api_request_post(endpoint, xml_string)
             if res:
                 binding = binding_model.create(

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!--
+        Netvisor trip expense XML document
+    -->
+    <template id="netvisor_tripexpense">
+        <root>
+            <tripexpense>
+                <header t-esc="record.name or ''" />
+                <description />
+                <customlines>
+                    <customline>
+                        <employeeidentifier
+                            t-esc="record.employee_id.identification_id or ''"
+                            type="number"
+                        />
+                        <ratio t-esc="record.product_id.name" type="name" />
+                        <amount t-esc="record.quantity" />
+                        <customlineunitprice
+                            iso4217currencycode="EUR"
+                            currencyrate="1"
+                            t-esc="record.price_unit"
+                        />
+                        <vatpercentage
+                            t-if="record.tax_ids"
+                            t-esc="record.tax_ids[0].amount"
+                        />
+                        <linedescription t-esc="record.description or ''" />
+                        <begindate t-esc="record.date.isoformat() or ''" />
+                        <enddate t-esc="record.date.isoformat() or ''" />
+                        <expenseaccountnumber t-esc="record.account_id.code or ''" />
+
+                        <tripexpenseattachments t-if="record.attachment_ids">
+                            <t t-foreach="record.attachment_ids" t-as="attachment">
+                                <!-- Skip unsupported file types -->
+                                <t
+                                    t-set="file_ending"
+                                    t-value="attachment.mimetype.split('/')[1]"
+                                />
+                                <tripexpenseattachment
+                                    t-if="file_ending in ['pdf','doc','xls','tif','jpg','gif','txt','xsl','html']"
+                                >
+                                    <mimetype t-esc="attachment.mimetype" />
+                                    <attachmentdescription
+                                        t-esc="attachment.description or attachment.name"
+                                    />
+                                    <filename t-esc="attachment.name" />
+                                    <documentdata
+                                        t-att-type="file_ending"
+                                        t-raw="attachment.datas_utf8"
+                                    />
+                                    <printByDefault>1</printByDefault>
+                                </tripexpenseattachment>
+                            </t>
+                        </tripexpenseattachments>
+                    </customline>
+
+                </customlines>
+            </tripexpense>
+        </root>
+    </template>
+</odoo>

@@ -34,147 +34,243 @@
                     </group>
 
                     <notebook>
-                        <page name="invoicing" string="Invoicing">
-                            <group name="invoicing" colspan="2">
-                                <field
-                                    name="auto_open_refunds"
-                                    widget="boolean_toggle"
-                                />
-                                <field
-                                    name="customer_invoice_allow_updating"
-                                    widget="boolean_toggle"
-                                />
-                                <field
-                                    name="customer_invoice_use_delivery_address"
-                                    widget="boolean_toggle"
-                                />
+                        <page name="sales_invoices" string="Sales invoices">
+                            <group name="sale_invoices_group">
+                                <group
+                                    name="sale_invoices_group_invoice_settings"
+                                    string="Invoice settings"
+                                >
+                                    <field
+                                        name="auto_open_refunds"
+                                        widget="boolean_toggle"
+                                    />
+                                    <field
+                                        name="customer_invoice_allow_updating"
+                                        widget="boolean_toggle"
+                                    />
+                                    <field
+                                        name="customer_invoice_use_delivery_address"
+                                        widget="boolean_toggle"
+                                    />
+                                </group>
+                                <group
+                                    name="sale_invoices_group_print_settings"
+                                    string="Print settings"
+                                >
+                                    <field name="print_channel_format" />
+                                    <field name="print_channel_format_type" />
+                                </group>
+                            </group>
+                        </page>
+
+                        <page name="purchase_invoices" string="Purchase invoices">
+                            <group name="purchase_invoices_group">
+                                <group
+                                    name="purchase_invoices_group_import"
+                                    string="Import"
+                                >
+                                    <p class="oe_grey oe_inline" colspan="2">
+                                        Import purchase invoices from Netvisor
+                                    </p>
+                                    <button
+                                        name="action_import_purchase_invoices"
+                                        confirm="Are you sure you want to import purchase invoices?"
+                                        type="object"
+                                        class="oe_highlight"
+                                        colspan="2"
+                                        string="Import invoices"
+                                    />
+                                </group>
+                                <group
+                                    name="purchase_invoices_group_import_settings"
+                                    string="Import settings"
+                                >
+                                    <field name="purchases_start_date" />
+                                    <field
+                                        name="purchase_invoice_allow_updating"
+                                        widget="boolean_toggle"
+                                    />
+                                </group>
                             </group>
                         </page>
 
                         <page name="payments" string="Payments">
-                            <group name="payments" colspan="2">
-                                <field name="payments_start_date" />
-
-                                <button
-                                    name="action_import_payments"
-                                    type="object"
-                                    class="oe_highlight"
-                                    string="Import payments"
-                                />
-
+                            <group name="payments_group">
+                                <group name="payments_group_import" string="Import">
+                                    <p class="oe_grey oe_inline" colspan="2">
+                                        Import payments from Netvisor
+                                    </p>
+                                    <button
+                                        name="action_import_payments"
+                                        confirm="Are you sure you want to import payments?"
+                                        type="object"
+                                        class="oe_highlight"
+                                        colspan="2"
+                                        string="Import payments"
+                                    />
+                                </group>
+                                <group
+                                    name="payments_group_import_settings"
+                                    string="Import settings"
+                                >
+                                    <field name="payments_start_date" />
+                                </group>
                             </group>
                         </page>
 
                         <page name="customers" string="Customers">
-                            <group name="customers" string="Import" colspan="2">
-                                <p class="oe_grey oe_inline">
-                                    Import or update all customers from Netvisor.
-                                    <br />
-                                    Matching is done with business code, email, exact name.
-                                    <br />
-                                    You can configure the behaviour of this button below.
-                                </p>
-                                <button
-                                    name="action_import_customers"
-                                    confirm="Are you sure you want to import customers?"
-                                    type="object"
-                                    class="oe_highlight"
-                                    string="Import customers"
-                                />
-                                <field
-                                    name="customer_import_create"
-                                    widget="boolean_toggle"
-                                />
-                                <field
-                                    name="customer_import_update"
-                                    widget="boolean_toggle"
-                                />
+                            <group name="customers_group">
+                                <group name="customers_group_import" string="Import">
+                                    <p class="oe_grey oe_inline" colspan="2">
+                                        Import or update all customers from Netvisor.
+                                        <br />
+                                        Matching is done with business code, email, exact name.
+                                        <br />
+                                        You can configure the behaviour of this button below.
+                                    </p>
+                                    <button
+                                        name="action_import_customers"
+                                        confirm="Are you sure you want to import customers?"
+                                        type="object"
+                                        class="oe_highlight"
+                                        colspan="2"
+                                        string="Import customers"
+                                    />
+                                </group>
+                                <group
+                                    name="customers_group_import_settings"
+                                    string="Import settings"
+                                >
+                                    <field
+                                        name="customer_import_create"
+                                        widget="boolean_toggle"
+                                    />
+                                    <field
+                                        name="customer_import_update"
+                                        widget="boolean_toggle"
+                                    />
+                                </group>
                             </group>
                         </page>
 
                         <page name="supplier" string="Suppliers" invisible="1">
-                            <group name="suppliers" string="Import" colspan="2">
-                                <p class="oe_grey oe_inline">
-                                    Import or update all suppliers from Netvisor.
-                                    <br />
-                                    If suppliers doesn't exist, one will be created.
-                                    If suppliers exists (business id or exact name match), it will be updated.
-                                </p>
-                                <button
-                                    name="action_import_suppliers"
-                                    confirm="Are you sure you want to import suppliers?"
-                                    type="object"
-                                    class="oe_highlight"
-                                    string="Import suppliers"
-                                />
+                            <group name="suppliers_group">
+                                <group name="suppliers_group_import" string="Import">
+                                    <p class="oe_grey oe_inline" colspan="2">
+                                        Import or update all suppliers from Netvisor.
+                                        <br />
+                                        If suppliers doesn't exist, one will be created.
+                                        If suppliers exists (business id or exact name match), it will be updated.
+                                    </p>
+                                    <button
+                                        name="action_import_suppliers"
+                                        confirm="Are you sure you want to import suppliers?"
+                                        type="object"
+                                        class="oe_highlight"
+                                        colspan="2"
+                                        string="Import suppliers"
+                                    />
+                                </group>
+                                <group
+                                    name="suppliers_group_import_settings"
+                                    string="Import settings"
+                                >
+
+                                </group>
                             </group>
                         </page>
 
                         <page name="products" string="Products">
-                            <group name="products_import" string="Import" colspan="2">
-                                <p class="oe_grey oe_inline">
-                                    Import or update all products from Netvisor.
-                                    <br />
-                                    Matching is done by internal code or exact name match.
-                                    <br />
-                                    You can configure the behaviour of this button below.
-                                </p>
-                                <button
-                                    name="action_import_products"
-                                    confirm="Are you sure you want to import products?"
-                                    type="object"
-                                    class="oe_highlight"
-                                    string="Import products"
-                                />
-                                <field
-                                    name="product_import_create"
-                                    widget="boolean_toggle"
-                                />
-                                <field
-                                    name="product_import_update"
-                                    widget="boolean_toggle"
-                                />
+                            <group name="products_import_group">
+                                <group
+                                    name="products_import_group_import"
+                                    string="Import"
+                                >
+                                    <p class="oe_grey oe_inline" colspan="2">
+                                        Import or update all products from Netvisor.
+                                        <br />
+                                        Matching is done by internal code or exact name match.
+                                        <br />
+                                        You can configure the behaviour of this button below.
+                                    </p>
+                                    <button
+                                        name="action_import_products"
+                                        confirm="Are you sure you want to import products?"
+                                        type="object"
+                                        class="oe_highlight"
+                                        colspan="2"
+                                        string="Import products"
+                                    />
+                                </group>
+                                <group
+                                    name="products_import_group_import_settings"
+                                    string="Import settings"
+                                >
+                                    <field
+                                        name="product_import_create"
+                                        widget="boolean_toggle"
+                                    />
+                                    <field
+                                        name="product_import_update"
+                                        widget="boolean_toggle"
+                                    />
+                                </group>
                             </group>
 
-                            <group name="products_export" string="Export" colspan="2">
-                                <p class="oe_grey oe_inline">
-                                    Export or update all products to Netvisor.
-                                    <br />
-                                    If product doesn't exist, one will be created.
-                                    If product exists (binding exists), it will be updated.
-                                </p>
-                                <button
-                                    name="action_export_products"
-                                    confirm="Are you sure you want to export products?"
-                                    type="object"
-                                    class="oe_highlight"
-                                    string="Export products"
-                                />
+                            <group name="products_export_group">
+                                <group
+                                    name="products_export_group_export"
+                                    string="Export"
+                                >
+                                    <p class="oe_grey oe_inline" colspan="2">
+                                        Export or update all products to Netvisor.
+                                        <br />
+                                        If product doesn't exist, one will be created.
+                                        If product exists (binding exists), it will be updated.
+                                    </p>
+                                    <button
+                                        name="action_export_products"
+                                        confirm="Are you sure you want to export products?"
+                                        type="object"
+                                        class="oe_highlight"
+                                        colspan="2"
+                                        string="Export products"
+                                    />
+                                </group>
+                                <group
+                                    name="products_export_group_export_settings"
+                                    string="Export settings"
+                                >
+
+                                </group>
                             </group>
 
-                        </page>
-
-                        <page name="sales_invoice" string="Sales invoice">
-                            <group name="sales_settings" string="Settings" colspan="2">
-                                <field name="print_channel_format" />
-                                <field name="print_channel_format_type" />
-                            </group>
                         </page>
 
                         <page name="dimensions" string="Dimensions">
-                            <group name="dimensions" string="Import" colspan="2">
-                                <p class="oe_grey oe_inline">
-                                    Import or update all dimensions from Netvisor.
-                                    <br />
-                                    If dimension doesn't exist, one will be created.
-                                    If dimension exists (name match), it will be updated.
-                                </p>
-                                <button
-                                    name="action_import_dimensions"
-                                    type="object"
-                                    class="oe_highlight"
-                                    string="Import dimensions"
-                                />
+                            <group name="dimensions_group_import">
+                                <group name="dimensions_group_import" string="Import">
+                                    <p class="oe_grey oe_inline" colspan="2">
+                                        Import or update all dimensions from Netvisor.
+                                        <br />
+                                        If dimension doesn't exist, one will be created.
+                                        If dimension exists (name match), it will be updated.
+                                    </p>
+                                    <button
+                                        name="action_import_dimensions"
+                                        confirm="Are you sure you want to import dimensions?"
+                                        type="object"
+                                        class="oe_highlight"
+                                        colspan="2"
+                                        string="Import dimensions"
+                                    />
+                                </group>
+                                <group
+                                    name="dimensions_group_import_settings"
+                                    string="Import Settings"
+                                >
+
+                                </group>
                             </group>
                         </page>
 

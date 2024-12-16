@@ -32,7 +32,11 @@ class NetvisorBackend(models.Model):
 
     environment = fields.Selection(
         string="Environment",
-        selection=[("test", "Test"), ("production", "Production")],
+        selection=[
+            ("test", "Test"),
+            ("production", "Production"),
+            ("disabled", "Disabled"),
+        ],
         default="test",
         required=True,
     )
@@ -99,8 +103,22 @@ class NetvisorBackend(models.Model):
         default=False,
     )
     customer_invoice_allow_updating = fields.Boolean(
-        string="Allow updating invoices",
-        help="Allow updating invoice information from Odoo to Netvisor",
+        string="Allow updating customer invoices",
+        help="Allow updating customer invoice information from Odoo to Netvisor",
+        default=False,
+    )
+
+    # Purchase invoice settings
+    purchases_start_date = fields.Datetime(
+        string="Import start date",
+        help="When fetching the purchase invoices, use this date as the "
+        "lower boundary for the invoice date. This field gets "
+        "automatically updated after a successful fetch.",
+        default="2020-01-01 00:00:00",
+    )
+    purchase_invoice_allow_updating = fields.Boolean(
+        string="Allow updating purchase invoices",
+        help="Allow updating purchase invoice posting data from Odoo to Netvisor",
         default=False,
     )
 
@@ -182,7 +200,14 @@ class NetvisorBackend(models.Model):
         :param params: Requests params
         :return: Parser response dict
         """
+
         _logger.debug(_("Making a POST request to endpoint {}".format(endpoint)))
+        _logger.debug(values)
+
+        if self.environment == "disabled":
+            _logger.warning(_("Integration disabled. Not making the request"))
+            return {"error": "Integration is disabled"}
+
         if params is None:
             params = {}
 
@@ -209,6 +234,11 @@ class NetvisorBackend(models.Model):
         :return: Parser response dict
         """
         _logger.debug(_("Making a GET request to endpoint {}".format(endpoint)))
+
+        if self.environment == "disabled":
+            _logger.warning(_("Integration disabled. Not making the request"))
+            return {"error": "Integration is disabled"}
+
         if params is None:
             params = {}
 
@@ -335,6 +365,15 @@ class NetvisorBackend(models.Model):
             if isinstance(res, dict):
                 # Always put payments in a list
                 res = [res]
+        elif "PurchaseInvoice" in root:
+            res = root.get("PurchaseInvoice", {})
+        elif "PurchaseInvoiceList" in root:
+            res = root.get("PurchaseInvoiceList") and root["PurchaseInvoiceList"].get(
+                "PurchaseInvoice", {}
+            )
+            if isinstance(res, dict):
+                # Always put invoices in a list
+                res = [res]
         elif root.keys() and len(root.keys()) == 1:
             # Some endpoints just return the ResponseStatus
             res = {}
@@ -418,7 +457,36 @@ class NetvisorBackend(models.Model):
 
             netvisor_model.with_delay(description=job_desc).netvisor_export_products()
 
-    def action_cron_update_invoices_status(self):
+    def action_import_purchase_invoices(self):
+        """
+        Import purchase invoices from Netvisor
+        :return:
+        """
+        _logger.debug(_("Importing purchase invoices from Netvisor"))
+        netvisor_model = self.env["netvisor.invoice"]
+
+        for record in self:
+            netvisor_model = netvisor_model.with_context(
+                company_id=record.company_id.id
+            )
+
+            job_desc = _(
+                "Netvisor: import purchase invoices for {}".format(
+                    record.company_id.name
+                )
+            )
+
+            netvisor_model.with_delay(
+                description=job_desc
+            ).netvisor_import_purchase_invoices(record.company_id)
+
+            record.purchases_start_date = fields.Datetime.now()
+
+    def _cron_import_purchase_invoices(self):
+        for backend in self.search([]):
+            backend.action_import_purchase_invoices()
+
+    def _cron_update_invoices_status(self):
         """
         Scheduled update all invoices status
         """
@@ -450,7 +518,7 @@ class NetvisorBackend(models.Model):
                 binding.odoo_id
             )
 
-    def action_cron_import_payments(self):
+    def _cron_import_payments(self):
         """
         Scheduled import all new payments
         """
@@ -485,3 +553,7 @@ class NetvisorBackend(models.Model):
             )
 
             netvisor_model.with_delay(description=job_desc).netvisor_import_dimensions()
+
+    def _cron_import_dimensions(self):
+        for backend in self.search([]):
+            backend.action_import_dimensions()

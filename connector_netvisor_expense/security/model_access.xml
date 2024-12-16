@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+
+    <record id="role_expense_user" model="ir.model.access">
+        <field name="name">Netvisor expense user</field>
+        <field
+            name="model_id"
+            ref="connector_netvisor_expense.model_netvisor_expense"
+        />
+        <field name="group_id" ref="hr.group_hr_user" />
+        <field name="perm_read" eval="1" />
+        <field name="perm_write" eval="1" />
+        <field name="perm_create" eval="1" />
+        <field name="perm_unlink" eval="0" />
+    </record>
+
+</odoo>

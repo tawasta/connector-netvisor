@@ -19,7 +19,10 @@
                     targettype="invoice"
                 />
                 <sourcename t-esc="record.ref" />
-                <paymentmethod t-esc="'pankkikortti'" type="alternative" />
+                <paymentmethod
+                    t-esc="record.payment_method_line_id.name"
+                    type="alternative"
+                />
             </salespayment>
         </root>
     </template>

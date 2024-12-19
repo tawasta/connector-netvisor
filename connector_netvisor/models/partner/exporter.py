@@ -46,7 +46,7 @@ class NetvisorPartnerExportMapper(Component):
             customers = backend._api_request_get(endpoint, params)
             _logger.warning("Overlapping partner(s) data: {}".format(customers))
 
-            if len(customers):
+            if len(customers) and customers[0].get("Code") == record.ref:
                 # Only one match found. Create a new binding
                 binding = binding_model.create(
                     {

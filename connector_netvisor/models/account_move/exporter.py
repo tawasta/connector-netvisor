@@ -38,7 +38,7 @@ class NetvisorInvoiceExportMapper(Component):
             company_id = record.company_id.id
             record = record.with_company(company_id)
 
-        # Update partner information to Netvisor
+        # Send/update partner information to Netvisor before sending
         record.partner_id.action_netvisor_export_record(
             use_queue=False, company_id=company_id
         )
@@ -48,6 +48,12 @@ class NetvisorInvoiceExportMapper(Component):
         ):
             record.partner_shipping_id.action_netvisor_export_record(
                 use_queue=False, company_id=company_id
+            )
+
+        # Send/update product information to Netvisor before sending
+        for line in record.invoice_line_ids:
+            line.product_id.action_netvisor_export_record(
+                use_queue=False, company_id=record.company_id.id
             )
 
         # Set correct states
@@ -233,70 +239,3 @@ class NetvisorInvoiceExportMapper(Component):
         else:
             res = _("No refunded invoice to match")
         return res
-
-    @mapping
-    def invoicing_customer(self, record):
-        res = {}
-
-        # Export the partner to
-        # a) Create a new partner
-        # b) Update existing partner values
-        record.partner_id.action_netvisor_export_record(
-            use_queue=False, company_id=record.company_id.id
-        )
-
-        binding = record.partner_id.netvisor_bind_ids.filtered(
-            lambda r: r.backend_id.company_id == record.company_id
-        )
-
-        if binding:
-            # If partner identifier is known, use it
-            res["invoicing_customer_identifier"] = binding.external_id
-        else:
-            # Partner seems to be mandatory?
-            raise ValidationError(
-                _(
-                    "'{}' is not yet exported to Netvisor.".format(
-                        record.partner_id.name
-                    )
-                )
-            )
-        return res
-
-    @mapping
-    def invoice_lines(self, record):
-        """
-        Return mapping for invoice lines
-        :param record: Account move record
-        :return:
-        """
-        invoice_lines = list()
-        for line in record.invoice_line_ids:
-            # Export the product to
-            # a) Create a new product
-            # b) Update existing product values
-            line.product_id.action_netvisor_export_record(
-                use_queue=False, company_id=record.company_id.id
-            )
-
-            product_identifier = line.product_id.netvisor_bind_ids.filtered(
-                lambda r: r.backend_id.company_id == record.company_id
-            )
-
-            if len(product_identifier) != 1:
-                raise MappingError(
-                    _(
-                        "Product '{}' is not found from Netvisor! "
-                        "Please export products to Netvisor before sending the invoice".format(
-                            line.product_id.display_name
-                        )
-                    )
-                )
-
-            invoice_lines.append(
-                {
-                    "dimension": self._get_dimensions(line),
-                }
-            )
-
-        return {"invoice_lines": invoice_lines}

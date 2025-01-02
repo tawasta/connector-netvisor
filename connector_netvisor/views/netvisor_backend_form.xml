@@ -86,6 +86,10 @@
                                     string="Import settings"
                                 >
                                     <field name="purchases_start_date" />
+                                    <field
+                                        name="purchase_invoice_allow_updating"
+                                        widget="boolean_toggle"
+                                    />
                                 </group>
                             </group>
                         </page>

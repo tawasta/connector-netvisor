@@ -9,7 +9,7 @@
         <field name="name">Netvisor: Update invoice status</field>
         <field name="model_id" ref="model_netvisor_backend" />
         <field name="state">code</field>
-        <field name="code">model.action_cron_update_invoices_status()</field>
+        <field name="code">model._cron_update_invoices_status()</field>
         <field name="active" eval="True" />
         <field name="user_id" ref="base.user_root" />
         <field name="interval_number">1</field>
@@ -22,7 +22,7 @@
         <field name="name">Netvisor: Import payments</field>
         <field name="model_id" ref="model_netvisor_backend" />
         <field name="state">code</field>
-        <field name="code">model.action_cron_import_payments()</field>
+        <field name="code">model._cron_import_payments()</field>
         <field name="active" eval="True" />
         <field name="user_id" ref="base.user_root" />
         <field name="interval_number">1</field>
@@ -35,13 +35,30 @@
         <field name="name">Netvisor: Import/update dimensions</field>
         <field name="model_id" ref="model_netvisor_backend" />
         <field name="state">code</field>
-        <field name="code">model.action_import_dimensions()</field>
+        <field name="code">model._cron_import_dimensions()</field>
         <field name="active" eval="True" />
         <field name="user_id" ref="base.user_root" />
         <field name="interval_number">30</field>
         <field name="interval_type">minutes</field>
         <field name="numbercall">-1</field>
         <field name="doall" eval="False" />
+    </record>
+
+    <record
+        id="ir_cron_netvisor_purchase_invoice_import"
+        model="ir.cron"
+        forcecreate="True"
+    >
+        <field name="name">Netvisor: Import purchase invoices</field>
+        <field name="model_id" ref="model_netvisor_backend" />
+        <field name="state">code</field>
+        <field name="code">model._cron_import_purchase_invoices()</field>
+        <field name="active" eval="True" />
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field eval="False" name="doall" />
     </record>
 
 </odoo>

@@ -103,8 +103,8 @@ class NetvisorBackend(models.Model):
         default=False,
     )
     customer_invoice_allow_updating = fields.Boolean(
-        string="Allow updating invoices",
-        help="Allow updating invoice information from Odoo to Netvisor",
+        string="Allow updating customer invoices",
+        help="Allow updating customer invoice information from Odoo to Netvisor",
         default=False,
     )
 
@@ -115,6 +115,11 @@ class NetvisorBackend(models.Model):
         "lower boundary for the invoice date. This field gets "
         "automatically updated after a successful fetch.",
         default="2020-01-01 00:00:00",
+    )
+    purchase_invoice_allow_updating = fields.Boolean(
+        string="Allow updating purchase invoices",
+        help="Allow updating purchase invoice posting data from Odoo to Netvisor",
+        default=False,
     )
 
     customer_invoice_use_delivery_address = fields.Boolean(
@@ -475,7 +480,13 @@ class NetvisorBackend(models.Model):
                 description=job_desc
             ).netvisor_import_purchase_invoices(record.company_id)
 
-    def action_cron_update_invoices_status(self):
+            record.purchases_start_date = fields.Datetime.now()
+
+    def _cron_import_purchase_invoices(self):
+        for backend in self.search([]):
+            backend.action_import_purchase_invoices()
+
+    def _cron_update_invoices_status(self):
         """
         Scheduled update all invoices status
         """
@@ -507,7 +518,7 @@ class NetvisorBackend(models.Model):
                 binding.odoo_id
             )
 
-    def action_cron_import_payments(self):
+    def _cron_import_payments(self):
         """
         Scheduled import all new payments
         """
@@ -542,3 +553,7 @@ class NetvisorBackend(models.Model):
             )
 
             netvisor_model.with_delay(description=job_desc).netvisor_import_dimensions()
+
+    def _cron_import_dimensions(self):
+        for backend in self.search([]):
+            backend.action_import_dimensions()

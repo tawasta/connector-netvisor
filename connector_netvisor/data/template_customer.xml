@@ -11,7 +11,7 @@
                     <internalidentifier t-esc="partner.ref or ''" />
                     <externalidentifier t-esc="partner.company_registry or ''" />
                     <organizationunitnumber
-                        t-if="partner.is_company"
+                        t-if="partner.is_company and partner.edicode[0:4] == '0037'"
                         t-esc="partner.edicode or ''"
                     />
                     <name t-esc="partner.name or ''" />

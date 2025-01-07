@@ -274,6 +274,9 @@ class NetvisorInvoiceImportMapper(Component):
         # TODO: Should there be some logic between ordered amount and delivered amount?
         quantity = line.get("DeliveredAmount") or line.get("OrderedAmount") or 0
 
+        if isinstance(quantity, str):
+            quantity = float(quantity.replace(",", "."))
+
         line_values = {
             "netvisor_key": line.get("NetvisorKey"),
             "name": line.get("Description", ""),

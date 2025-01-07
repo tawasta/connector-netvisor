@@ -108,6 +108,7 @@ class NetvisorInvoiceImportMapper(Component):
 
         endpoint = f"getpurchaseinvoice.nv?netvisorkey={netvisor_key}"
         invoice = backend._api_request_get(endpoint)
+        attachments = invoice.get("Attachments", {}).get("Attachment", {})
         values = self.map_record(invoice).values()
         values["company_id"] = backend.company_id.id
         netvisor_key = invoice.get("PurchaseInvoiceNetvisorKey")
@@ -130,6 +131,23 @@ class NetvisorInvoiceImportMapper(Component):
         invoice_line_ids = values.pop("invoice_line_ids")
         invoice = account_move.create(values)
         invoice.write({"invoice_line_ids": invoice_line_ids})
+
+        # Import attachments
+        for attachment in attachments:
+            _logger.debug(attachment)
+            values = dict(
+                datas=attachment.get("AttachmentBase64Data"),
+                name=attachment.get("FileName", "n/a"),
+                store_fname=attachment.get("FileName", "n/a"),
+                type="binary",
+                res_model="account.move",
+                res_id=invoice.id,
+                mimetype=attachment.get("ContentType", "Unknown"),
+                description=attachment.get("Comment"),
+            )
+
+            _logger.debug("Creating attachment with values %s" % values)
+            self.env["ir.attachment"].create(values)
 
         # No existing binding
         binding_values = {
@@ -322,5 +340,10 @@ class NetvisorInvoiceImportMapper(Component):
 
         if len(product_id) == 1:
             line_values["product_id"] = product_id.id
+        else:
+            if product_code:
+                line_values["name"] = "[{}] {}".format(product_code, product_name)
+            else:
+                line_values["name"] = product_name
 
         return line_values

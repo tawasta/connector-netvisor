@@ -109,6 +109,10 @@ class NetvisorInvoiceImportMapper(Component):
         endpoint = f"getpurchaseinvoice.nv?netvisorkey={netvisor_key}"
         invoice = backend._api_request_get(endpoint)
         attachments = invoice.get("Attachments", {}).get("Attachment", {})
+        if isinstance(attachments, dict):
+            # Always put lines in a list
+            attachments = [attachments]
+
         values = self.map_record(invoice).values()
         values["company_id"] = backend.company_id.id
         netvisor_key = invoice.get("PurchaseInvoiceNetvisorKey")
@@ -213,6 +217,15 @@ class NetvisorInvoiceImportMapper(Component):
 
         if len(partner_id) != 1:
             # Only use an exact match, otherwise create a new partner
+
+            vendor_country_id = False
+            if record.get("VendorCountry"):
+                vendor_country = self.env["res.country"].search(
+                    [("name", "=ilike", record["VendorCountry"])], limit=1
+                )
+                if vendor_country:
+                    vendor_country_id = vendor_country.id
+
             partner_id = res_partner.create(
                 {
                     "name": name,
@@ -221,7 +234,7 @@ class NetvisorInvoiceImportMapper(Component):
                     "street": record.get("VendorAddressline"),
                     "zip": record.get("VendorPostnumber"),
                     "city": record.get("VendorTown"),
-                    # TODO VendorCountry
+                    "country_id": vendor_country_id,
                 }
             )
 
@@ -343,7 +356,9 @@ class NetvisorInvoiceImportMapper(Component):
         else:
             if product_code:
                 line_values["name"] = "[{}] {}".format(product_code, product_name)
-            else:
+            elif product_name:
                 line_values["name"] = product_name
+            else:
+                line_values["name"] = line.get("Description")
 
         return line_values

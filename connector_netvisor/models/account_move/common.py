@@ -55,7 +55,7 @@ class AccountMove(models.Model):
 
     narration_plaintext = fields.Char(
         string="Narration plaintext",
-        _compute="_compute_narration_plaintext",
+        compute="_compute_narration_plaintext",
         help="Helper field for narration",
     )
 
@@ -83,7 +83,7 @@ class AccountMove(models.Model):
 
     def _compute_narration_plaintext(self):
         for record in self:
-            record.narration_plaintext = record(html2plaintext(record.narration))
+            record.narration_plaintext = html2plaintext(record.narration)
 
     def write(self, vals):
         res = super().write(vals)

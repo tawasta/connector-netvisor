@@ -32,7 +32,7 @@
                     t-esc="invoice.amount_total_signed"
                 />
                 <!--sellerIdentifier type="netvisor">1</sellerIdentifier-->
-                <!--sellerName>Sally Seller</sellerName-->
+                <sellerName t-esc="invoice.invoice_user_id.name or ''" />
                 <invoiceType>invoice</invoiceType>
                 <salesInvoiceStatus
                     type="netvisor"
@@ -99,8 +99,8 @@
                         type="ISO-3316"
                         t-esc="invoice.partner_shipping_id.country_id.code or ''"
                     />
-                    <!--deliveryMethod>Installed</deliveryMethod-->
-                    <!--deliveryTerm>According to the agreement</deliveryTerm-->
+                    <deliveryMethod t-esc="invoice.incoterm_location" />
+                    <deliveryTerm t-esc="invoice.invoice_incoterm_id.display_name" />
                 </t>
                 <!--salesInvoiceTaxHandlingType>countrygroup</salesInvoiceTaxHandlingType-->
                 <!--paymentterm type="customerdefault">1</paymentterm-->
@@ -127,7 +127,7 @@
                                 type="customer"
                                 t-esc="line.product_id.default_code or ''"
                             />
-                            <productName t-esc="line.name[0:200] or ''" />
+                            <productName t-esc="line.product_id.name[0:200] or ''" />
                             <productunitPrice type="net" t-esc="line.price_unit" />
                             <productUnitPurchasePrice
                                 type="net"

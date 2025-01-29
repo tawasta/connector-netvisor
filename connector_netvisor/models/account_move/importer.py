@@ -211,11 +211,11 @@ class NetvisorInvoiceImportMapper(Component):
                 "|",
                 ("company_registry", "=", company_registry),
                 ("ref", "=", code),
-                ("name", "=", name),
-            ]
+                ("name", "=ilike", name),
+            ], limit=1
         )
 
-        if len(partner_id) != 1:
+        if not partner_id:
             # Only use an exact match, otherwise create a new partner
 
             vendor_country_id = False
@@ -230,6 +230,7 @@ class NetvisorInvoiceImportMapper(Component):
                 {
                     "name": name,
                     "company_registry": company_registry,
+                    "is_company": company_registry is not False,
                     "ref": code,
                     "street": record.get("VendorAddressline"),
                     "zip": record.get("VendorPostnumber"),

@@ -208,14 +208,22 @@ class NetvisorInvoiceImportMapper(Component):
         partner_id = res_partner.search(
             [
                 "|",
-                "|",
                 ("company_registry", "=", company_registry),
                 ("ref", "=", code),
-                ("name", "=", name),
-            ]
+            ],
+            limit=1,
         )
 
-        if len(partner_id) != 1:
+        if not partner_id:
+            # Try to find partner by exact name
+            partner_ids = res_partner.search(
+                [("name", "=ilike", name)],
+            )
+            if len(partner_ids) == 1:
+                # Only use exact match
+                partner_id = partner_ids
+
+        if not partner_id:
             # Only use an exact match, otherwise create a new partner
 
             vendor_country_id = False
@@ -230,6 +238,7 @@ class NetvisorInvoiceImportMapper(Component):
                 {
                     "name": name,
                     "company_registry": company_registry,
+                    "is_company": company_registry is not False,
                     "ref": code,
                     "street": record.get("VendorAddressline"),
                     "zip": record.get("VendorPostnumber"),

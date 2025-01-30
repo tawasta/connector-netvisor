@@ -38,9 +38,11 @@
                     <!--defaultoutsideeuaccountnumber>3380</defaultoutsideeuaccountnumber-->
                 </productbookkeepingdetails>
                 <productadditionalinformation t-if="product.weight">
-                    <productnetweight t-esc="product.weight" />
+                    <productnetweight
+                        t-esc="str(round(product.weight, 2)).replace('.', ',')"
+                    />
                     <!--<productgrossweight>15</productgrossweight>-->
-                    <productweightunit t-esc="product.uom_id.name" />
+                    <productweightunit>kg</productweightunit>
                 </productadditionalinformation>
                 <!--dimension>
                     <dimensionname>Project</dimensionname>

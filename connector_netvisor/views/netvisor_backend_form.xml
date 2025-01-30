@@ -52,6 +52,14 @@
                                         name="customer_invoice_use_delivery_address"
                                         widget="boolean_toggle"
                                     />
+                                    <field
+                                        name="customer_invoice_use_product_code"
+                                        widget="boolean_toggle"
+                                    />
+                                    <field
+                                        name="customer_invoice_use_product_name"
+                                        widget="boolean_toggle"
+                                    />
                                 </group>
                                 <group
                                     name="sale_invoices_group_print_settings"

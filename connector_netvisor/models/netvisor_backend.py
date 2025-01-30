@@ -96,7 +96,7 @@ class NetvisorBackend(models.Model):
         required=True,
     )
 
-    # Invoicing settings
+    # Customer invoice settings
     auto_open_refunds = fields.Boolean(
         string="Set refunds as sent",
         help="When sending a refund invoice, mark it as sent (open)",
@@ -106,6 +106,21 @@ class NetvisorBackend(models.Model):
         string="Allow updating customer invoices",
         help="Allow updating customer invoice information from Odoo to Netvisor",
         default=False,
+    )
+    customer_invoice_use_delivery_address = fields.Boolean(
+        string="Use delivery address",
+        help="Send customer invoice delivery address to Netvisor",
+        default=True,
+    )
+    customer_invoice_use_product_code = fields.Boolean(
+        string="Use product code",
+        help="Send product code on invoice lines",
+        default=True,
+    )
+    customer_invoice_use_product_name = fields.Boolean(
+        string="Use product name",
+        help="Send product name on invoice lines",
+        default=True,
     )
 
     # Purchase invoice settings
@@ -120,12 +135,6 @@ class NetvisorBackend(models.Model):
         string="Allow updating purchase invoices",
         help="Allow updating purchase invoice posting data from Odoo to Netvisor",
         default=False,
-    )
-
-    customer_invoice_use_delivery_address = fields.Boolean(
-        string="Use delivery address",
-        help="Send customer invoice delivery address to Netvisor",
-        default=True,
     )
 
     # Import / export settings

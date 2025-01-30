@@ -122,6 +122,14 @@ class AccountMove(models.Model):
         Export (send) invoice(s) to Netvisor
         :return:
         """
+        for record in self:
+            if not record.partner_id.netvisor_bind_ids and not record.partner_id.ref:
+                msg = _(
+                    "Partner '%s' is missing a partner reference. Please add one",
+                    record.partner_id.name,
+                )
+                raise ValidationError(msg)
+
         if len(self) == 1 and not self.netvisor_delayed_send:
             # Only use direct send when validating one invoice
             # Otherwise we might end up with a situation where the first
@@ -188,19 +196,6 @@ class AccountMove(models.Model):
         """
         Auto-send invoices to Netvisor when Validating
         """
-        for record in self:
-            if (
-                record.is_sale_document()
-                and record.is_purchase_document()
-                and not record.partner_id.netvisor_bind_ids
-                and not record.partner_id.ref
-            ):
-                msg = _(
-                    "Partner '%s' is missing a partner reference. Please add one",
-                    record.partner_id.name,
-                )
-                raise ValidationError(msg)
-
         res = super()._post(soft)
 
         # Omit all moves that are not sale or purchase invoices

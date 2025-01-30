@@ -42,6 +42,7 @@
         "security/model_access.xml",
         "views/hr_expense.xml",
         "views/hr_expense_sheet.xml",
+        "views/netvisor_backend.xml",
     ],
     "assets": {},
     "demo": [],

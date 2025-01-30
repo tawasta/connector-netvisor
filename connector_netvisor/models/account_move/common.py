@@ -189,7 +189,12 @@ class AccountMove(models.Model):
         Auto-send invoices to Netvisor when Validating
         """
         for record in self:
-            if not record.partner_id.netvisor_bind_ids and not record.partner_id.ref:
+            if (
+                record.is_sale_document()
+                and record.is_purchase_document()
+                and not record.partner_id.netvisor_bind_ids
+                and not record.partner_id.ref
+            ):
                 msg = _(
                     "Partner '%s' is missing a partner reference. Please add one",
                     record.partner_id.name,

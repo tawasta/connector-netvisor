@@ -125,9 +125,12 @@
                         <salesInvoiceProductLine t-if="line.display_type == 'product'">
                             <productIdentifier
                                 type="customer"
-                                t-esc="line.product_id.default_code or ''"
+                                t-esc="backend.customer_invoice_use_product_code and line.product_id.default_code or ''"
                             />
-                            <productName t-esc="line.product_id.name[0:200] or ''" />
+
+                            <productName
+                                t-esc="backend and line.product_id.name[0:200] or ''"
+                            />
                             <productunitPrice type="net" t-esc="line.price_unit" />
                             <productUnitPurchasePrice
                                 type="net"

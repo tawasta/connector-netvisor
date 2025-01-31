@@ -383,6 +383,11 @@ class NetvisorBackend(models.Model):
             if isinstance(res, dict):
                 # Always put invoices in a list
                 res = [res]
+        elif "PayrollRatios" in root:
+            res = root.get("PayrollRatios", {})
+            if isinstance(res, dict):
+                # Always put ratios in a list
+                res = [res]
         elif root.keys() and len(root.keys()) == 1:
             # Some endpoints just return the ResponseStatus
             res = {}

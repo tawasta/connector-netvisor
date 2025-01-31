@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_netvisor_backend_form" model="ir.ui.view">
+        <field name="name">Netvisor backend form expense</field>
+        <field name="model">netvisor.backend</field>
+        <field name="inherit_id" ref="connector_netvisor.view_netvisor_backend_form" />
+        <field name="arch" type="xml">
+            <page name="dimensions" position="after">
+                <page name="expenses" string="Expenses">
+                    <group name="expenses_group">
+                        <group name="expenses_group_import" string="Import">
+                            <p class="oe_grey oe_inline" colspan="2">
+                                Import or update all salary types from Netvisor.
+                                <br />
+                                If salary type doesn't exist, one will be created.
+                                If salary type exists (name match), it will be updated.
+                            </p>
+                            <button
+                                name="action_import_salary_types"
+                                confirm="Are you sure you want to import salary types?"
+                                type="object"
+                                class="oe_highlight"
+                                colspan="2"
+                                string="Import salary types"
+                            />
+                        </group>
+                        <group name="expenses_group_settings" string="Expense Settings">
+
+                        </group>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>

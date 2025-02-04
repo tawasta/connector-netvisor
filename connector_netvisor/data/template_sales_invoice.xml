@@ -45,8 +45,25 @@
                 <salesInvoiceFreeTextAfterLines
                     t-esc="invoice.narration_plaintext or ''"
                 />
-                <salesInvoiceOurReference t-esc="invoice.ref or ''" />
-                <!--salesInvoiceYourReference>Your reference</salesInvoiceYourReference-->
+
+                <salesInvoiceOurReference
+                    t-if="backend.customer_invoice_our_reference == 'ref'"
+                    t-esc="invoice.ref or ''"
+                />
+                <salesInvoiceOurReference
+                    t-else="backend.customer_invoice_our_reference == 'invoice_origin'"
+                    t-esc="invoice.invoice_origin or ''"
+                />
+
+                <salesInvoiceYourReference
+                    t-if="backend.customer_invoice_your_reference == 'ref'"
+                    t-esc="invoice.ref or ''"
+                />
+                <salesInvoiceYourReference
+                    t-else="backend.customer_invoice_your_reference == 'invoice_origin'"
+                    t-esc="invoice.invoice_origin or ''"
+                />
+
                 <salesInvoicePrivateComment t-esc="invoice.description or ''" />
                 <t
                     t-set="partner_binding"

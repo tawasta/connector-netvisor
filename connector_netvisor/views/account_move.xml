@@ -5,19 +5,41 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form" />
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_post'][2]" position="attributes">
-                <attribute name="string">Send to Netvisor</attribute>
+            <xpath expr="//button[@name='action_post'][2]" position="after">
+                <button
+                    invisible="not netvisor_send or state == 'posted'"
+                    name="action_post"
+                    string="Send to Netvisor"
+                    class="oe_highlight"
+                    type="object"
+                    groups="account.group_account_invoice"
+                    data-hotkey="q"
+                    context="{'validate_analytic': True}"
+                />
+                <button
+                    name="action_netvisor_export_invoice"
+                    string="Send to Netvisor"
+                    class="oe_highlight"
+                    type="object"
+                    groups="account.group_account_invoice"
+                    invisible="not netvisor_send or state != 'posted' or netvisor_bind_ids"
+                />
             </xpath>
 
             <xpath expr="//notebook/page[last()]" position="after">
-                <page string="Netvisor" name="netvisor" groups="base.group_no_one">
+                <page
+                    string="Netvisor"
+                    name="netvisor"
+                    groups="account.group_account_invoice"
+                >
                     <group col="1" groups="queue_job.group_queue_job_manager">
                         <button
                             name="action_netvisor_export_invoice"
-                            type="object"
-                            class="oe_highlight"
-                            invisible="state != 'posted'"
                             string="Send to Netvisor"
+                            class="oe_highlight"
+                            type="object"
+                            groups="account.group_account_invoice"
+                            invisible="not netvisor_send or state != 'posted'"
                         />
 
                         <button
@@ -40,10 +62,15 @@
                     </group>
 
                     <group>
-                        <field name="netvisor_send" groups="base.group_no_one" />
+                        <field
+                            name="netvisor_send"
+                            groups="account.group_account_invoice"
+                            widget="boolean_toggle"
+                        />
                         <field
                             name="netvisor_delayed_send"
                             groups="base.group_no_one"
+                            widget="boolean_toggle"
                         />
                         <field name="netvisor_status" />
                     </group>

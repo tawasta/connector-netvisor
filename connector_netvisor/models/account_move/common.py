@@ -85,6 +85,12 @@ class AccountMove(models.Model):
         for record in self:
             record.narration_plaintext = html2plaintext(record.narration)
 
+    @api.depends("date", "auto_post")
+    def _compute_hide_post_button(self):
+        super()._compute_hide_post_button()
+        for record in self.filtered("netvisor_send"):
+            record.hide_post_button = record.netvisor_send
+
     def write(self, vals):
         res = super().write(vals)
 

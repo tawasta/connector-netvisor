@@ -122,6 +122,24 @@ class NetvisorBackend(models.Model):
         help="Send product name on invoice lines",
         default=True,
     )
+    customer_invoice_our_reference = fields.Selection(
+        string="Our reference",
+        help="The field used as our reference",
+        selection=[
+            ("ref", "Customer reference"),
+            ("invoice_origin", "Invoice origin"),
+        ],
+        default="ref",
+    )
+    customer_invoice_your_reference = fields.Selection(
+        string="Your reference",
+        help="The field used as your reference",
+        selection=[
+            ("ref", "Customer reference"),
+            ("invoice_origin", "Invoice origin"),
+        ],
+        default=False,
+    )
 
     # Purchase invoice settings
     purchases_start_date = fields.Datetime(

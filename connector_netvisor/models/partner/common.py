@@ -75,7 +75,7 @@ class Partner(models.Model):
         res = super().write(values)
         auto_export = self._get_auto_export(values)
         if auto_export and not self.env.context.get("skip_export"):
-            for record in self:
+            for record in self.filtered(lambda r: r.customer_rank > 0):
                 self._event("on_partner_update").notify(record)
 
         return res
@@ -89,7 +89,11 @@ class Partner(models.Model):
         """
         res = super().create(values)
         auto_export = True
-        if auto_export and not self.env.context.get("skip_export"):
+        if (
+            auto_export
+            and res.customer_rank > 0
+            and not self.env.context.get("skip_export")
+        ):
             self._event("on_partner_update").notify(res)
 
         return res

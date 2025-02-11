@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import fields, models, _
 
 
 class HrExpenseSheet(models.Model):
@@ -14,3 +14,5 @@ class HrExpenseSheet(models.Model):
         for record in self:
             record.expense_line_ids.action_netvisor_export_record()
             record.expenses_sent_to_netvisor = True
+            msg = _("Expense report posted to Netvisor")
+            record.message_post(body=msg)

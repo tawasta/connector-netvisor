@@ -22,10 +22,16 @@
                             currencyrate="1"
                             t-esc="record.price_unit"
                         />
-                        <vatpercentage
+                        <t
                             t-if="record.tax_ids"
-                            t-esc="record.tax_ids[0].amount"
+                            t-set="vat"
+                            t-value="record.tax_ids[0].amount"
                         />
+                        <t t-else="" t-set="vat" t-value="0" />
+                        <vatpercentage
+                            t-esc="int(vat) if vat%1==0 else str(vat).replace('.', ',')"
+                        />
+
                         <linedescription t-esc="record.description or ''" />
                         <begindate t-esc="record.date.isoformat() or ''" />
                         <enddate t-esc="record.date.isoformat() or ''" />

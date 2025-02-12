@@ -115,6 +115,7 @@ class NetvisorInvoiceImportMapper(Component):
 
         values = self.map_record(invoice).values()
         values["company_id"] = backend.company_id.id
+        _logger.debug(values)
         netvisor_key = invoice.get("PurchaseInvoiceNetvisorKey")
 
         # Search for existing binding
@@ -138,7 +139,6 @@ class NetvisorInvoiceImportMapper(Component):
 
         # Import attachments
         for attachment in attachments:
-            _logger.debug(attachment)
             values = dict(
                 datas=attachment.get("AttachmentBase64Data"),
                 name=attachment.get("FileName", "n/a"),
@@ -150,8 +150,9 @@ class NetvisorInvoiceImportMapper(Component):
                 description=attachment.get("Comment"),
             )
 
-            _logger.debug("Creating attachment with values %s" % values)
             self.env["ir.attachment"].create(values)
+            values.pop("datas")
+            _logger.debug("Created attachment with values %s" % values)
 
         # No existing binding
         binding_values = {

@@ -52,6 +52,9 @@ class NetvisorExpenseExportMapper(Component):
                             "odoo_id": record.id,
                         }
                     )
+                    msg = _("Expense posted to Netvisor")
+                    record.message_post(body=msg)
+
                 except IntegrityError:
                     # Binding already exists
                     pass

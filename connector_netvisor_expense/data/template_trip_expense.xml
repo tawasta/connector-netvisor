@@ -46,11 +46,7 @@
                                         t-esc="attachment.description or attachment.name"
                                     />
                                     <filename t-esc="attachment.name" />
-                                    <documentdata
-                                        t-att-type="file_ending"
-                                        t-raw="attachment.datas_utf8"
-                                    />
-                                    <printByDefault>1</printByDefault>
+                                    <documentdata t-raw="attachment.datas_utf8" />
                                 </tripexpenseattachment>
                             </t>
                         </tripexpenseattachments>

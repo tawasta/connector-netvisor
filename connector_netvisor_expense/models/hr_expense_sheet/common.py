@@ -17,11 +17,15 @@ class HrExpenseSheet(models.Model):
             msg = _("Expense report posted to Netvisor")
             record.message_post(body=msg)
             record.set_to_paid()
+            # Force payment state
+            record.payment_state = "paid"
 
     def _do_create_moves(self):
         # Don't create moves when using Netvisor expenses.
         # Netvisor will handle the payment
-        #self.set_to_paid()
+        self.set_to_paid()
+        # Force payment state
+        self.payment_state = "paid"
 
         # Return empty recordset
         moves = self.env["account.move"]

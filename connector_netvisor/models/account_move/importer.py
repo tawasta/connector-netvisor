@@ -211,6 +211,7 @@ class NetvisorInvoiceImportMapper(Component):
                 "|",
                 ("company_registry", "=", company_registry),
                 ("ref", "=", code),
+                ("ref", "!=", False),
             ],
             limit=1,
         )

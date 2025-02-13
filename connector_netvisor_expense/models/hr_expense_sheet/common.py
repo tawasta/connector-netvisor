@@ -16,11 +16,12 @@ class HrExpenseSheet(models.Model):
             record.expenses_sent_to_netvisor = True
             msg = _("Expense report posted to Netvisor")
             record.message_post(body=msg)
+            record.set_to_paid()
 
     def _do_create_moves(self):
         # Don't create moves when using Netvisor expenses.
         # Netvisor will handle the payment
-        self.set_to_posted()
+        #self.set_to_paid()
 
         # Return empty recordset
         moves = self.env["account.move"]

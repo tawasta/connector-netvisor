@@ -11,7 +11,7 @@ class Partner(models.Model):
 
     comment_plaintext = fields.Char(
         string="Notes plaintext",
-        _compute="_compute_notes_plaintext",
+        compute="_compute_notes_plaintext",
         help="Helper field for comment",
     )
 

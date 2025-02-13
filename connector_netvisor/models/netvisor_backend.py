@@ -3,7 +3,7 @@ import logging
 import uuid
 import httpx
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import xmltodict
 
 from odoo import _, api, fields, models
@@ -512,7 +512,8 @@ class NetvisorBackend(models.Model):
                 description=job_desc
             ).netvisor_import_purchase_invoices(record.company_id)
 
-            record.purchases_start_date = fields.Datetime.now()
+            # Always fetch a week backwards, if new invoices have been created to past
+            record.purchases_start_date = fields.Datetime.now() - timedelta(days=7)
 
     def _cron_import_purchase_invoices(self):
         for backend in self.search([]):

@@ -49,7 +49,8 @@ class NetvisorInvoice(models.Model):
         endpoint = "purchaseinvoicelist.nv"
 
         params = {
-            "lastmodifiedstart": backend.purchases_start_date.isoformat(),
+            # "lastmodifiedstart": backend.purchases_start_date.isoformat(),
+            "begininvoicedate": backend.purchases_start_date.isoformat(),
             # "paymentstatus": "unpaid",
             # "invoicestatus": "open",
         }

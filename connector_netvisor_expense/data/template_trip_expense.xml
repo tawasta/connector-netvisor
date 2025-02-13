@@ -37,26 +37,16 @@
                         <enddate t-esc="record.date.isoformat() or ''" />
                         <expenseaccountnumber t-esc="record.account_id.code or ''" />
 
+
                         <tripexpenseattachments t-if="record.attachment_ids">
                             <t t-foreach="record.attachment_ids" t-as="attachment">
-                                <!-- Skip unsupported file types -->
-                                <t
-                                    t-set="file_ending"
-                                    t-value="attachment.mimetype.split('/')[1]"
-                                />
-                                <tripexpenseattachment
-                                    t-if="file_ending in ['pdf','doc','xls','tif','jpg','gif','txt','xsl','html']"
-                                >
+                                <tripexpenseattachment>
                                     <mimetype t-esc="attachment.mimetype" />
                                     <attachmentdescription
                                         t-esc="attachment.description or attachment.name"
                                     />
                                     <filename t-esc="attachment.name" />
-                                    <documentdata
-                                        t-att-type="file_ending"
-                                        t-raw="attachment.datas_utf8"
-                                    />
-                                    <printByDefault>1</printByDefault>
+                                    <documentdata t-raw="attachment.datas_utf8" />
                                 </tripexpenseattachment>
                             </t>
                         </tripexpenseattachments>

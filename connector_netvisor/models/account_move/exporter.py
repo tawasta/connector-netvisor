@@ -4,8 +4,6 @@ from odoo import _
 from odoo.exceptions import ValidationError
 
 from odoo.addons.component.core import Component
-from odoo.addons.connector.components.mapper import mapping
-from odoo.addons.connector.exception import MappingError
 
 _logger = logging.getLogger(__name__)
 
@@ -52,6 +50,13 @@ class NetvisorInvoiceExportMapper(Component):
 
         # Send/update product information to Netvisor before sending
         for line in record.invoice_line_ids:
+            if not line.product_id:
+                raise ValidationError(
+                    _(
+                        "Using product in invoice lines is mandatory! Please add a product to all invoice lines"
+                    )
+                )
+
             line.product_id.action_netvisor_export_record(
                 use_queue=False, company_id=record.company_id.id
             )
@@ -143,7 +148,7 @@ class NetvisorInvoiceExportMapper(Component):
 
                 msg = _("Created invoice '{}'".format(record.display_name))
             else:
-                raise MappingError(
+                raise ValidationError(
                     _(
                         "Something went wrong when exporting invoice. "
                         "Please see log for more details"
@@ -187,7 +192,7 @@ class NetvisorInvoiceExportMapper(Component):
             # Check if there are multiple taxes per line
             taxes = line.tax_ids
             if len(taxes) > 1:
-                raise MappingError(
+                raise ValidationError(
                     _(
                         "Please define only one tax for invoice line '{}'".format(
                             line.name
@@ -195,7 +200,7 @@ class NetvisorInvoiceExportMapper(Component):
                     )
                 )
             elif len(taxes) < 1:
-                raise MappingError(
+                raise ValidationError(
                     _("Please define one tax for invoice line '{}'".format(line.name))
                 )
 

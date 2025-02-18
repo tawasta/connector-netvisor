@@ -37,6 +37,19 @@
                         <enddate t-esc="record.date.isoformat() or ''" />
                         <expenseaccountnumber t-esc="record.account_id.code or ''" />
 
+                        <t t-if="record.analytic_distribution" id="dimension_wrapper">
+                        <dimension
+                                t-foreach="list(record.analytic_distribution.keys())[0].split(',')"
+                                t-as="dimension"
+                            >
+                            <dimensionName
+                                    t-esc="dimensions[int(dimension)][0] or ''"
+                                />
+                            <dimensionItem
+                                    t-esc="dimensions[int(dimension)][1] or ''"
+                                />
+                        </dimension>
+                        </t>
 
                         <tripexpenseattachments t-if="record.attachment_ids">
                             <t t-foreach="record.attachment_ids" t-as="attachment">

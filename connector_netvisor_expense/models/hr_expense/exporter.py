@@ -35,8 +35,14 @@ class NetvisorExpenseExportMapper(Component):
             [("odoo_id", "=", record.id), ("backend_id", "=", backend.id)]
         )
 
+        analytic_accounts = self.env["account.analytic.account"].search([])
+        dimensions = dict(
+            [(r.id, (r.root_plan_id.name, r.name)) for r in analytic_accounts]
+        )
+
         xml_string = self.env["ir.qweb"]._render(
-            "connector_netvisor_expense.netvisor_tripexpense", {"record": record}
+            "connector_netvisor_expense.netvisor_tripexpense",
+            {"record": record, "dimensions": dimensions},
         )
 
         if not binding:

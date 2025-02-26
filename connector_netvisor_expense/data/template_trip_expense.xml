@@ -9,37 +9,43 @@
             <tripexpense>
                 <header t-esc="record.name or ''" />
                 <description />
-                <customlines>
-                    <customline>
+
+                <customlines t-if="custom_lines">
+                    <customline t-foreach="custom_lines" t-as="custom_line">
                         <employeeidentifier
-                            t-esc="record.employee_id.identification_id or ''"
+                            t-esc="custom_line.employee_id.identification_id or ''"
                             type="number"
                         />
-                        <ratio t-esc="record.product_id.name" type="name" />
-                        <amount t-esc="record.quantity" />
+                        <ratio t-esc="custom_line.product_id.name" type="name" />
+                        <amount t-esc="custom_line.quantity" />
                         <customlineunitprice
                             iso4217currencycode="EUR"
                             currencyrate="1"
-                            t-esc="record.price_unit"
+                            t-esc="custom_line.price_unit"
                         />
                         <t
-                            t-if="record.tax_ids"
+                            t-if="custom_line.tax_ids"
                             t-set="vat"
-                            t-value="record.tax_ids[0].amount"
+                            t-value="custom_line.tax_ids[0].amount"
                         />
                         <t t-else="" t-set="vat" t-value="0" />
                         <vatpercentage
                             t-esc="int(vat) if vat%1==0 else str(vat).replace('.', ',')"
                         />
 
-                        <linedescription t-esc="record.description or ''" />
-                        <begindate t-esc="record.date.isoformat() or ''" />
-                        <enddate t-esc="record.date.isoformat() or ''" />
-                        <expenseaccountnumber t-esc="record.account_id.code or ''" />
+                        <linedescription t-esc="custom_line.description or ''" />
+                        <begindate t-esc="custom_line.date.isoformat() or ''" />
+                        <enddate t-esc="custom_line.date.isoformat() or ''" />
+                        <expenseaccountnumber
+                            t-esc="custom_line.account_id.code or ''"
+                        />
 
-                        <t t-if="record.analytic_distribution" id="dimension_wrapper">
+                        <t
+                            t-if="custom_line.analytic_distribution"
+                            id="dimension_wrapper"
+                        >
                         <dimension
-                                t-foreach="list(record.analytic_distribution.keys())[0].split(',')"
+                                t-foreach="list(custom_line.analytic_distribution.keys())[0].split(',')"
                                 t-as="dimension"
                             >
                             <dimensionName
@@ -51,8 +57,8 @@
                         </dimension>
                         </t>
 
-                        <tripexpenseattachments t-if="record.attachment_ids">
-                            <t t-foreach="record.attachment_ids" t-as="attachment">
+                        <tripexpenseattachments t-if="custom_line.attachment_ids">
+                            <t t-foreach="custom_line.attachment_ids" t-as="attachment">
                                 <tripexpenseattachment>
                                     <mimetype t-esc="attachment.mimetype" />
                                     <attachmentdescription
@@ -66,6 +72,109 @@
                     </customline>
 
                 </customlines>
+
+                <travellines t-if="travel_lines">
+                    <travelline t-foreach="travel_lines" t-as="travel_line">
+                        <employeeidentifier
+                            t-esc="travel_line.employee_id.identification_id or ''"
+                            type="number"
+                        />
+                        <traveltype
+                            t-esc="travel_line.product_id.netvisor_travel_type"
+                        />
+                        <!-- TODO: configurable passenger amount -->
+                        <passengeramount>0</passengeramount>
+                        <kilometeramount t-esc="travel_line.quantity" />
+                        <unitprice t-esc="travel_line.price_unit" />
+                        <linedescription t-esc="travel_line.description or ''" />
+                        <traveldate t-esc="travel_lines.date.isoformat() or ''" />
+                        <routedescription t-esc="travel_line.description or ''" />
+
+                        <t
+                            t-if="travel_line.analytic_distribution"
+                            id="dimension_wrapper"
+                        >
+                        <dimension
+                                t-foreach="list(travel_line.analytic_distribution.keys())[0].split(',')"
+                                t-as="dimension"
+                            >
+                            <dimensionName
+                                    t-esc="dimensions[int(dimension)][0] or ''"
+                                />
+                            <dimensionItem
+                                    t-esc="dimensions[int(dimension)][1] or ''"
+                                />
+                        </dimension>
+                        </t>
+
+                        <tripexpenseattachments t-if="travel_lines.attachment_ids">
+                            <t
+                                t-foreach="travel_lines.attachment_ids"
+                                t-as="attachment"
+                            >
+                                <tripexpenseattachment>
+                                    <mimetype t-esc="attachment.mimetype" />
+                                    <attachmentdescription
+                                        t-esc="attachment.description or attachment.name"
+                                    />
+                                    <filename t-esc="attachment.name" />
+                                    <documentdata t-raw="attachment.datas_utf8" />
+                                </tripexpenseattachment>
+                            </t>
+                        </tripexpenseattachments>
+                    </travelline>
+
+                </travellines>
+
+                <dailycompensationlines t-if="daily_lines">
+                    <dailycompensationline t-foreach="daily_lines" t-as="daily_line">
+                        <employeeidentifier
+                            t-esc="daily_line.employee_id.identification_id or ''"
+                            type="number"
+                        />
+                        <compensationtype
+                            t-esc="daily_line.product_id.netvisor_compensation_type"
+                        />
+                        <amount t-esc="daily_line.quantity" />
+                        <unitprice t-esc="daily_line.price_unit" />
+                        <linedescription t-esc="daily_line.description or ''" />
+                        <!-- TODO: Configurable time of departure, return -->
+                        <timeofdeparture t-esc="daily_line.date.isoformat() or ''" />
+                        <returntime t-esc="daily_line.date.isoformat() or ''" />
+
+                        <t
+                            t-if="daily_line.analytic_distribution"
+                            id="dimension_wrapper"
+                        >
+                        <dimension
+                                t-foreach="list(daily_line.analytic_distribution.keys())[0].split(',')"
+                                t-as="dimension"
+                            >
+                            <dimensionName
+                                    t-esc="dimensions[int(dimension)][0] or ''"
+                                />
+                            <dimensionItem
+                                    t-esc="dimensions[int(dimension)][1] or ''"
+                                />
+                        </dimension>
+                        </t>
+
+                        <tripexpenseattachments t-if="daily_line.attachment_ids">
+                            <t t-foreach="daily_line.attachment_ids" t-as="attachment">
+                                <tripexpenseattachment>
+                                    <mimetype t-esc="attachment.mimetype" />
+                                    <attachmentdescription
+                                        t-esc="attachment.description or attachment.name"
+                                    />
+                                    <filename t-esc="attachment.name" />
+                                    <documentdata t-raw="attachment.datas_utf8" />
+                                </tripexpenseattachment>
+                            </t>
+                        </tripexpenseattachments>
+                    </dailycompensationline>
+
+                </dailycompensationlines>
+
             </tripexpense>
         </root>
     </template>

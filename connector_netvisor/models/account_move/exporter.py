@@ -130,6 +130,9 @@ class NetvisorInvoiceExportMapper(Component):
                     template,
                     {"invoice": binding, "backend": backend, "dimensions": dimensions},
                 )
+                _logger.info(
+                    "Sending purchase invoice posting data for '{}'".format(record.name)
+                )
 
             backend._api_request_post(endpoint, xml_string)
 

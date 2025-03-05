@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_product_hr_expense_form" model="ir.ui.view">
+        <field name="name">product.template.expense.form.netvisor</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="hr_expense.view_product_hr_expense_form" />
+        <field name="arch" type="xml">
+
+            <field name="uom_id" position="before">
+                <field
+                    name="netvisor_expense_type"
+                    invisible="not can_be_expensed"
+                    required="can_be_expensed"
+                />
+                <field
+                    name="netvisor_compensation_type"
+                    invisible="netvisor_expense_type != 'daily'"
+                    required="netvisor_expense_type == 'daily'"
+                />
+                <field
+                    name="netvisor_travel_type"
+                    invisible="netvisor_expense_type != 'travel'"
+                    required="netvisor_expense_type == 'travel'"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>

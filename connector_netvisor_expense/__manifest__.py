@@ -43,6 +43,7 @@
         "views/hr_expense.xml",
         "views/hr_expense_sheet.xml",
         "views/netvisor_backend.xml",
+        "views/product_product.xml",
         "views/product_template.xml",
     ],
     "assets": {},

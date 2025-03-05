@@ -40,9 +40,26 @@ class NetvisorExpenseExportMapper(Component):
             [(r.id, (r.root_plan_id.name, r.name)) for r in analytic_accounts]
         )
 
+        custom_lines = record.filtered(
+            lambda r: r.product_id.netvisor_expense_type == "custom"
+        )
+        travel_lines = record.filtered(
+            lambda r: r.product_id.netvisor_expense_type == "travel"
+        )
+        # Daily compensation lines
+        daily_lines = record.filtered(
+            lambda r: r.product_id.netvisor_expense_type == "daily"
+        )
+
         xml_string = self.env["ir.qweb"]._render(
             "connector_netvisor_expense.netvisor_tripexpense",
-            {"record": record, "dimensions": dimensions},
+            {
+                "record": record,
+                "dimensions": dimensions,
+                "custom_lines": custom_lines,
+                "travel_lines": travel_lines,
+                "daily_lines": daily_lines,
+            },
         )
 
         if not binding:

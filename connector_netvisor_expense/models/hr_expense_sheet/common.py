@@ -20,6 +20,9 @@ class HrExpenseSheet(models.Model):
             # Force payment state
             record.payment_state = "paid"
 
+            # Force expense line state
+            record.expense_line_ids.write({"state": "done"})
+
     def _do_create_moves(self):
         # Don't create moves when using Netvisor expenses.
         # Netvisor will handle the payment

@@ -62,6 +62,10 @@
                                     />
                                     <field name="customer_invoice_our_reference" />
                                     <field name="customer_invoice_your_reference" />
+                                    <field
+                                        name="customer_invoice_send_order_reference"
+                                        widget="boolean_toggle"
+                                    />
                                 </group>
                                 <group
                                     name="sale_invoices_group_print_settings"

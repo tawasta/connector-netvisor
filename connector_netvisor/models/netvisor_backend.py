@@ -141,6 +141,12 @@ class NetvisorBackend(models.Model):
         default=False,
     )
 
+    customer_invoice_send_order_reference = fields.Boolean(
+        string="Send order reference",
+        help="Send order reference to Netvisor",
+        default=True,
+    )
+
     # Purchase invoice settings
     purchases_start_date = fields.Datetime(
         string="Import start date",

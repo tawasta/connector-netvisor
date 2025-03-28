@@ -133,7 +133,10 @@
                 />
                 <!--secondName type="netvisor">123</secondName-->
                 <overrideRateOfOverdue t-esc="invoice.overdue_interest or 0" />
-                <orderNumber t-esc="invoice.invoice_origin or ''" />
+                <orderNumber
+                    t-if="backend.customer_invoice_send_order_reference"
+                    t-esc="invoice.invoice_origin or ''"
+                />
                 <!--collectionCost>15</collectionCost-->
                 <!--isThirdPartySales>1</isThirdPartySales-->
                 <invoiceLines>

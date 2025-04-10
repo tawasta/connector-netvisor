@@ -28,6 +28,7 @@ class AccountMove(models.Model):
             ("requested", "Requested"),
             ("reminded", "Reminded"),
             ("dueforpayment", "Due for payment"),
+            ("collected", "Collected"),
         ],
         copy=False,
         readonly=True,

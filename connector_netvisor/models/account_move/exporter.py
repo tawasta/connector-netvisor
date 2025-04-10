@@ -1,6 +1,7 @@
 import logging
 
 from odoo import _
+from odoo import fields
 from odoo.exceptions import ValidationError
 
 from odoo.addons.component.core import Component
@@ -139,6 +140,20 @@ class NetvisorInvoiceExportMapper(Component):
             msg = _("Updated invoice '{}'".format(record.name))
         else:
             endpoint = f"{endpoint}?method=add"
+
+            if record.netvisor_sent:
+                msg = _(
+                    "It seems like this invoice was already sent to Netvisor on '%s'. "
+                    "Please contact support to proceed",
+                    record.netvisor_sent,
+                )
+                raise ValidationError(msg)
+
+            # Set invoice as sent and commit that to prevent a situation where we manage to send an invoice
+            # to Netvisor, but don't receive a reply (due to a timeout or something like that)
+            record.netvisor_sent = fields.Datetime.now()
+            self.env.cr.commit()
+
             res = backend._api_request_post(endpoint, xml_string)
             if res:
                 binding = binding_model.create(
@@ -149,7 +164,8 @@ class NetvisorInvoiceExportMapper(Component):
                     }
                 )
 
-                msg = _("Created invoice '{}'".format(record.display_name))
+                msg = _("Exported invoice '%s' to Netvisor", record.display_name)
+                record.message_post(body=msg)
             else:
                 raise ValidationError(
                     _(

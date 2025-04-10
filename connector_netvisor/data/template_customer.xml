@@ -10,10 +10,14 @@
                 <customerbaseinformation>
                     <internalidentifier t-esc="partner.ref or ''" />
                     <externalidentifier t-esc="partner.company_registry or ''" />
+                    <!--  This is "OVT identifier, if the information differs from the company's business ID"
+                          We don't really have a field/need for it currently
+
                     <organizationunitnumber
                         t-if="partner.is_company and partner.edicode and partner.edicode[0:4] == '0037'"
                         t-esc="partner.edicode or ''"
                     />
+                    -->
                     <name
                         t-esc="partner.name or partner.commercial_company_name or ''"
                     />

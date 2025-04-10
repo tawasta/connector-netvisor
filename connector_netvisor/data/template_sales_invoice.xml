@@ -216,16 +216,15 @@
                         <sum>1240,00</sum>
                     </accrualVoucherEntry>
                 </salesInvoiceAccrual-->
-                <salesInvoiceAttachments t-if="invoice.attachment_ids">
-                    <t t-foreach="invoice.attachment_ids" t-as="attachment">
-                        <!-- Skip unsupported file types -->
-                        <t
-                            t-set="file_ending"
-                            t-value="attachment.mimetype.split('/')[1]"
-                        />
-                        <salesinvoiceattachment
-                            t-if="file_ending in ['pdf','doc','xls','tif','jpg','gif','txt','xsl','html']"
-                        >
+
+                <!-- Skip unsupported file types -->
+                <t
+                    t-set="attachments"
+                    t-value="invoice.attachment_ids.filtered(lambda a: a.mimetype.split('/')[1] in ['pdf','doc','xls','tif','jpg','gif','txt','xsl','html'])"
+                />
+                <salesInvoiceAttachments t-if="attachments">
+                    <t t-foreach="attachments" t-as="attachment">
+                        <salesinvoiceattachment>
                             <mimeType t-esc="attachment.mimetype" />
                             <attachmentDescription
                                 t-esc="attachment.description or attachment.name"

@@ -28,6 +28,7 @@ class AccountMove(models.Model):
             ("requested", "Requested"),
             ("reminded", "Reminded"),
             ("dueforpayment", "Due for payment"),
+            ("collected", "Collected"),
         ],
         copy=False,
         readonly=True,
@@ -37,6 +38,10 @@ class AccountMove(models.Model):
         string="Send to netvisor",
         help="Uncheck this to skip sending the invoice to Netvisor on confirm",
         default=True,
+    )
+
+    netvisor_sent = fields.Datetime(
+        string="Sent to Netvisor", readonly=True, copy=False
     )
 
     netvisor_delayed_send = fields.Boolean(
@@ -90,6 +95,16 @@ class AccountMove(models.Model):
         super()._compute_hide_post_button()
         for record in self.filtered("netvisor_send"):
             record.hide_post_button = record.netvisor_send
+
+    def _compute_show_reset_to_draft_button(self):
+        # Disallow resetting invoice to draft if Netvisor binding exists
+        res = super()._compute_show_reset_to_draft_button()
+
+        for record in self:
+            if record.netvisor_bind_ids:
+                record.show_reset_to_draft_button = False
+
+        return res
 
     def write(self, vals):
         res = super().write(vals)
@@ -197,6 +212,19 @@ class AccountMove(models.Model):
                 netvisor_model.with_delay(description=job_desc).netvisor_export_status(
                     record
                 )
+
+    def action_netvisor_unlink(self):
+        """Unlink the Netvisor invoice"""
+        for record in self:
+            record.netvisor_sent = False
+
+            for binding in self.netvisor_bind_ids:
+                msg = _(
+                    "Removed Netvisor invoice binding for Netvisor id '%s'",
+                    binding.external_id,
+                )
+                record.message_post(body=msg)
+                binding.sudo().unlink()
 
     def _post(self, soft=True):
         """

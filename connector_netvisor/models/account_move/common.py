@@ -226,6 +226,12 @@ class AccountMove(models.Model):
                 record.message_post(body=msg)
                 binding.sudo().unlink()
 
+    def action_reset_netvisor_sent(self):
+        """
+        Reset "netvisor_sent"-state, to allow resending
+        """
+        self.write({"netvisor_sent": False})
+
     def _post(self, soft=True):
         """
         Auto-send invoices to Netvisor when Validating

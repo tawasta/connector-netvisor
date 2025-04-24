@@ -154,7 +154,14 @@ class NetvisorInvoiceExportMapper(Component):
             record.netvisor_sent = fields.Datetime.now()
             self.env.cr.commit()
 
-            res = backend._api_request_post(endpoint, xml_string)
+            try:
+                res = backend._api_request_post(endpoint, xml_string)
+            except ValidationError:
+                # Reset the sent state on actual error
+                record.netvisor_sent = False
+                self.env.cr.commit()
+                raise
+
             if res:
                 binding = binding_model.create(
                     {

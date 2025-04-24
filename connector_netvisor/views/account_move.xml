@@ -45,8 +45,21 @@
                                 groups="base.group_no_one"
                                 widget="boolean_toggle"
                             />
-                            <field name="netvisor_sent" />
                             <field name="netvisor_status" />
+
+                            <field name="netvisor_sent" />
+                            <div colspan="2">
+                                <button
+                                    name="action_reset_netvisor_sent"
+                                    type="object"
+                                    invisible="not netvisor_sent"
+                                    help="Reset Netvisor sent state to allow resending"
+                                    confirm="Are you sure you want reset the sent state?"
+                                    string="Reset sent state"
+                                    groups="queue_job.group_queue_job_manager"
+                                />
+                            </div>
+
                         </group>
 
                         <group name="netvisor_action_buttons" string="Actions" col="4">

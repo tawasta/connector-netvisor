@@ -14,7 +14,7 @@
                     groups="account.group_account_invoice"
                     data-hotkey="q"
                     context="{'validate_analytic': True}"
-                    invisible="not netvisor_send or state == 'posted' or netvisor_bind_ids"
+                    invisible="not netvisor_send or state == 'posted' or (netvisor_bind_ids and move_type in ('out_invoice', 'out_refund'))"
                 />
                 <button
                     name="action_netvisor_export_invoice"

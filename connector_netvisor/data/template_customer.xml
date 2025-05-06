@@ -41,8 +41,9 @@
                     />
                     <emailinvoicingaddress t-else="" />
                 </customerbaseinformation>
+                <t t-set="is_company" t-value="partner.is_company or (not partner.parent_id and partner.company_registry)" />
                 <customerfinvoicedetails
-                    t-if="partner.customer_invoice_transmit_method_code == 'einvoice' and partner.edicode and (partner.type == 'invoice' or partner.is_company)"
+                    t-if="partner.customer_invoice_transmit_method_code == 'einvoice' and partner.edicode and (partner.type == 'invoice' or is_company)"
                 >
                     <finvoiceaddress t-esc="partner.edicode or ''" />
                     <finvoiceroutercode

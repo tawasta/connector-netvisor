@@ -27,10 +27,12 @@
                 <!--salesInvoiceWaybillIdentifier>033000050143<salesInvoiceWaybillIdentifier-->
                 <!--salesInvoiceReferenceNumber>123456</salesInvoiceReferenceNumber-->
                 <salesInvoiceAmount
+                    t-if="backend.customer_invoice_override_total_amount"
                     t-att-iso4217currencyCode="invoice.currency_id.name"
                     pricetype="customer"
                     t-esc="invoice.amount_total_signed"
                 />
+                <salesInvoiceAmount t-else="">0</salesInvoiceAmount>
                 <!--sellerIdentifier type="netvisor">1</sellerIdentifier-->
                 <sellerName t-esc="invoice.invoice_user_id.name or ''" />
                 <invoiceType>invoice</invoiceType>

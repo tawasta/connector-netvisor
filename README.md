@@ -14,6 +14,6 @@ addon | version | maintainers | summary
 [connector_netvisor_accrual](connector_netvisor_accrual/) | 17.0.1.1.0 |  | Add accrual rules to invoices
 [connector_netvisor_ecommerce](connector_netvisor_ecommerce/) | 17.0.1.0.2 |  | Use Netvisor with eCommerce
 [connector_netvisor_expense](connector_netvisor_expense/) | 17.0.1.1.0 |  | Add support for travel expenses
-[connector_netvisor_subscription](connector_netvisor_subscription/) | 17.0.1.0.0 |  | Add support for subscriptions
+[connector_netvisor_subscription](connector_netvisor_subscription/) | 17.0.1.0.0 |  | Allows Netvisor-integration to handle subscription invoices
 
 [//]: # (end addons)

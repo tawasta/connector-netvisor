@@ -66,6 +66,10 @@
                                         name="customer_invoice_send_order_reference"
                                         widget="boolean_toggle"
                                     />
+                                    <field
+                                        name="customer_invoice_override_total_amount"
+                                        widget="boolean_toggle"
+                                    />
                                 </group>
                                 <group
                                     name="sale_invoices_group_print_settings"

@@ -140,11 +140,15 @@ class NetvisorBackend(models.Model):
         ],
         default=False,
     )
-
     customer_invoice_send_order_reference = fields.Boolean(
         string="Send order reference",
         help="Send order reference to Netvisor",
         default=True,
+    )
+    customer_invoice_override_total_amount = fields.Boolean(
+        string="Override total amount",
+        help="If this is selected, Netvisor will not calculate the total amount from invoice rows",
+        default=False,
     )
 
     # Purchase invoice settings

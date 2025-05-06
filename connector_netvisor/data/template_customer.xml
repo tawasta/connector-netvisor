@@ -67,7 +67,7 @@
                 </customercontactdetails>
                 -->
                 <customeradditionalinformation>
-                    <comment t-esc="partner.comment_plaintext or ''" />
+                    <comment t-esc="partner.comment and partner.comment_plaintext or ''" />
                     <!--<customeragreementidentifier>Agreement code</customeragreementidentifier>-->
                     <!--<customerreferencenumber t-esc="partner.comment or ''" />-->
                     <!--<invoicinglanguage>FI/SE/EN</invoicinglanguage>-->

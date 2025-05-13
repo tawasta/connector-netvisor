@@ -124,6 +124,12 @@ class NetvisorInvoiceExportMapper(Component):
             if record.is_sale_document():
                 endpoint = f"{endpoint}?method=edit&id={binding.external_id}"
             elif record.is_purchase_document():
+                # If posting date is in the past,
+                # set it as the first date of this month
+                first_day = fields.Date.today().replace(day=1)
+                if record.date < first_day:
+                    record.date = first_day
+
                 endpoint = "purchaseinvoicepostingdata.nv"
                 template = "connector_netvisor.netvisor_purchaseinvoicepostingdata"
 

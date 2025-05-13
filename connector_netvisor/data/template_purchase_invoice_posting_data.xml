@@ -9,10 +9,7 @@
             <purchaseInvoicePostingData>
                 <purchaseInvoiceNetvisorKey t-esc="invoice.external_id" />
                 <status>approved</status>
-                <eventDate
-                    format="ansi"
-                    t-esc="invoice.invoice_date.isoformat() or ''"
-                />
+                <eventDate format="ansi" t-esc="invoice.date.isoformat() or ''" />
                 <isReadyForAccounting>1</isReadyForAccounting>
                 <comment t-esc="invoice.description" />
 

@@ -21,7 +21,7 @@
 {
     "name": "Netvisor connector",
     "summary": "Integration between Odoo and Netvisor",
-    "version": "17.0.1.4.5",
+    "version": "17.0.1.4.7",
     "category": "Invoicing & Payments",
     "website": "https://gitlab.com/tawasta/odoo/connector-netvisor",
     "author": "Futural",
@@ -66,6 +66,7 @@
         "views/netvisor_backend_menu.xml",
         "views/netvisor_backend_form.xml",
         "views/netvisor_backend_tree.xml",
+        "views/netvisor_invoice.xml",
         "views/partner.xml",
         "views/payment.xml",
         "views/product.xml",

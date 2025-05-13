@@ -299,6 +299,8 @@ class NetvisorInvoiceImportMapper(Component):
         product_name = line.get("ProductName", "")
         product_code = line.get("ProductCode", "")
         vat_percent = line.get("VatPercent", 0)
+        vat_code = line.get("VatCode")
+        line_values = {}
 
         if isinstance(price_unit, str):
             price_unit = float(price_unit.replace(",", "."))
@@ -307,8 +309,28 @@ class NetvisorInvoiceImportMapper(Component):
             vat_percent = float(vat_percent.replace(",", "."))
 
         if vat_percent:
+            AccountTax = self.env["account.tax"].sudo()
+
+            tax_scope = "purchase" if move_type == "in_invoice" else "sale"
+
+            tax_vals = {
+                "amount": vat_percent,
+                "type_tax_use": tax_scope,
+                "price_include": False,
+                "netvisor_code": vat_code,
+            }
+            tax = AccountTax.search([(k, "=", v) for k, v in tax_vals.items()], limit=1)
+
+            if not tax:
+                # Tax not found in Odoo, create one
+                tax_vals["name"] = "{} %".format(vat_percent)
+                tax = AccountTax.create(tax_vals)
+
+            line_values["tax_ids"] = [(4, tax.id)]
+
+        if tax and tax.amount > 0:
             # Price unit is returned as a gross price
-            price_unit = price_unit / (1 + vat_percent / 100)
+            price_unit = price_unit / (1 + tax.amount / 100)
 
         # In Odoo the invoice type dictates the sign, not the sign on the qty
         qty_factor = -1 if "refund" in move_type else 1
@@ -319,33 +341,16 @@ class NetvisorInvoiceImportMapper(Component):
         if isinstance(quantity, str):
             quantity = float(quantity.replace(",", "."))
 
-        line_values = {
-            "netvisor_key": line.get("NetvisorKey"),
-            "name": line.get("Description", ""),
-            "discount": line.get("DiscountPercentage", 0),
-            "price_unit": price_unit,
-            "purchase_price": line.get("PurchasePrice", 0),
-            "quantity": quantity * qty_factor,
-        }
-
-        if vat_percent:
-            AccountTax = self.env["account.tax"]
-
-            tax_scope = "purchase" if move_type == "in_invoice" else "sale"
-
-            tax_vals = {
-                "amount": vat_percent,
-                "type_tax_use": tax_scope,
-                "price_include": False,
+        line_values.update(
+            {
+                "netvisor_key": line.get("NetvisorKey"),
+                "name": line.get("Description", ""),
+                "discount": line.get("DiscountPercentage", 0),
+                "price_unit": price_unit,
+                "purchase_price": line.get("PurchasePrice", 0),
+                "quantity": quantity * qty_factor,
             }
-            tax = AccountTax.search([(k, "=", v) for k, v in tax_vals.items()], limit=1)
-
-            if not tax:
-                # Tax not found in Odoo, create one
-                tax_vals["name"] = "{} %".format(vat_percent)
-                tax = AccountTax.create(tax_vals)
-
-            line_values["tax_ids"] = [(4, tax.id)]
+        )
 
         if line.get("Unit", False):
             uom = self.env["uom.uom"]

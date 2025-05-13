@@ -107,16 +107,16 @@ class NetvisorInvoiceImportMapper(Component):
         netvisor_model = self.env["netvisor.invoice"]
 
         endpoint = f"getpurchaseinvoice.nv?netvisorkey={netvisor_key}"
-        invoice = backend._api_request_get(endpoint)
-        attachments = invoice.get("Attachments", {}).get("Attachment", {})
+        raw_response = backend._api_request_get(endpoint)
+        attachments = raw_response.get("Attachments", {}).get("Attachment", {})
         if isinstance(attachments, dict):
             # Always put lines in a list
             attachments = [attachments]
 
-        values = self.map_record(invoice).values()
+        values = self.map_record(raw_response).values()
         values["company_id"] = backend.company_id.id
         _logger.debug(values)
-        netvisor_key = invoice.get("PurchaseInvoiceNetvisorKey")
+        netvisor_key = raw_response.get("PurchaseInvoiceNetvisorKey")
 
         # Search for existing binding
         existing_binding = netvisor_model.search(
@@ -159,6 +159,7 @@ class NetvisorInvoiceImportMapper(Component):
             "backend_id": backend.id,
             "external_id": netvisor_key,
             "odoo_id": invoice.id,
+            "netvisor_raw_content": raw_response,
         }
 
         netvisor_model.create(binding_values)
@@ -295,18 +296,44 @@ class NetvisorInvoiceImportMapper(Component):
         # TODO: an option to auto-create new products by code or name
         # TODO: break this method into smaller methods
 
-        price_unit = line.get("UnitPrice", 0)
         product_name = line.get("ProductName", "")
         product_code = line.get("ProductCode", "")
-        vat_percent = line.get("VatPercent", 0)
-        vat_code = line.get("VatCode")
         line_values = {}
 
-        if isinstance(price_unit, str):
-            price_unit = float(price_unit.replace(",", "."))
+        # region Line quantity
+        # TODO: Should there be some logic between ordered amount and delivered amount?
+        delivered = line.get("DeliveredAmount") or 0
+        delivered = self._str_to_float(delivered)
 
-        if isinstance(vat_percent, str):
-            vat_percent = float(vat_percent.replace(",", "."))
+        if delivered == 0:
+            ordered = line.get("OrderedAmount") or 0
+            ordered = self._str_to_float(ordered)
+
+        quantity = delivered or ordered or 1
+
+        # In Odoo the invoice type dictates the sign, not the sign on the qty
+        qty_factor = -1 if "refund" in move_type else 1
+        # endregion
+
+        # region Unit price
+        # Untaxed amount
+        line_sum = line.get("LineNetSum", 0)
+        line_sum = self._str_to_float(line_sum)
+
+        discount = line.get("DiscountPercentage", 0)
+        discount = self._str_to_float(discount)
+
+        price_unit = line_sum / quantity
+        if discount:
+            # In Netvisor, the discount is included in unit price
+            price_unit = price_unit / (1 - discount / 100)
+
+        # endregion
+
+        # region VAT
+        vat_percent = line.get("VatPercent", 0)
+        vat_code = line.get("VatCode")
+        vat_percent = self._str_to_float(vat_percent)
 
         if vat_percent:
             AccountTax = self.env["account.tax"].sudo()
@@ -319,6 +346,7 @@ class NetvisorInvoiceImportMapper(Component):
                 "price_include": False,
                 "netvisor_code": vat_code,
             }
+            _logger.debug("Using tax values {}".format(tax_vals))
             tax = AccountTax.search([(k, "=", v) for k, v in tax_vals.items()], limit=1)
 
             if not tax:
@@ -327,27 +355,15 @@ class NetvisorInvoiceImportMapper(Component):
                 tax = AccountTax.create(tax_vals)
 
             line_values["tax_ids"] = [(4, tax.id)]
-
-        if tax and tax.amount > 0:
-            # Price unit is returned as a gross price
-            price_unit = price_unit / (1 + tax.amount / 100)
-
-        # In Odoo the invoice type dictates the sign, not the sign on the qty
-        qty_factor = -1 if "refund" in move_type else 1
-
-        # TODO: Should there be some logic between ordered amount and delivered amount?
-        quantity = line.get("DeliveredAmount") or line.get("OrderedAmount") or 0
-
-        if isinstance(quantity, str):
-            quantity = float(quantity.replace(",", "."))
+        # endregion
 
         line_values.update(
             {
                 "netvisor_key": line.get("NetvisorKey"),
                 "name": line.get("Description", ""),
-                "discount": line.get("DiscountPercentage", 0),
+                "discount": discount,
                 "price_unit": price_unit,
-                "purchase_price": line.get("PurchasePrice", 0),
+                "purchase_price": self._str_to_float(line.get("PurchasePrice", 0)),
                 "quantity": quantity * qty_factor,
             }
         )
@@ -378,3 +394,10 @@ class NetvisorInvoiceImportMapper(Component):
                 line_values["name"] = line.get("Description")
 
         return line_values
+
+    def _str_to_float(self, string_value):
+        res = string_value
+        if isinstance(string_value, str):
+            res = float(string_value.replace(",", "."))
+
+        return res

@@ -51,7 +51,8 @@ class NetvisorInvoiceExportMapper(Component):
 
         # Send/update product information to Netvisor before sending
         for line in record.invoice_line_ids:
-            if not line.product_id:
+            # Require products for sale invoices
+            if record.is_sale_document() and not line.product_id:
                 raise ValidationError(
                     _(
                         "Using product in invoice lines is mandatory! Please add a product to all invoice lines"

@@ -32,7 +32,10 @@
                     pricetype="customer"
                     t-esc="invoice.amount_total_signed"
                 />
-                <salesInvoiceAmount t-else="">0</salesInvoiceAmount>
+                <salesInvoiceAmount
+                    t-else=""
+                    t-att-iso4217currencyCode="invoice.currency_id.name"
+                >0</salesInvoiceAmount>
                 <!--sellerIdentifier type="netvisor">1</sellerIdentifier-->
                 <sellerName t-esc="invoice.invoice_user_id.name or ''" />
                 <invoiceType>invoice</invoiceType>

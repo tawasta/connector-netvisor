@@ -88,7 +88,10 @@ class AccountMove(models.Model):
 
     def _compute_narration_plaintext(self):
         for record in self:
-            record.narration_plaintext = html2plaintext(record.narration)
+            if record.narration:
+                record.narration_plaintext = html2plaintext(record.narration)
+            else:
+                record.narration_plaintext = ""
 
     @api.depends("date", "auto_post")
     def _compute_hide_post_button(self):

@@ -74,8 +74,9 @@ class NetvisorProductImportMapper(Component):
         if existing_record and len(existing_record) > 1:
             raise ValidationError(
                 _(
-                    f"Found multiple matching records: "
-                    f"{existing_record.ids} with values {values}"
+                    "Found multiple matching records: " "{} with values {}".format(
+                        existing_record.ids, values
+                    )
                 )
             )
 

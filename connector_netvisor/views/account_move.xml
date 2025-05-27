@@ -27,6 +27,27 @@
                 />
             </xpath>
 
+            <xpath expr="//widget[@name='web_ribbon'][1]" position="after">
+                <field name="netvisor_status" invisible="1" />
+                <widget
+                    name="web_ribbon"
+                    id="web_ribbon_creditloss"
+                    bg_color="text-bg-danger"
+                    title="Credit loss"
+                    invisible="netvisor_status != 'creditloss'"
+                />
+            </xpath>
+
+            <xpath expr="//widget[@name='web_ribbon'][1]" position="attributes">
+                <!-- We can't append to this, so override the condition -->
+                <!--<attribute name="invisible">payment_state != 'paid' or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') or netvisor_status == 'creditloss'</attribute>-->
+                <attribute
+                    name="invisible"
+                    separator=" "
+                    add="or netvisor_status == 'creditloss'"
+                />
+            </xpath>
+
             <xpath expr="//notebook/page[last()]" position="after">
                 <page
                     string="Netvisor"

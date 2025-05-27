@@ -172,7 +172,9 @@ class AccountMove(models.Model):
                     )
 
                 job_desc = _(
-                    f"Netvisor: send invoice {record.name} [Odoo ID: {record.id}] "
+                    "Netvisor: send invoice {} [Odoo ID: {}]".format(
+                        record.name, record.id
+                    )
                 )
                 netvisor_model.with_delay(description=job_desc).netvisor_export_invoice(
                     record

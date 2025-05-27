@@ -150,6 +150,11 @@ class NetvisorBackend(models.Model):
         help="If this is selected, Netvisor will not calculate the total amount from invoice rows",
         default=False,
     )
+    customer_invoice_writeoff_account_id = fields.Many2one(
+        string="Writeoff account",
+        help="Use this account when making credit loss payments",
+        comodel_name="account.account",
+    )
 
     # Purchase invoice settings
     purchases_start_date = fields.Datetime(

@@ -139,7 +139,7 @@ class NetvisorInvoice(models.Model):
                 # so this is disabled for now
                 # record.odoo_id.button_draft()
                 pass
-            elif invoice_status == "paid":
+            elif invoice_status in ["paid", "creditloss"]:
                 if record.payment_state in ["paid", "reversed"]:
                     # Already paid, nothing to do
                     record.netvisor_status = invoice_status
@@ -150,20 +150,31 @@ class NetvisorInvoice(models.Model):
                 # TODO: get correct payment method
                 # TODO: get correct journal
 
-                payment_amount = record.amount_residual
-
                 # This will currently set today as payment date
                 # It is usually incorrect, but we don't have the correct data here
                 payment_date = datetime.date.today()
 
                 payment_values = {
-                    "amount": payment_amount,
                     "group_payment": True,
-                    "payment_difference_handling": "open",
                     "currency_id": record.currency_id.id,
                     "payment_date": payment_date,
                     "netvisor_send": False,
                 }
+
+                if invoice_status == "paid":
+                    payment_values["amount"] = record.amount_residual
+                    payment_values["payment_difference_handling"] = "open"
+                else:
+                    # Credit loss
+                    payment_values["amount"] = 0
+                    payment_values["payment_difference_handling"] = "reconcile"
+                    payment_values["writeoff_label"] = _("Credit loss")
+                    if record.netvisor_bind_ids:
+                        payment_values[
+                            "writeoff_account_id"
+                        ] = record.netvisor_bind_ids[
+                            0
+                        ].backend_id.customer_invoice_writeoff_account_id.id
 
                 _logger.debug(_("Payment values: {}".format(payment_values)))
                 _logger.debug(_("Invoices to pay: {}".format(record.odoo_id.ids)))

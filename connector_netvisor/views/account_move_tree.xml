@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_invoice_tree" model="ir.ui.view">
+        <field name="name">account.move.tree.netvisor</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree" />
+        <field name="arch" type="xml">
+
+            <field name="state" position="after">
+                <field
+                    name="payment_state"
+                    string="Payment"
+                    widget="badge"
+                    decoration-success="payment_state in ('paid', 'reversed')"
+                    invisible="payment_state == 'invoicing_legacy' or state != 'posted' or move_type == 'entry'"
+                    optional="show"
+                />
+
+                <field
+                    name="netvisor_status"
+                    widget="badge"
+                    decoration-danger="netvisor_status in ('creditloss', 'rejected', 'dueforpayment')"
+                    decoration-warning="netvisor_status in ('overdue', 'reminded', 'requested')"
+                    decoration-success="netvisor_status in ('paid', 'collected')"
+                    decoration-info="netvisor_status in ('open', 'unsent')"
+                    optional="hide"
+                />
+                <field name="netvisor_send" optional="hide" />
+            </field>
+
+        </field>
+    </record>
+</odoo>

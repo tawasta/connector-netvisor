@@ -162,10 +162,15 @@ class NetvisorInvoice(models.Model):
                 }
 
                 if invoice_status == "paid":
+                    # Paid invoice
+                    msg = _("Set invoice as paid (status from Netvisor)")
+
                     payment_values["amount"] = record.amount_residual
                     payment_values["payment_difference_handling"] = "open"
                 else:
                     # Credit loss
+                    msg = _("Set invoice as credit loss (status from Netvisor)")
+
                     payment_values["amount"] = 0
                     payment_values["payment_difference_handling"] = "reconcile"
                     payment_values["writeoff_label"] = _("Credit loss")
@@ -182,6 +187,8 @@ class NetvisorInvoice(models.Model):
                 self.env["account.payment.register"].with_context(
                     active_model="account.move", active_ids=record.odoo_id.ids
                 ).create(payment_values)._create_payments()
+
+                record.odoo_id.message_post(body=msg)
 
             _logger.info(
                 _("Updating record.name Netvisor status to {}").format(invoice_status)

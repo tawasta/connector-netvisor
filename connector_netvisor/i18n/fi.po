@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0-20250520\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-27 12:20+0000\n"
-"PO-Revision-Date: 2025-05-27 15:26+0300\n"
+"POT-Creation-Date: 2025-05-28 10:59+0000\n"
+"PO-Revision-Date: 2025-05-28 14:03+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -3535,7 +3535,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields.selection,name:connector_netvisor.selection__account_move__netvisor_status__open
 msgid "Open"
-msgstr ""
+msgstr "Avoin"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__opportunity_ids
@@ -3570,12 +3570,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__invoice_origin
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__invoice_origin
 msgid "Origin"
-msgstr ""
+msgstr "Lähde"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_backend__customer_invoice_our_reference
 msgid "Our reference"
-msgstr ""
+msgstr "Viitteemme"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_product__outgoing_qty
@@ -3597,7 +3597,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields.selection,name:connector_netvisor.selection__account_move__netvisor_status__overdue
 msgid "Overdue"
-msgstr ""
+msgstr "Myöhässä"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__overdue_interest
@@ -3663,7 +3663,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields.selection,name:connector_netvisor.selection__account_move__netvisor_status__paid
 msgid "Paid"
-msgstr ""
+msgstr "Maksettu"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__paired_internal_transfer_payment_id
@@ -4340,7 +4340,7 @@ msgstr "Kirjaa maksu"
 #. module: connector_netvisor
 #: model:ir.model.fields.selection,name:connector_netvisor.selection__account_move__netvisor_status__rejected
 msgid "Rejected"
-msgstr ""
+msgstr "Hylätty"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__parent_id
@@ -4361,7 +4361,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields.selection,name:connector_netvisor.selection__account_move__netvisor_status__reminded
 msgid "Reminded"
-msgstr ""
+msgstr "Muistutettu"
 
 #. module: connector_netvisor
 #. odoo-python
@@ -4388,7 +4388,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields.selection,name:connector_netvisor.selection__account_move__netvisor_status__requested
 msgid "Requested"
-msgstr ""
+msgstr "Pyydetty"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__require_partner_bank_account
@@ -4676,7 +4676,7 @@ msgstr "Lähetä Netvisoriin"
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__netvisor_sent
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_payment__netvisor_sent
 msgid "Sent to Netvisor"
-msgstr ""
+msgstr "Lähetetty Netvisoriin"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_partner__seo_name
@@ -4716,7 +4716,21 @@ msgstr ""
 #: code:addons/connector_netvisor/models/account_move/common.py:0
 #, python-format
 msgid "Set invoice '{}' as sent in Netvisor"
-msgstr ""
+msgstr "Aseta lasku \"{}\" lähetetyksi Netvisorissa"
+
+#. module: connector_netvisor
+#. odoo-python
+#: code:addons/connector_netvisor/models/account_move/binding.py:0
+#, python-format
+msgid "Set invoice as credit loss (status from Netvisor)"
+msgstr "Aseta lasku luottotappioksi (tila Netvisorista)"
+
+#. module: connector_netvisor
+#. odoo-python
+#: code:addons/connector_netvisor/models/account_move/binding.py:0
+#, python-format
+msgid "Set invoice as paid (status from Netvisor)"
+msgstr "Aseta lasku maksetuksi (tila Netvisorista)"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_backend__auto_open_refunds
@@ -5594,7 +5608,7 @@ msgstr ""
 #. module: connector_netvisor
 #: model:ir.model.fields.selection,name:connector_netvisor.selection__account_move__netvisor_status__unsent
 msgid "Unsent"
-msgstr ""
+msgstr "Lähettämättä"
 
 #. module: connector_netvisor
 #: model:ir.model.fields,field_description:connector_netvisor.field_netvisor_invoice__amount_untaxed

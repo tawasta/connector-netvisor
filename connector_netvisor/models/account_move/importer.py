@@ -109,7 +109,7 @@ class NetvisorInvoiceImportMapper(Component):
         endpoint = f"getpurchaseinvoice.nv?netvisorkey={netvisor_key}"
         raw_response = backend._api_request_get(endpoint)
         attachments = raw_response.get("Attachments", {}).get("Attachment", {})
-        if isinstance(attachments, dict):
+        if isinstance(attachments, dict) and attachments:
             # Always put lines in a list
             attachments = [attachments]
 

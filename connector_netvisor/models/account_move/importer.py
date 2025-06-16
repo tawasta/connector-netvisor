@@ -344,8 +344,11 @@ class NetvisorInvoiceImportMapper(Component):
                 "amount": vat_percent,
                 "type_tax_use": tax_scope,
                 "price_include": False,
-                "netvisor_code": vat_code,
             }
+
+            if vat_code:
+                tax_vals["netvisor_code"] = vat_code
+
             _logger.debug("Using tax values {}".format(tax_vals))
             tax = AccountTax.search([(k, "=", v) for k, v in tax_vals.items()], limit=1)
 

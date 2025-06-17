@@ -96,6 +96,19 @@
                             />
 
                             <p class="oe_grey oe_inline" colspan="3">
+                                Import invoice information from Netvisor
+                            </p>
+                            <button
+                                name="action_netvisor_import_invoice"
+                                string="Import invoice"
+                                class="oe_highlight btn-warning"
+                                type="object"
+                                confirm="Are you sure you want to re-import data from Netvisor? This will override changes in Odoo"
+                                invisible="not netvisor_bind_ids or state != 'draft'"
+                            />
+
+
+                            <p class="oe_grey oe_inline" colspan="3">
                                 Import invoice status from Netvisor to Odoo
                             </p>
                             <button

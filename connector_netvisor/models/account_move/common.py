@@ -180,6 +180,16 @@ class AccountMove(models.Model):
                     record
                 )
 
+    def action_netvisor_import_invoice(self):
+        """
+        Update invoice information from Netvisor
+        """
+        for record in self:
+            for binding in record.netvisor_bind_ids:
+                binding.netvisor_import_purchase_invoice(
+                    binding.external_id, update=True
+                )
+
     def action_netvisor_import_status(self):
         """
         Update status from Netvisor

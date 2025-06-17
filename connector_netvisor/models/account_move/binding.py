@@ -70,17 +70,21 @@ class NetvisorInvoice(models.Model):
                 record.get("NetvisorKey"), backend.company_id
             )
 
-    def netvisor_import_purchase_invoice(self, record, company_id=False):
+    def netvisor_import_purchase_invoice(
+        self, netvisor_key, company_id=False, update=False
+    ):
         """
         Import a purchase invoice from Netvisor
         :param record: Purchase invoice record
+        :param company_id: Override company id
+        :param update: Update information from Netvisor
         :return:
         """
         backend = self.get_netvisor_backend(company_id)
 
         with backend.work_on(self._name) as work:
             importer = work.component(usage="import.mapper")
-            return importer.import_purchase_invoice(backend, record)
+            return importer.import_purchase_invoice(backend, netvisor_key, update)
 
     def netvisor_import_status(self, record):
         """

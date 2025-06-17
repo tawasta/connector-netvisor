@@ -97,7 +97,7 @@ class NetvisorInvoiceImportMapper(Component):
 
         return _("Updated details for {}".format(binding.odoo_id))
 
-    def import_purchase_invoice(self, backend, netvisor_key):
+    def import_purchase_invoice(self, backend, netvisor_key, update=False):
         """
         Import or update a purchase invoice from Netvisor.
         :param backend: Netvisor backend record
@@ -127,44 +127,55 @@ class NetvisorInvoiceImportMapper(Component):
             limit=1,
         )
 
-        if existing_binding:
+        if existing_binding and not update:
             # Updating purchase invoices is not implemented
             return _("Purchase invoice already imported. Nothing to do")
 
-        # Create invoice
         account_move = self.env["account.move"]
-        invoice_line_ids = values.pop("invoice_line_ids")
-        invoice = account_move.create(values)
-        invoice.write({"invoice_line_ids": invoice_line_ids})
 
-        # Import attachments
-        for attachment in attachments:
-            values = dict(
-                datas=attachment.get("AttachmentBase64Data"),
-                name=attachment.get("FileName", "n/a"),
-                store_fname=attachment.get("FileName", "n/a"),
-                type="binary",
-                res_model="account.move",
-                res_id=invoice.id,
-                mimetype=attachment.get("ContentType", "Unknown"),
-                description=attachment.get("Comment"),
-            )
+        if not update:
+            # Create a new invoice
+            invoice_line_ids = values.pop("invoice_line_ids")
+            invoice = account_move.create(values)
+            invoice.write({"invoice_line_ids": invoice_line_ids})
 
-            self.env["ir.attachment"].create(values)
-            values.pop("datas")
-            _logger.debug("Created attachment with values %s" % values)
+            # Import attachments
+            for attachment in attachments:
+                values = dict(
+                    datas=attachment.get("AttachmentBase64Data"),
+                    name=attachment.get("FileName", "n/a"),
+                    store_fname=attachment.get("FileName", "n/a"),
+                    type="binary",
+                    res_model="account.move",
+                    res_id=invoice.id,
+                    mimetype=attachment.get("ContentType", "Unknown"),
+                    description=attachment.get("Comment"),
+                )
 
-        # No existing binding
-        binding_values = {
-            "backend_id": backend.id,
-            "external_id": netvisor_key,
-            "odoo_id": invoice.id,
-            "netvisor_raw_content": raw_response,
-        }
+                self.env["ir.attachment"].create(values)
+                values.pop("datas")
+                _logger.debug("Created attachment with values %s" % values)
 
-        netvisor_model.create(binding_values)
+            # Create a binding
+            binding_values = {
+                "backend_id": backend.id,
+                "external_id": netvisor_key,
+                "odoo_id": invoice.id,
+                "netvisor_raw_content": raw_response,
+            }
 
-        return _("Created invoice '{}'".format(invoice.id))
+            netvisor_model.create(binding_values)
+            msg = _("Updated invoice with Odoo ID '{}'".format(invoice.id))
+        else:
+            # Update the invoice information
+            existing_binding.netvisor_raw_content += "\n" + str(raw_response)
+            invoice = existing_binding.odoo_id
+            invoice.invoice_line_ids = False
+            invoice.write(values)
+            invoice.message_post(body=_("Updated values from Netvisor"))
+            msg = _("Updated invoice with Odoo ID '{}'".format(invoice.id))
+
+        return msg
 
     # Netvisor, Odoo
     direct = [

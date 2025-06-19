@@ -212,23 +212,34 @@ class NetvisorInvoiceImportMapper(Component):
     def partner_id(self, record):
         code = record.get("VendorCode")
         name = record.get("VendorName")
-
-        res_partner = self.env["res.partner"]
-
         company_registry = record.get("VendorOrganizationIdentifier")
 
-        # Try to find partner by company registry, ref, or exact name
-        partner_id = res_partner.search(
-            [
-                "|",
-                ("company_registry", "=", company_registry),
-                ("ref", "=", code),
-                ("ref", "!=", False),
-            ],
-            limit=1,
-        )
+        res_partner = self.env["res.partner"]
+        partner_id = False
 
-        if not partner_id:
+        # 1. Try to find partner by ref
+        if not partner_id and code:
+            partner_id = res_partner.search(
+                [("ref", "=", code)],
+                limit=1,
+            )
+
+        # 2. Try to find partner by company registry
+        if not partner_id and company_registry:
+            partner_id = res_partner.search(
+                [("company_registry", "=", company_registry)],
+                limit=1,
+            )
+
+        # 3. Try to find partner by vat code
+        if not partner_id and company_registry:
+            partner_id = res_partner.search(
+                [("vat", "=", company_registry)],
+                limit=1,
+            )
+
+        # 4. Try to find partner by exact name
+        if not partner_id and name:
             # Try to find partner by exact name
             partner_ids = res_partner.search(
                 [("name", "=ilike", name)],
@@ -237,6 +248,7 @@ class NetvisorInvoiceImportMapper(Component):
                 # Only use exact match
                 partner_id = partner_ids
 
+        # 5. Create a new partner
         if not partner_id:
             # Only use an exact match, otherwise create a new partner
 

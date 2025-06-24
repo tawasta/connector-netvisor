@@ -46,8 +46,10 @@ class NetvisorPaymentExportMapper(Component):
 
         _logger.debug(xml_string)
 
-        if not record.reconciled_invoice_ids:
-            raise RetryableJobError(_("Payment has no reconciled invoice yet"))
+        if not record.reconciled_invoice_ids and not record.payment_transaction_id:
+            raise RetryableJobError(
+                _("Payment has no reconciled invoice or payment transaction yet")
+            )
 
         if False in record.reconciled_invoice_ids.mapped("netvisor_status"):
             raise RetryableJobError(_("Reconciled invoice is not yet sent to Netvisor"))

@@ -10,8 +10,14 @@
                 <sum t-esc="record.amount" t-att-currency="record.currency_id.name" />
                 <paymentdate t-esc="record.date.isoformat()" />
                 <t
+                    t-if="record.reconciled_invoice_ids"
                     t-set="identifier"
                     t-value="record.reconciled_invoice_ids[0].netvisor_bind_ids.filtered(lambda b: b.company_id == record.company_id).external_id"
+                />
+                <t
+                    t-elif="record.payment_transaction_id"
+                    t-set="identifier"
+                    t-value="record.payment_transaction_id.invoice_ids[0].netvisor_bind_ids.filtered(lambda b: b.company_id == record.company_id).external_id"
                 />
                 <targetidentifier
                     t-esc="identifier"

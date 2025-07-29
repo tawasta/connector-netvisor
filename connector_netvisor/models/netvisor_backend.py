@@ -2,6 +2,7 @@ import hashlib
 import logging
 import uuid
 import httpx
+import hmac
 
 from datetime import datetime, timedelta
 import xmltodict
@@ -296,24 +297,30 @@ class NetvisorBackend(models.Model):
 
         return res
 
-    def _get_mac(self, url, timestamp, transaction_id):
+    def _get_mac(self, url, timestamp_unix, timestamp_ansi, transaction_id):
         parameters = [
             url,
             self.sender,
             self.customer,
-            timestamp,
+            timestamp_ansi,
             self.language,
             self.company_id.company_registry,
             transaction_id,
+            timestamp_unix,
             self.customer_key,
             self.partner_key,
         ]
         joined_parameters = b"&".join(
             p.encode("utf-8") if isinstance(p, str) else p for p in parameters
         )
-        # SHA256 is used in documentation, but doesn't seem to be working
-        # return hashlib.sha256(joined_parameters).hexdigest()
-        return hashlib.md5(joined_parameters).hexdigest()
+
+        # encode the string to ISO-8859-1 and perform the sha256-hash
+        key = self.customer_key + "&" + self.partner_key
+        h_mac = hmac.new(
+            bytes(key, "ISO-8859-1"), joined_parameters, hashlib.sha256
+        ).hexdigest()
+
+        return h_mac
 
     def _get_authentication_headers(self, url):
         if not self.company_id.company_registry:
@@ -321,20 +328,28 @@ class NetvisorBackend(models.Model):
                 _("Company registry is missing. Please provide and try again")
             )
 
-        timestamp = datetime.now().isoformat(" ")[:-3]
+        timestamp = datetime.now()
+        # ANSI-format, e.g. "2025-01-01 00:00:00.000"
+        timestamp_ansi = timestamp.isoformat(" ")[:-3]
+        # UNIX timestamp without seconds, e.g. "1744635366"
+        timestamp_unix = str(int(timestamp.timestamp()))
+
         transaction_id = uuid.uuid4().hex
-        mac = self._get_mac(url, timestamp, transaction_id)
+        mac = self._get_mac(url, timestamp_unix, timestamp_ansi, transaction_id)
 
         headers = {
             "Content-type": "text/plain",
             "X-Netvisor-Authentication-Sender": self.sender,
             "X-Netvisor-Authentication-CustomerId": self.customer,
             "X-Netvisor-Authentication-PartnerId": self.partner,
-            "X-Netvisor-Authentication-Timestamp": timestamp,
+            "X-Netvisor-Authentication-TimestampUnix": timestamp_unix,
+            "X-Netvisor-Authentication-Timestamp": timestamp_ansi,
             "X-Netvisor-Interface-Language": self.language,
             "X-Netvisor-Organisation-ID": self.company_id.company_registry,
             "X-Netvisor-Authentication-TransactionId": transaction_id,
             "X-Netvisor-Authentication-MAC": mac,
+            "X-Netvisor-Authentication-MACHashCalculationAlgorithm": "HMACSHA256",
+            "X-Netvisor-Authentication-UseHTTPResponseStatusCodes": "1",
         }
 
         return headers

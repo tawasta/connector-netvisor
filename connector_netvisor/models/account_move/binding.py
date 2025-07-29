@@ -90,7 +90,7 @@ class NetvisorInvoice(models.Model):
         """
         Update status from Netvisor
         """
-        backend = self.get_netvisor_backend()
+        backend = self.get_netvisor_backend(record.company_id)
 
         with backend.work_on(self._name) as work:
             importer = work.component(usage="import.mapper")
@@ -100,7 +100,7 @@ class NetvisorInvoice(models.Model):
         """
         Get invoice details from Netvisor
         """
-        backend = self.get_netvisor_backend()
+        backend = self.get_netvisor_backend(record.company_id)
 
         with backend.work_on(self._name) as work:
             importer = work.component(usage="import.mapper")
@@ -110,7 +110,7 @@ class NetvisorInvoice(models.Model):
         """
         Update status to Netvisor
         """
-        backend = self.get_netvisor_backend()
+        backend = self.get_netvisor_backend(record.company_id)
 
         with backend.work_on(self._name) as work:
             exporter = work.component(usage="export.mapper")

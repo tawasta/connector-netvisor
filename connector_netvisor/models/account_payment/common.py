@@ -40,7 +40,10 @@ class AccountPayment(models.Model):
             if use_queue:
                 # Queued sending
                 job_desc = _(
-                    "Netvisor: export payment '{}'".format(record.display_name)
+                    "Netvisor: export payment '{}' [Odoo ID: {}]".format(
+                        record.display_name,
+                        record.id
+                    )
                 )
                 netvisor_model.with_delay(description=job_desc).netvisor_export_payment(
                     record, company_id

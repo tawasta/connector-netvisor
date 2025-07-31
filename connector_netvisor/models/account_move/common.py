@@ -129,15 +129,8 @@ class AccountMove(models.Model):
 
         if vals.get("payment_id"):
             for record in self.filtered(lambda r: r.is_entry()):
-                job_desc = _(
-                    "Send payment '{}' to Netvisor".format(record.payment_id.id)
-                )
-
-                record.message_post(body=job_desc)
                 # Send the payment to Netvisor
-                record.payment_id.with_delay(
-                    description=job_desc
-                ).action_netvisor_export_record()
+                record.payment_id.action_netvisor_export_record(use_queue=True)
 
         return res
 

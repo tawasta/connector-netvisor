@@ -81,15 +81,6 @@ class NetvisorPaymentExportMapper(Component):
 
                 msg = _("Created payment '{}'".format(record.display_name))
 
-                # Update invoice status
-                for invoice in record.reconciled_invoice_ids:
-                    job_desc = _(
-                        "Update '{}' status from Netvisor)".format(invoice.name)
-                    )
-                    invoice.with_delay(
-                        description=job_desc
-                    ).action_netvisor_import_status()
-
             else:
                 raise UserError(
                     _(

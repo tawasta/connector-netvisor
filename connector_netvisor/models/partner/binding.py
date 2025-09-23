@@ -66,3 +66,42 @@ class NetvisorPartner(models.Model):
         with backend.work_on(self._name) as work:
             exporter = work.component(usage="export.mapper")
             return exporter.export_customer(backend, record)
+
+    def netvisor_import_suppliers(self, company=False):
+        """
+        Import all suppliers from Netvisor
+        :return:
+        """
+        backend = self.get_netvisor_backend(company)
+        endpoint = "getvendor.nv"
+        params = {
+            "changedsince": backend.supplier_import_start_date.isoformat(),
+        }
+        suppliers = backend._api_request_get(endpoint, params=params)
+
+        if backend.company_id:
+            self = self.with_context(company_id=backend.company_id.id)
+
+        for record in suppliers:
+            job_desc = _(
+                "Netvisor: import supplier '{}'".format(
+                    record.get("VendorBaseInformation").get("Name")
+                )
+            )
+            self.with_delay(description=job_desc).netvisor_import_supplier(
+                record.get("NetvisorKey"), backend.company_id
+            )
+
+        backend.supplier_import_start_date = fields.Date.today()
+
+    def netvisor_import_supplier(self, netvisor_key, company=False):
+        """
+        Import a partner from Netvisor
+        :param netvisor_key: Netvisor external ID
+        :return:
+        """
+        backend = self.get_netvisor_backend(company)
+
+        with backend.work_on(self._name) as work:
+            importer = work.component(usage="import.mapper")
+            return importer.import_supplier(backend, netvisor_key)

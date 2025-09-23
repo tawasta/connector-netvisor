@@ -171,7 +171,7 @@ class NetvisorBackend(models.Model):
         default=False,
     )
 
-    # Import / export settings
+    # Customer settings
     customer_import_create = fields.Boolean(
         string="Create new customers on import",
         help="When importing customer that doesn't exist in Odoo, create a new partner",
@@ -183,6 +183,25 @@ class NetvisorBackend(models.Model):
         default=True,
     )
 
+    # Supplier settings
+    supplier_import_start_date = fields.Date(
+        string="Supplier import start date",
+        help="Starting date for supplier import. "
+        "Will be automatically updated after fetching suppliers",
+        default="1970-01-01",
+    )
+    supplier_import_create = fields.Boolean(
+        string="Create new suppliers on import",
+        help="When importing supplier that doesn't exist in Odoo, create a new partner",
+        default=True,
+    )
+    supplier_import_update = fields.Boolean(
+        string="Update existing suppliers on import",
+        help="When importing supplier that exists in Odoo, update partner values",
+        default=True,
+    )
+
+    # Product settings
     product_import_create = fields.Boolean(
         string="Create new products on import",
         help="When importing products that doesn't exist in Odoo, create a new products",
@@ -218,7 +237,7 @@ class NetvisorBackend(models.Model):
         """
         self.ensure_one()
 
-        # Try to list customers
+        # Try to list products
         endpoint = "productlist.nv"
         self._api_request_get(endpoint)
 
@@ -364,7 +383,7 @@ class NetvisorBackend(models.Model):
 
     def _parse_response(self, response):
         text = xmltodict.parse(response.text)
-        root = text.get("Root")
+        root = text.get("Root") or {}
 
         if not root:
             _logger.warning("Root element not found: {}".format(text))
@@ -375,7 +394,7 @@ class NetvisorBackend(models.Model):
             raise ValidationError(_("This endpoint doesn't seem to exist."))
 
         try:
-            response_status = root.get("ResponseStatus")
+            response_status = root.get("ResponseStatus") or {}
         except AttributeError as e:
             raise Exception(
                 "Error while trying to parse response '{}': '{}'".format(root, e)
@@ -399,6 +418,13 @@ class NetvisorBackend(models.Model):
                 res = [res]
         elif "Customer" in root:
             res = root.get("Customer", {})
+        elif "Vendors" in root:
+            res = root.get("Vendors") and root["Vendors"].get("Vendor", {})
+            if isinstance(res, dict):
+                # Always put vendors in a list
+                res = [res]
+        elif "Vendor" in root:
+            res = root.get("Vendor", {})
         elif "DimensionNameList" in root:
             res = root.get("DimensionNameList") and root["DimensionNameList"].get(
                 "DimensionName", {}
@@ -477,7 +503,20 @@ class NetvisorBackend(models.Model):
         """
         _logger.debug(_("Importing suppliers from Netvisor"))
 
-        raise UserError(_("Importing suppliers not implemented."))
+        netvisor_model = self.env["netvisor.partner"]
+
+        for record in self:
+            netvisor_model = netvisor_model.with_context(
+                company_id=record.company_id.id
+            )
+
+            job_desc = _(
+                "Netvisor: import suppliers for {}".format(record.company_id.name)
+            )
+
+            netvisor_model.with_delay(description=job_desc).netvisor_import_suppliers(
+                record.company_id
+            )
 
     def action_import_products(self):
         """

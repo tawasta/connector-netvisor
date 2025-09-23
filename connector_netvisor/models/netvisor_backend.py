@@ -383,6 +383,7 @@ class NetvisorBackend(models.Model):
 
     def _parse_response(self, response):
         text = xmltodict.parse(response.text)
+        headers = response.headers
         root = text.get("Root") or {}
 
         if not root:
@@ -402,6 +403,7 @@ class NetvisorBackend(models.Model):
 
         response_status_list = response_status.get("Status")
 
+        _logger.debug(headers)
         _logger.debug(root.keys())
         _logger.debug(response_status)
 

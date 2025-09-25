@@ -253,10 +253,6 @@ class NetvisorInvoiceExportMapper(Component):
 
         if record.payment_state == "reversed":
             netvisor_status = "paid"
-        elif record.payment_state == "paid":
-            # Leave invoice open, as account.payment
-            # will export the payment transaction to Netvisor
-            netvisor_status = "open"
         elif record.is_move_sent:
             netvisor_status = "open"
 

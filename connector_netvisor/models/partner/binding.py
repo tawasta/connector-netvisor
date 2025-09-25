@@ -76,7 +76,7 @@ class NetvisorPartner(models.Model):
         endpoint = "getvendor.nv"
         params = {
             "changedsince": backend.supplier_import_start_date.isoformat(),
-            "page": 1, # TODO: handle pagination for over 500 vendors
+            "page": 1,  # TODO: handle pagination for over 500 vendors
         }
         suppliers = backend._api_request_get(endpoint, params=params)
 

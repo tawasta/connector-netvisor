@@ -94,7 +94,7 @@ class NetvisorInvoice(models.Model):
 
         with backend.work_on(self._name) as work:
             importer = work.component(usage="import.mapper")
-            return importer.update_status(record)
+            return importer.import_status_from_netvisor(record)
 
     def netvisor_import_invoice_details(self, record):
         """
@@ -114,7 +114,7 @@ class NetvisorInvoice(models.Model):
 
         with backend.work_on(self._name) as work:
             exporter = work.component(usage="export.mapper")
-            return exporter.update_status(record)
+            return exporter.export_status_to_netvisor(record)
 
     def netvisor_match_credit_note(self):
         """

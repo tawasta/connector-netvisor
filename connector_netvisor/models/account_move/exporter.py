@@ -247,13 +247,14 @@ class NetvisorInvoiceExportMapper(Component):
                 )
                 raise ValidationError(err)
 
-    def update_status(self, record):
-        """Update invoice status to Netvisor"""
+    def export_status_to_netvisor(self, record):
+        """Export invoice status to Netvisor"""
         netvisor_status = record.netvisor_status
+        print(netvisor_status)
 
         if record.payment_state == "reversed":
             netvisor_status = "paid"
-        elif record.is_move_sent:
+        elif netvisor_status == "unsent" and record.is_move_sent:
             netvisor_status = "open"
 
         _logger.debug("Export '{}' status as '{}'".format(record.name, netvisor_status))
@@ -266,7 +267,9 @@ class NetvisorInvoiceExportMapper(Component):
             binding.backend_id._api_request_post(endpoint, values)
 
         record.netvisor_status = netvisor_status
-        return f"Updated status to {netvisor_status}"
+        msg = "Set invoice as '{}' in Netvisor".format(netvisor_status)
+        record.message_post(body=msg)
+        return msg
 
     def match_credit_note(self, binding):
         """Match credit note"""

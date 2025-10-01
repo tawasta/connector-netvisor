@@ -113,6 +113,7 @@ class AccountMove(models.Model):
         res = super().write(vals)
 
         if vals.get("is_move_sent"):
+            # If invoice is set as sent, export the status to Netvisor
             for record in self:
                 if (
                     record.transmit_method_id.code == "mail"
@@ -125,7 +126,6 @@ class AccountMove(models.Model):
                     record.with_delay(
                         description=job_desc
                     ).action_netvisor_export_status()
-                    record.message_post(body=job_desc)
 
         if vals.get("payment_id"):
             for record in self.filtered(lambda r: r.is_entry()):
@@ -275,3 +275,19 @@ class AccountMove(models.Model):
         purchase_invoices.action_netvisor_export_invoice()
 
         return res
+
+    def button_draft(self):
+        """
+        Disable resetting to draft if Netvisor binding exists
+        """
+        for record in self:
+            if record.netvisor_bind_ids:
+                msg = _(
+                    "Cannot reset to draft, invoice is already sent to Netvisor. "
+                    "Please use 'Unlink Netvisor invoice' first."
+                )
+                raise ValidationError(msg)
+            else:
+                record.netvisor_sent = False
+
+        return super().button_draft()

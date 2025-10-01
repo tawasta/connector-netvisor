@@ -16,7 +16,7 @@ class NetvisorInvoiceImportMapper(Component):
     _inherit = "base.import.mapper"
     _apply_on = ["netvisor.invoice"]
 
-    def update_status(self, record):
+    def import_status_from_netvisor(self, record):
         """
         Update invoice status
         :param netvisor_key: Netvisor external id

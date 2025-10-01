@@ -275,3 +275,19 @@ class AccountMove(models.Model):
         purchase_invoices.action_netvisor_export_invoice()
 
         return res
+
+    def button_draft(self):
+        """
+        Disable resetting to draft if Netvisor binding exists
+        """
+        for record in self:
+            if record.netvisor_bind_ids:
+                msg = _(
+                    "Cannot reset to draft, invoice is already sent to Netvisor. "
+                    "Please use 'Unlink Netvisor invoice' first."
+                )
+                raise ValidationError(msg)
+            else:
+                record.netvisor_sent = False
+
+        return super().button_draft()

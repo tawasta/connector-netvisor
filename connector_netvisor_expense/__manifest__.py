@@ -21,7 +21,7 @@
 {
     "name": "Netvisor Connector Expense support",
     "summary": "Add support for travel expenses",
-    "version": "17.0.1.1.0",
+    "version": "17.0.1.1.1",
     "category": "Sales",
     "website": "https://gitlab.com/tawasta/odoo/connector-netvisor",
     "author": "Futural",

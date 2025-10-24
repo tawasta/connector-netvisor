@@ -9,11 +9,8 @@
             <purchaseInvoicePostingData>
                 <purchaseInvoiceNetvisorKey t-esc="invoice.external_id" />
                 <status>approved</status>
-                <eventDate
-                    format="ansi"
-                    t-esc="invoice.invoice_date.isoformat() or ''"
-                />
-                <isReadyForAccounting>1</isReadyForAccounting>
+                <eventDate format="ansi" t-esc="invoice.date.isoformat() or ''" />
+                <isReadyForAccounting>0</isReadyForAccounting>
                 <comment t-esc="invoice.description" />
 
                 <t
@@ -27,7 +24,7 @@
                         t-esc="line.netvisor_key"
                     />
                     <productCode t-esc="line.product_id.default_code or ''" />
-                    <productName t-esc="line.name[0:200] or ''" />
+                    <productName t-esc="line.name and line.name[0:200] or ''" />
                     <deliveredAmount
                         t-esc="line.quantity if invoice.move_type != 'in_refund' else line.quantity * -1"
                     />

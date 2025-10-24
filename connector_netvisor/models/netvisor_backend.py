@@ -2,8 +2,9 @@ import hashlib
 import logging
 import uuid
 import httpx
+import hmac
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import xmltodict
 
 from odoo import _, api, fields, models
@@ -96,7 +97,7 @@ class NetvisorBackend(models.Model):
         required=True,
     )
 
-    # Invoicing settings
+    # Customer invoice settings
     auto_open_refunds = fields.Boolean(
         string="Set refunds as sent",
         help="When sending a refund invoice, mark it as sent (open)",
@@ -106,6 +107,54 @@ class NetvisorBackend(models.Model):
         string="Allow updating customer invoices",
         help="Allow updating customer invoice information from Odoo to Netvisor",
         default=False,
+    )
+    customer_invoice_use_delivery_address = fields.Boolean(
+        string="Use delivery address",
+        help="Send customer invoice delivery address to Netvisor",
+        default=True,
+    )
+    customer_invoice_use_product_code = fields.Boolean(
+        string="Use product code",
+        help="Send product code on invoice lines",
+        default=True,
+    )
+    customer_invoice_use_product_name = fields.Boolean(
+        string="Use product name",
+        help="Send product name on invoice lines",
+        default=True,
+    )
+    customer_invoice_our_reference = fields.Selection(
+        string="Our reference",
+        help="The field used as our reference",
+        selection=[
+            ("ref", "Customer reference"),
+            ("invoice_origin", "Invoice origin"),
+        ],
+        default="ref",
+    )
+    customer_invoice_your_reference = fields.Selection(
+        string="Your reference",
+        help="The field used as your reference",
+        selection=[
+            ("ref", "Customer reference"),
+            ("invoice_origin", "Invoice origin"),
+        ],
+        default=False,
+    )
+    customer_invoice_send_order_reference = fields.Boolean(
+        string="Send order reference",
+        help="Send order reference to Netvisor",
+        default=True,
+    )
+    customer_invoice_override_total_amount = fields.Boolean(
+        string="Override total amount",
+        help="If this is selected, Netvisor will not calculate the total amount from invoice rows",
+        default=False,
+    )
+    customer_invoice_writeoff_account_id = fields.Many2one(
+        string="Writeoff account",
+        help="Use this account when making credit loss payments",
+        comodel_name="account.account",
     )
 
     # Purchase invoice settings
@@ -122,13 +171,7 @@ class NetvisorBackend(models.Model):
         default=False,
     )
 
-    customer_invoice_use_delivery_address = fields.Boolean(
-        string="Use delivery address",
-        help="Send customer invoice delivery address to Netvisor",
-        default=True,
-    )
-
-    # Import / export settings
+    # Customer settings
     customer_import_create = fields.Boolean(
         string="Create new customers on import",
         help="When importing customer that doesn't exist in Odoo, create a new partner",
@@ -140,6 +183,25 @@ class NetvisorBackend(models.Model):
         default=True,
     )
 
+    # Supplier settings
+    supplier_import_start_date = fields.Date(
+        string="Supplier import start date",
+        help="Starting date for supplier import. "
+        "Will be automatically updated after fetching suppliers",
+        default="1970-01-01",
+    )
+    supplier_import_create = fields.Boolean(
+        string="Create new suppliers on import",
+        help="When importing supplier that doesn't exist in Odoo, create a new partner",
+        default=True,
+    )
+    supplier_import_update = fields.Boolean(
+        string="Update existing suppliers on import",
+        help="When importing supplier that exists in Odoo, update partner values",
+        default=True,
+    )
+
+    # Product settings
     product_import_create = fields.Boolean(
         string="Create new products on import",
         help="When importing products that doesn't exist in Odoo, create a new products",
@@ -175,7 +237,7 @@ class NetvisorBackend(models.Model):
         """
         self.ensure_one()
 
-        # Try to list customers
+        # Try to list products
         endpoint = "productlist.nv"
         self._api_request_get(endpoint)
 
@@ -254,24 +316,30 @@ class NetvisorBackend(models.Model):
 
         return res
 
-    def _get_mac(self, url, timestamp, transaction_id):
+    def _get_mac(self, url, timestamp_unix, timestamp_ansi, transaction_id):
         parameters = [
             url,
             self.sender,
             self.customer,
-            timestamp,
+            timestamp_ansi,
             self.language,
             self.company_id.company_registry,
             transaction_id,
+            timestamp_unix,
             self.customer_key,
             self.partner_key,
         ]
         joined_parameters = b"&".join(
             p.encode("utf-8") if isinstance(p, str) else p for p in parameters
         )
-        # SHA256 is used in documentation, but doesn't seem to be working
-        # return hashlib.sha256(joined_parameters).hexdigest()
-        return hashlib.md5(joined_parameters).hexdigest()
+
+        # encode the string to ISO-8859-1 and perform the sha256-hash
+        key = self.customer_key + "&" + self.partner_key
+        h_mac = hmac.new(
+            bytes(key, "ISO-8859-1"), joined_parameters, hashlib.sha256
+        ).hexdigest()
+
+        return h_mac
 
     def _get_authentication_headers(self, url):
         if not self.company_id.company_registry:
@@ -279,20 +347,28 @@ class NetvisorBackend(models.Model):
                 _("Company registry is missing. Please provide and try again")
             )
 
-        timestamp = datetime.now().isoformat(" ")[:-3]
+        timestamp = datetime.now()
+        # ANSI-format, e.g. "2025-01-01 00:00:00.000"
+        timestamp_ansi = timestamp.isoformat(" ")[:-3]
+        # UNIX timestamp without seconds, e.g. "1744635366"
+        timestamp_unix = str(int(timestamp.timestamp()))
+
         transaction_id = uuid.uuid4().hex
-        mac = self._get_mac(url, timestamp, transaction_id)
+        mac = self._get_mac(url, timestamp_unix, timestamp_ansi, transaction_id)
 
         headers = {
             "Content-type": "text/plain",
             "X-Netvisor-Authentication-Sender": self.sender,
             "X-Netvisor-Authentication-CustomerId": self.customer,
             "X-Netvisor-Authentication-PartnerId": self.partner,
-            "X-Netvisor-Authentication-Timestamp": timestamp,
+            "X-Netvisor-Authentication-TimestampUnix": timestamp_unix,
+            "X-Netvisor-Authentication-Timestamp": timestamp_ansi,
             "X-Netvisor-Interface-Language": self.language,
             "X-Netvisor-Organisation-ID": self.company_id.company_registry,
             "X-Netvisor-Authentication-TransactionId": transaction_id,
             "X-Netvisor-Authentication-MAC": mac,
+            "X-Netvisor-Authentication-MACHashCalculationAlgorithm": "HMACSHA256",
+            "X-Netvisor-Authentication-UseHTTPResponseStatusCodes": "1",
         }
 
         return headers
@@ -307,7 +383,8 @@ class NetvisorBackend(models.Model):
 
     def _parse_response(self, response):
         text = xmltodict.parse(response.text)
-        root = text.get("Root")
+        headers = response.headers
+        root = text.get("Root") or {}
 
         if not root:
             _logger.warning("Root element not found: {}".format(text))
@@ -318,7 +395,7 @@ class NetvisorBackend(models.Model):
             raise ValidationError(_("This endpoint doesn't seem to exist."))
 
         try:
-            response_status = root.get("ResponseStatus")
+            response_status = root.get("ResponseStatus") or {}
         except AttributeError as e:
             raise Exception(
                 "Error while trying to parse response '{}': '{}'".format(root, e)
@@ -326,6 +403,7 @@ class NetvisorBackend(models.Model):
 
         response_status_list = response_status.get("Status")
 
+        _logger.debug(headers)
         _logger.debug(root.keys())
         _logger.debug(response_status)
 
@@ -342,6 +420,13 @@ class NetvisorBackend(models.Model):
                 res = [res]
         elif "Customer" in root:
             res = root.get("Customer", {})
+        elif "Vendors" in root:
+            res = root.get("Vendors") and root["Vendors"].get("Vendor", {})
+            if isinstance(res, dict):
+                # Always put vendors in a list
+                res = [res]
+        elif "Vendor" in root:
+            res = root.get("Vendor", {})
         elif "DimensionNameList" in root:
             res = root.get("DimensionNameList") and root["DimensionNameList"].get(
                 "DimensionName", {}
@@ -373,6 +458,11 @@ class NetvisorBackend(models.Model):
             )
             if isinstance(res, dict):
                 # Always put invoices in a list
+                res = [res]
+        elif "PayrollRatios" in root:
+            res = root.get("PayrollRatios", {})
+            if isinstance(res, dict):
+                # Always put ratios in a list
                 res = [res]
         elif root.keys() and len(root.keys()) == 1:
             # Some endpoints just return the ResponseStatus
@@ -415,7 +505,20 @@ class NetvisorBackend(models.Model):
         """
         _logger.debug(_("Importing suppliers from Netvisor"))
 
-        raise UserError(_("Importing suppliers not implemented."))
+        netvisor_model = self.env["netvisor.partner"]
+
+        for record in self:
+            netvisor_model = netvisor_model.with_context(
+                company_id=record.company_id.id
+            )
+
+            job_desc = _(
+                "Netvisor: import suppliers for {}".format(record.company_id.name)
+            )
+
+            netvisor_model.with_delay(description=job_desc).netvisor_import_suppliers(
+                record.company_id
+            )
 
     def action_import_products(self):
         """
@@ -480,7 +583,8 @@ class NetvisorBackend(models.Model):
                 description=job_desc
             ).netvisor_import_purchase_invoices(record.company_id)
 
-            record.purchases_start_date = fields.Datetime.now()
+            # Always fetch a week backwards, if new invoices have been created to past
+            record.purchases_start_date = fields.Datetime.now() - timedelta(days=7)
 
     def _cron_import_purchase_invoices(self):
         for backend in self.search([]):

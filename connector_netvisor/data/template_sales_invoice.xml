@@ -27,12 +27,17 @@
                 <!--salesInvoiceWaybillIdentifier>033000050143<salesInvoiceWaybillIdentifier-->
                 <!--salesInvoiceReferenceNumber>123456</salesInvoiceReferenceNumber-->
                 <salesInvoiceAmount
+                    t-if="backend.customer_invoice_override_total_amount"
                     t-att-iso4217currencyCode="invoice.currency_id.name"
                     pricetype="customer"
                     t-esc="invoice.amount_total_signed"
                 />
+                <salesInvoiceAmount
+                    t-else=""
+                    t-att-iso4217currencyCode="invoice.currency_id.name"
+                >0</salesInvoiceAmount>
                 <!--sellerIdentifier type="netvisor">1</sellerIdentifier-->
-                <!--sellerName>Sally Seller</sellerName-->
+                <sellerName t-esc="invoice.invoice_user_id.name or ''" />
                 <invoiceType>invoice</invoiceType>
                 <salesInvoiceStatus
                     type="netvisor"
@@ -45,8 +50,25 @@
                 <salesInvoiceFreeTextAfterLines
                     t-esc="invoice.narration_plaintext or ''"
                 />
-                <salesInvoiceOurReference t-esc="invoice.ref or ''" />
-                <!--salesInvoiceYourReference>Your reference</salesInvoiceYourReference-->
+
+                <salesInvoiceOurReference
+                    t-if="backend.customer_invoice_our_reference == 'ref'"
+                    t-esc="invoice.ref or ''"
+                />
+                <salesInvoiceOurReference
+                    t-else="backend.customer_invoice_our_reference == 'invoice_origin'"
+                    t-esc="invoice.invoice_origin or ''"
+                />
+
+                <salesInvoiceYourReference
+                    t-if="backend.customer_invoice_your_reference == 'ref'"
+                    t-esc="invoice.ref or ''"
+                />
+                <salesInvoiceYourReference
+                    t-else="backend.customer_invoice_your_reference == 'invoice_origin'"
+                    t-esc="invoice.invoice_origin or ''"
+                />
+
                 <salesInvoicePrivateComment t-esc="invoice.description or ''" />
                 <t
                     t-set="partner_binding"
@@ -99,8 +121,8 @@
                         type="ISO-3316"
                         t-esc="invoice.partner_shipping_id.country_id.code or ''"
                     />
-                    <!--deliveryMethod>Installed</deliveryMethod-->
-                    <!--deliveryTerm>According to the agreement</deliveryTerm-->
+                    <deliveryMethod t-esc="invoice.incoterm_location" />
+                    <deliveryTerm t-esc="invoice.invoice_incoterm_id.display_name" />
                 </t>
                 <!--salesInvoiceTaxHandlingType>countrygroup</salesInvoiceTaxHandlingType-->
                 <!--paymentterm type="customerdefault">1</paymentterm-->
@@ -116,7 +138,10 @@
                 />
                 <!--secondName type="netvisor">123</secondName-->
                 <overrideRateOfOverdue t-esc="invoice.overdue_interest or 0" />
-                <orderNumber t-esc="invoice.invoice_origin or ''" />
+                <orderNumber
+                    t-if="backend.customer_invoice_send_order_reference"
+                    t-esc="invoice.invoice_origin or ''"
+                />
                 <!--collectionCost>15</collectionCost-->
                 <!--isThirdPartySales>1</isThirdPartySales-->
                 <invoiceLines>
@@ -125,9 +150,12 @@
                         <salesInvoiceProductLine t-if="line.display_type == 'product'">
                             <productIdentifier
                                 type="customer"
-                                t-esc="line.product_id.default_code or ''"
+                                t-esc="backend.customer_invoice_use_product_code and line.product_id and line.product_id.default_code or ''"
                             />
-                            <productName t-esc="line.name[0:200] or ''" />
+
+                            <productName
+                                t-esc="backend.customer_invoice_use_product_name and line.product_id and line.product_id.name[0:200] or ''"
+                            />
                             <productunitPrice type="net" t-esc="line.price_unit" />
                             <productUnitPurchasePrice
                                 type="net"
@@ -193,16 +221,15 @@
                         <sum>1240,00</sum>
                     </accrualVoucherEntry>
                 </salesInvoiceAccrual-->
-                <salesInvoiceAttachments t-if="invoice.attachment_ids">
-                    <t t-foreach="invoice.attachment_ids" t-as="attachment">
-                        <!-- Skip unsupported file types -->
-                        <t
-                            t-set="file_ending"
-                            t-value="attachment.mimetype.split('/')[1]"
-                        />
-                        <salesinvoiceattachment
-                            t-if="file_ending in ['pdf','doc','xls','tif','jpg','gif','txt','xsl','html']"
-                        >
+
+                <!-- Skip unsupported file types -->
+                <t
+                    t-set="attachments"
+                    t-value="invoice.attachment_ids.filtered(lambda a: a.mimetype.split('/')[1] in ['pdf','doc','xls','tif','jpg','gif','txt','xsl','html'])"
+                />
+                <salesInvoiceAttachments t-if="attachments">
+                    <t t-foreach="attachments" t-as="attachment">
+                        <salesinvoiceattachment>
                             <mimeType t-esc="attachment.mimetype" />
                             <attachmentDescription
                                 t-esc="attachment.description or attachment.name"

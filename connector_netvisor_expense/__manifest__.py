@@ -1,7 +1,7 @@
 ##############################################################################
 #
-#    Author: Oy Tawasta OS Technologies Ltd.
-#    Copyright 2024 Oy Tawasta OS Technologies Ltd. (https://tawasta.fi)
+#    Author: Futural Oy
+#    Copyright 2024 Futural Oy (https://tawasta.fi)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,10 +21,10 @@
 {
     "name": "Netvisor Connector Expense support",
     "summary": "Add support for travel expenses",
-    "version": "17.0.1.0.0",
+    "version": "17.0.1.1.1",
     "category": "Sales",
     "website": "https://gitlab.com/tawasta/odoo/connector-netvisor",
-    "author": "Tawasta",
+    "author": "Futural",
     "license": "AGPL-3",
     "application": False,
     "installable": True,
@@ -41,6 +41,10 @@
         "data/template_trip_expense.xml",
         "security/model_access.xml",
         "views/hr_expense.xml",
+        "views/hr_expense_sheet.xml",
+        "views/netvisor_backend.xml",
+        "views/product_product.xml",
+        "views/product_template.xml",
     ],
     "assets": {},
     "demo": [],

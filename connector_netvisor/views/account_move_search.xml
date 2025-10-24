@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">account.move.search.netvisor</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter" />
+        <field name="arch" type="xml">
+
+            <filter name="reversed" position="after">
+                <filter
+                    name="creditloss"
+                    string="Credit loss"
+                    domain="[('state', '=', 'posted'), ('netvisor_status', '=', 'creditloss')]"
+                />
+            </filter>
+
+            <filter name="status" position="after">
+                <filter
+                    string="Netvisor status"
+                    name="netvisor_status"
+                    context="{'group_by':'netvisor_status'}"
+                />
+            </filter>
+
+        </field>
+    </record>
+</odoo>

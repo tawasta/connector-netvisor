@@ -1,7 +1,7 @@
 ##############################################################################
 #
-#    Author: Oy Tawasta OS Technologies Ltd.
-#    Copyright 2021 Oy Tawasta OS Technologies Ltd. (https://tawasta.fi)
+#    Author: Futural Oy
+#    Copyright 2021 Futural Oy (https://futural.fi)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,10 +21,10 @@
 {
     "name": "Netvisor connector",
     "summary": "Integration between Odoo and Netvisor",
-    "version": "17.0.1.4.1",
+    "version": "17.0.1.7.1",
     "category": "Invoicing & Payments",
     "website": "https://gitlab.com/tawasta/odoo/connector-netvisor",
-    "author": "Tawasta",
+    "author": "Futural",
     "license": "AGPL-3",
     "application": True,
     "installable": True,
@@ -62,10 +62,13 @@
         "data/template_sales_payment.xml",
         "security/model_access.xml",
         "views/account_move.xml",
+        "views/account_move_search.xml",
+        "views/account_move_tree.xml",
         "views/account_tax.xml",
         "views/netvisor_backend_menu.xml",
         "views/netvisor_backend_form.xml",
         "views/netvisor_backend_tree.xml",
+        "views/netvisor_invoice.xml",
         "views/partner.xml",
         "views/payment.xml",
         "views/product.xml",

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_netvisor_invoice_form" model="ir.ui.view">
+        <field name="name">Netvisor invoice form</field>
+        <field name="model">netvisor.invoice</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                </header>
+
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+
+                    </div>
+
+                    <group>
+                        <group name="binding_values">
+                            <field name="backend_id" />
+                            <field name="external_id" />
+                            <field name="odoo_id" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="raw_content" string="Raw response">
+                            <field
+                                name="netvisor_raw_content"
+                                widget="code"
+                                options="{'mode': 'python'}"
+                            />
+                        </page>
+                    </notebook>
+
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+</odoo>

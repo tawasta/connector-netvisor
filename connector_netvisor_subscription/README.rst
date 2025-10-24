@@ -2,12 +2,11 @@
    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
    :alt: License: AGPL-3
 
-====================================
-Netvisor Connector eCommerce support
-====================================
+=======================================
+Netvisor Connector Subscription support
+=======================================
 
-Use Netvisor with eCommerce.
-- Will send invoices as delayed jobs instead of instant sending. This will prevent server errors from end users, if sending will fail.
+Allows Netvisor-integration to handle subscription invoices
 
 Configuration
 =============

@@ -1,0 +1,52 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="product_product_expense_form_view" model="ir.ui.view">
+        <field name="name">product.product.expense.form.netvisor</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="hr_expense.product_product_expense_form_view" />
+        <field name="arch" type="xml">
+
+            <field name="uom_id" position="before">
+                <field
+                    name="netvisor_expense_type"
+                    invisible="not can_be_expensed"
+                    required="can_be_expensed"
+                    groups="base.group_user"
+                />
+                <field
+                    name="netvisor_compensation_type"
+                    invisible="netvisor_expense_type != 'daily'"
+                    required="netvisor_expense_type == 'daily'"
+                    groups="base.group_user"
+                />
+                <field
+                    name="netvisor_travel_type"
+                    invisible="netvisor_expense_type != 'travel'"
+                    required="netvisor_expense_type == 'travel'"
+                    groups="base.group_user"
+                />
+            </field>
+        </field>
+    </record>
+
+    <record id="product_product_expense_categories_tree_view" model="ir.ui.view">
+        <field name="name">product.product.expense.tree.netvisor</field>
+        <field name="model">product.product</field>
+        <field
+            name="inherit_id"
+            ref="hr_expense.product_product_expense_categories_tree_view"
+        />
+        <field name="arch" type="xml">
+
+            <xpath expr="//tree" position="attributes">
+                <attribute name="multi_edit">1</attribute>
+            </xpath>
+
+            <field name="standard_price" position="after">
+                <field name="netvisor_expense_type" optional="hide" />
+                <field name="netvisor_compensation_type" optional="hide" />
+                <field name="netvisor_travel_type" optional="hide" />
+            </field>
+        </field>
+    </record>
+</odoo>

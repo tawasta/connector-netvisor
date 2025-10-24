@@ -52,6 +52,27 @@
                                         name="customer_invoice_use_delivery_address"
                                         widget="boolean_toggle"
                                     />
+                                    <field
+                                        name="customer_invoice_use_product_code"
+                                        widget="boolean_toggle"
+                                    />
+                                    <field
+                                        name="customer_invoice_use_product_name"
+                                        widget="boolean_toggle"
+                                    />
+                                    <field name="customer_invoice_our_reference" />
+                                    <field name="customer_invoice_your_reference" />
+                                    <field
+                                        name="customer_invoice_writeoff_account_id"
+                                    />
+                                    <field
+                                        name="customer_invoice_send_order_reference"
+                                        widget="boolean_toggle"
+                                    />
+                                    <field
+                                        name="customer_invoice_override_total_amount"
+                                        widget="boolean_toggle"
+                                    />
                                 </group>
                                 <group
                                     name="sale_invoices_group_print_settings"
@@ -153,7 +174,7 @@
                             </group>
                         </page>
 
-                        <page name="supplier" string="Suppliers" invisible="1">
+                        <page name="supplier" string="Suppliers">
                             <group name="suppliers_group">
                                 <group name="suppliers_group_import" string="Import">
                                     <p class="oe_grey oe_inline" colspan="2">
@@ -175,6 +196,15 @@
                                     name="suppliers_group_import_settings"
                                     string="Import settings"
                                 >
+                                    <field name="supplier_import_start_date" />
+                                    <field
+                                        name="supplier_import_create"
+                                        widget="boolean_toggle"
+                                    />
+                                    <field
+                                        name="supplier_import_update"
+                                        widget="boolean_toggle"
+                                    />
 
                                 </group>
                             </group>

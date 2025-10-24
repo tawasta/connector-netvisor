@@ -28,6 +28,7 @@ class AccountMove(models.Model):
             ("requested", "Requested"),
             ("reminded", "Reminded"),
             ("dueforpayment", "Due for payment"),
+            ("collected", "Collected"),
         ],
         copy=False,
         readonly=True,
@@ -37,6 +38,10 @@ class AccountMove(models.Model):
         string="Send to netvisor",
         help="Uncheck this to skip sending the invoice to Netvisor on confirm",
         default=True,
+    )
+
+    netvisor_sent = fields.Datetime(
+        string="Sent to Netvisor", readonly=True, copy=False
     )
 
     netvisor_delayed_send = fields.Boolean(
@@ -55,7 +60,7 @@ class AccountMove(models.Model):
 
     narration_plaintext = fields.Char(
         string="Narration plaintext",
-        _compute="_compute_narration_plaintext",
+        compute="_compute_narration_plaintext",
         help="Helper field for narration",
     )
 
@@ -83,12 +88,32 @@ class AccountMove(models.Model):
 
     def _compute_narration_plaintext(self):
         for record in self:
-            record.narration_plaintext = record(html2plaintext(record.narration))
+            if record.narration:
+                record.narration_plaintext = html2plaintext(record.narration)
+            else:
+                record.narration_plaintext = ""
+
+    @api.depends("date", "auto_post")
+    def _compute_hide_post_button(self):
+        super()._compute_hide_post_button()
+        for record in self.filtered("netvisor_send"):
+            record.hide_post_button = record.netvisor_send
+
+    def _compute_show_reset_to_draft_button(self):
+        # Disallow resetting invoice to draft if Netvisor binding exists
+        res = super()._compute_show_reset_to_draft_button()
+
+        for record in self:
+            if record.netvisor_bind_ids:
+                record.show_reset_to_draft_button = False
+
+        return res
 
     def write(self, vals):
         res = super().write(vals)
 
         if vals.get("is_move_sent"):
+            # If invoice is set as sent, export the status to Netvisor
             for record in self:
                 if (
                     record.transmit_method_id.code == "mail"
@@ -101,19 +126,11 @@ class AccountMove(models.Model):
                     record.with_delay(
                         description=job_desc
                     ).action_netvisor_export_status()
-                    record.message_post(body=job_desc)
 
         if vals.get("payment_id"):
             for record in self.filtered(lambda r: r.is_entry()):
-                job_desc = _(
-                    "Send payment '{}' to Netvisor".format(record.payment_id.id)
-                )
-
-                record.message_post(body=job_desc)
                 # Send the payment to Netvisor
-                record.payment_id.with_delay(
-                    description=job_desc
-                ).action_netvisor_export_record()
+                record.payment_id.action_netvisor_export_record(use_queue=True)
 
         return res
 
@@ -148,10 +165,22 @@ class AccountMove(models.Model):
                     )
 
                 job_desc = _(
-                    f"Netvisor: send invoice {record.name} [Odoo ID: {record.id}] "
+                    "Netvisor: send invoice {} [Odoo ID: {}]".format(
+                        record.name, record.id
+                    )
                 )
                 netvisor_model.with_delay(description=job_desc).netvisor_export_invoice(
                     record
+                )
+
+    def action_netvisor_import_invoice(self):
+        """
+        Update invoice information from Netvisor
+        """
+        for record in self:
+            for binding in record.netvisor_bind_ids:
+                binding.netvisor_import_purchase_invoice(
+                    binding.external_id, update=True
                 )
 
     def action_netvisor_import_status(self):
@@ -192,6 +221,25 @@ class AccountMove(models.Model):
                     record
                 )
 
+    def action_netvisor_unlink(self):
+        """Unlink the Netvisor invoice"""
+        for record in self:
+            record.netvisor_sent = False
+
+            for binding in self.netvisor_bind_ids:
+                msg = _(
+                    "Removed Netvisor invoice binding for Netvisor id '%s'",
+                    binding.external_id,
+                )
+                record.message_post(body=msg)
+                binding.sudo().unlink()
+
+    def action_reset_netvisor_sent(self):
+        """
+        Reset "netvisor_sent"-state, to allow resending
+        """
+        self.write({"netvisor_sent": False})
+
     def _post(self, soft=True):
         """
         Auto-send invoices to Netvisor when Validating
@@ -227,3 +275,19 @@ class AccountMove(models.Model):
         purchase_invoices.action_netvisor_export_invoice()
 
         return res
+
+    def button_draft(self):
+        """
+        Disable resetting to draft if Netvisor binding exists
+        """
+        for record in self:
+            if record.netvisor_bind_ids:
+                msg = _(
+                    "Cannot reset to draft, invoice is already sent to Netvisor. "
+                    "Please use 'Unlink Netvisor invoice' first."
+                )
+                raise ValidationError(msg)
+            else:
+                record.netvisor_sent = False
+
+        return super().button_draft()

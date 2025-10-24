@@ -10,11 +10,17 @@
                 <customerbaseinformation>
                     <internalidentifier t-esc="partner.ref or ''" />
                     <externalidentifier t-esc="partner.company_registry or ''" />
+                    <!--  This is "OVT identifier, if the information differs from the company's business ID"
+                          We don't really have a field/need for it currently
+
                     <organizationunitnumber
-                        t-if="partner.is_company"
+                        t-if="partner.is_company and partner.edicode and partner.edicode[0:4] == '0037'"
                         t-esc="partner.edicode or ''"
                     />
-                    <name t-esc="partner.name or ''" />
+                    -->
+                    <name
+                        t-esc="partner.name or partner.commercial_company_name or ''"
+                    />
                     <nameextension t-esc="partner.name_extension or ''" />
                     <streetaddress t-esc="partner.street or ''" />
                     <additionaladdressline t-esc="partner.street2 or ''" />
@@ -35,8 +41,12 @@
                     />
                     <emailinvoicingaddress t-else="" />
                 </customerbaseinformation>
+                <t
+                    t-set="is_company"
+                    t-value="partner.is_company or (not partner.parent_id and partner.company_registry)"
+                />
                 <customerfinvoicedetails
-                    t-if="partner.customer_invoice_transmit_method_code == 'einvoice' and partner.edicode and (partner.type == 'invoice' or partner.is_company)"
+                    t-if="partner.edicode and (partner.type == 'invoice' or is_company)"
                 >
                     <finvoiceaddress t-esc="partner.edicode or ''" />
                     <finvoiceroutercode
@@ -60,7 +70,9 @@
                 </customercontactdetails>
                 -->
                 <customeradditionalinformation>
-                    <comment t-esc="partner.comment_plaintext or ''" />
+                    <comment
+                        t-esc="partner.comment_plaintext != 'False' and partner.comment_plaintext or ''"
+                    />
                     <!--<customeragreementidentifier>Agreement code</customeragreementidentifier>-->
                     <!--<customerreferencenumber t-esc="partner.comment or ''" />-->
                     <!--<invoicinglanguage>FI/SE/EN</invoicinglanguage>-->

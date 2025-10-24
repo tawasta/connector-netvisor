@@ -18,6 +18,10 @@ class NetvisorBinding(models.AbstractModel):
         help="Netvisor record id",
         index=True,
     )
+    netvisor_raw_content = fields.Text(
+        "Raw Netvisor Content",
+        help="Raw Netvisor response for debugging purposes",
+    )
 
     def get_netvisor_backend(self, company=False):
         """

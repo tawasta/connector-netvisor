@@ -49,7 +49,8 @@ class NetvisorInvoice(models.Model):
         endpoint = "purchaseinvoicelist.nv"
 
         params = {
-            "lastmodifiedstart": backend.purchases_start_date.isoformat(),
+            # "lastmodifiedstart": backend.purchases_start_date.isoformat(),
+            "begininvoicedate": backend.purchases_start_date.isoformat(),
             # "paymentstatus": "unpaid",
             # "invoicestatus": "open",
         }
@@ -69,33 +70,37 @@ class NetvisorInvoice(models.Model):
                 record.get("NetvisorKey"), backend.company_id
             )
 
-    def netvisor_import_purchase_invoice(self, record, company_id=False):
+    def netvisor_import_purchase_invoice(
+        self, netvisor_key, company_id=False, update=False
+    ):
         """
         Import a purchase invoice from Netvisor
         :param record: Purchase invoice record
+        :param company_id: Override company id
+        :param update: Update information from Netvisor
         :return:
         """
         backend = self.get_netvisor_backend(company_id)
 
         with backend.work_on(self._name) as work:
             importer = work.component(usage="import.mapper")
-            return importer.import_purchase_invoice(backend, record)
+            return importer.import_purchase_invoice(backend, netvisor_key, update)
 
     def netvisor_import_status(self, record):
         """
         Update status from Netvisor
         """
-        backend = self.get_netvisor_backend()
+        backend = self.get_netvisor_backend(record.company_id)
 
         with backend.work_on(self._name) as work:
             importer = work.component(usage="import.mapper")
-            return importer.update_status(record)
+            return importer.import_status_from_netvisor(record)
 
     def netvisor_import_invoice_details(self, record):
         """
         Get invoice details from Netvisor
         """
-        backend = self.get_netvisor_backend()
+        backend = self.get_netvisor_backend(record.company_id)
 
         with backend.work_on(self._name) as work:
             importer = work.component(usage="import.mapper")
@@ -105,11 +110,11 @@ class NetvisorInvoice(models.Model):
         """
         Update status to Netvisor
         """
-        backend = self.get_netvisor_backend()
+        backend = self.get_netvisor_backend(record.company_id)
 
         with backend.work_on(self._name) as work:
             exporter = work.component(usage="export.mapper")
-            return exporter.update_status(record)
+            return exporter.export_status_to_netvisor(record)
 
     def netvisor_match_credit_note(self):
         """
@@ -138,7 +143,7 @@ class NetvisorInvoice(models.Model):
                 # so this is disabled for now
                 # record.odoo_id.button_draft()
                 pass
-            elif invoice_status == "paid":
+            elif invoice_status in ["paid", "creditloss"]:
                 if record.payment_state in ["paid", "reversed"]:
                     # Already paid, nothing to do
                     record.netvisor_status = invoice_status
@@ -149,20 +154,36 @@ class NetvisorInvoice(models.Model):
                 # TODO: get correct payment method
                 # TODO: get correct journal
 
-                payment_amount = record.amount_residual
-
                 # This will currently set today as payment date
                 # It is usually incorrect, but we don't have the correct data here
                 payment_date = datetime.date.today()
 
                 payment_values = {
-                    "amount": payment_amount,
                     "group_payment": True,
-                    "payment_difference_handling": "open",
                     "currency_id": record.currency_id.id,
                     "payment_date": payment_date,
                     "netvisor_send": False,
                 }
+
+                if invoice_status == "paid":
+                    # Paid invoice
+                    msg = _("Set invoice as paid (status from Netvisor)")
+
+                    payment_values["amount"] = record.amount_residual
+                    payment_values["payment_difference_handling"] = "open"
+                else:
+                    # Credit loss
+                    msg = _("Set invoice as credit loss (status from Netvisor)")
+
+                    payment_values["amount"] = 0
+                    payment_values["payment_difference_handling"] = "reconcile"
+                    payment_values["writeoff_label"] = _("Credit loss")
+                    if record.netvisor_bind_ids:
+                        payment_values[
+                            "writeoff_account_id"
+                        ] = record.netvisor_bind_ids[
+                            0
+                        ].backend_id.customer_invoice_writeoff_account_id.id
 
                 _logger.debug(_("Payment values: {}".format(payment_values)))
                 _logger.debug(_("Invoices to pay: {}".format(record.odoo_id.ids)))
@@ -170,6 +191,8 @@ class NetvisorInvoice(models.Model):
                 self.env["account.payment.register"].with_context(
                     active_model="account.move", active_ids=record.odoo_id.ids
                 ).create(payment_values)._create_payments()
+
+                record.odoo_id.message_post(body=msg)
 
             _logger.info(
                 _("Updating record.name Netvisor status to {}").format(invoice_status)

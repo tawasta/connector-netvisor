@@ -1,7 +1,7 @@
 ##############################################################################
 #
 #    Author: Futural Oy
-#    Copyright 2022 Futural Oy (https://futural.fi)
+#    Copyright 2025 Futural Oy (https://futural.fi)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,9 +19,9 @@
 ##############################################################################
 
 {
-    "name": "Netvisor Connector eCommerce support",
-    "summary": "Use Netvisor with eCommerce",
-    "version": "17.0.1.0.2",
+    "name": "Netvisor Connector Subscription support",
+    "summary": "Allows Netvisor-integration to handle subscription invoices",
+    "version": "17.0.1.0.0",
     "category": "Sales",
     "website": "https://gitlab.com/tawasta/odoo/connector-netvisor",
     "author": "Futural",
@@ -35,17 +35,9 @@
     },
     "depends": [
         "connector_netvisor",
-        "website_sale",
-        "website_sale_company_email",
-        "website_sale_invoice_transmit_method",
+        "subscription_oca",
     ],
-    "data": [
-        "views/website_sale_checkout.xml",
-    ],
-    "assets": {
-        "web.assets_frontend": [
-            "connector_netvisor_ecommerce/static/src/js/checkout.esm.js",
-        ],
-    },
+    "data": [],
+    "assets": {},
     "demo": [],
 }

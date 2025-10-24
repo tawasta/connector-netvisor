@@ -44,17 +44,18 @@ class NetvisorPartnerExportMapper(Component):
             endpoint = "customerlist.nv"
             params = {"keyword": record.ref}
             customers = backend._api_request_get(endpoint, params)
-            _logger.warning("Overlapping partner(s) data: {}".format(customers))
+            _logger.warning("Found partner(s) data: {}".format(customers))
 
-            if len(customers):
-                # Only one match found. Create a new binding
-                binding = binding_model.create(
-                    {
-                        "backend_id": backend.id,
-                        "external_id": customers[0].get("Netvisorkey"),
-                        "odoo_id": record.id,
-                    }
-                )
+            for customer in customers:
+                if customer.get("Code") == record.ref:
+                    # Match found. Create a new binding
+                    binding = binding_model.create(
+                        {
+                            "backend_id": backend.id,
+                            "external_id": customer.get("Netvisorkey"),
+                            "odoo_id": record.id,
+                        }
+                    )
 
         if binding:
             # Update existing record in Netvisor

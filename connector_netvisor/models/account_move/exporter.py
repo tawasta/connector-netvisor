@@ -1,11 +1,10 @@
 import logging
 
 from odoo import _
+from odoo import fields
 from odoo.exceptions import ValidationError
 
 from odoo.addons.component.core import Component
-from odoo.addons.connector.components.mapper import mapping
-from odoo.addons.connector.exception import MappingError
 
 _logger = logging.getLogger(__name__)
 
@@ -38,7 +37,7 @@ class NetvisorInvoiceExportMapper(Component):
             company_id = record.company_id.id
             record = record.with_company(company_id)
 
-        # Update partner information to Netvisor
+        # Send/update partner information to Netvisor before sending
         record.partner_id.action_netvisor_export_record(
             use_queue=False, company_id=company_id
         )
@@ -48,6 +47,20 @@ class NetvisorInvoiceExportMapper(Component):
         ):
             record.partner_shipping_id.action_netvisor_export_record(
                 use_queue=False, company_id=company_id
+            )
+
+        # Send/update product information to Netvisor before sending
+        for line in record.invoice_line_ids:
+            # Require products for sale invoices
+            if record.is_sale_document() and not line.product_id:
+                raise ValidationError(
+                    _(
+                        "Using product in invoice lines is mandatory! Please add a product to all invoice lines"
+                    )
+                )
+
+            line.product_id.action_netvisor_export_record(
+                use_queue=False, company_id=record.company_id.id
             )
 
         # Set correct states
@@ -112,6 +125,12 @@ class NetvisorInvoiceExportMapper(Component):
             if record.is_sale_document():
                 endpoint = f"{endpoint}?method=edit&id={binding.external_id}"
             elif record.is_purchase_document():
+                # If posting date is in the past,
+                # set it as the first date of this month
+                first_day = fields.Date.today().replace(day=1)
+                if record.date < first_day:
+                    record.date = first_day
+
                 endpoint = "purchaseinvoicepostingdata.nv"
                 template = "connector_netvisor.netvisor_purchaseinvoicepostingdata"
 
@@ -119,13 +138,37 @@ class NetvisorInvoiceExportMapper(Component):
                     template,
                     {"invoice": binding, "backend": backend, "dimensions": dimensions},
                 )
+                _logger.info(
+                    "Sending purchase invoice posting data for '{}'".format(record.name)
+                )
 
             backend._api_request_post(endpoint, xml_string)
 
             msg = _("Updated invoice '{}'".format(record.name))
         else:
             endpoint = f"{endpoint}?method=add"
-            res = backend._api_request_post(endpoint, xml_string)
+
+            if record.netvisor_sent:
+                msg = _(
+                    "It seems like this invoice was already sent to Netvisor on '%s'. "
+                    "Please contact support to proceed",
+                    record.netvisor_sent,
+                )
+                raise ValidationError(msg)
+
+            # Set invoice as sent and commit that to prevent a situation where we manage to send an invoice
+            # to Netvisor, but don't receive a reply (due to a timeout or something like that)
+            record.netvisor_sent = fields.Datetime.now()
+            self.env.cr.commit()
+
+            try:
+                res = backend._api_request_post(endpoint, xml_string)
+            except ValidationError:
+                # Reset the sent state on actual error
+                record.netvisor_sent = False
+                self.env.cr.commit()
+                raise
+
             if res:
                 binding = binding_model.create(
                     {
@@ -135,9 +178,10 @@ class NetvisorInvoiceExportMapper(Component):
                     }
                 )
 
-                msg = _("Created invoice '{}'".format(record.display_name))
+                msg = _("Exported invoice '%s' to Netvisor", record.display_name)
+                record.message_post(body=msg)
             else:
-                raise MappingError(
+                raise ValidationError(
                     _(
                         "Something went wrong when exporting invoice. "
                         "Please see log for more details"
@@ -181,7 +225,7 @@ class NetvisorInvoiceExportMapper(Component):
             # Check if there are multiple taxes per line
             taxes = line.tax_ids
             if len(taxes) > 1:
-                raise MappingError(
+                raise ValidationError(
                     _(
                         "Please define only one tax for invoice line '{}'".format(
                             line.name
@@ -189,7 +233,7 @@ class NetvisorInvoiceExportMapper(Component):
                     )
                 )
             elif len(taxes) < 1:
-                raise MappingError(
+                raise ValidationError(
                     _("Please define one tax for invoice line '{}'".format(line.name))
                 )
 
@@ -203,15 +247,14 @@ class NetvisorInvoiceExportMapper(Component):
                 )
                 raise ValidationError(err)
 
-    def update_status(self, record):
-        """Update invoice status to Netvisor"""
+    def export_status_to_netvisor(self, record):
+        """Export invoice status to Netvisor"""
         netvisor_status = record.netvisor_status
+        print(netvisor_status)
 
         if record.payment_state == "reversed":
             netvisor_status = "paid"
-        elif record.payment_state == "paid":
-            netvisor_status = "open"
-        elif record.is_move_sent:
+        elif netvisor_status == "unsent" and record.is_move_sent:
             netvisor_status = "open"
 
         _logger.debug("Export '{}' status as '{}'".format(record.name, netvisor_status))
@@ -224,7 +267,9 @@ class NetvisorInvoiceExportMapper(Component):
             binding.backend_id._api_request_post(endpoint, values)
 
         record.netvisor_status = netvisor_status
-        return f"Updated status to {netvisor_status}"
+        msg = "Set invoice as '{}' in Netvisor".format(netvisor_status)
+        record.message_post(body=msg)
+        return msg
 
     def match_credit_note(self, binding):
         """Match credit note"""
@@ -248,70 +293,3 @@ class NetvisorInvoiceExportMapper(Component):
         else:
             res = _("No refunded invoice to match")
         return res
-
-    @mapping
-    def invoicing_customer(self, record):
-        res = {}
-
-        # Export the partner to
-        # a) Create a new partner
-        # b) Update existing partner values
-        record.partner_id.action_netvisor_export_record(
-            use_queue=False, company_id=record.company_id.id
-        )
-
-        binding = record.partner_id.netvisor_bind_ids.filtered(
-            lambda r: r.backend_id.company_id == record.company_id
-        )
-
-        if binding:
-            # If partner identifier is known, use it
-            res["invoicing_customer_identifier"] = binding.external_id
-        else:
-            # Partner seems to be mandatory?
-            raise ValidationError(
-                _(
-                    "'{}' is not yet exported to Netvisor.".format(
-                        record.partner_id.name
-                    )
-                )
-            )
-        return res
-
-    @mapping
-    def invoice_lines(self, record):
-        """
-        Return mapping for invoice lines
-        :param record: Account move record
-        :return:
-        """
-        invoice_lines = list()
-        for line in record.invoice_line_ids:
-            # Export the product to
-            # a) Create a new product
-            # b) Update existing product values
-            line.product_id.action_netvisor_export_record(
-                use_queue=False, company_id=record.company_id.id
-            )
-
-            product_identifier = line.product_id.netvisor_bind_ids.filtered(
-                lambda r: r.backend_id.company_id == record.company_id
-            )
-
-            if len(product_identifier) != 1:
-                raise MappingError(
-                    _(
-                        "Product '{}' is not found from Netvisor! "
-                        "Please export products to Netvisor before sending the invoice".format(
-                            line.product_id.display_name
-                        )
-                    )
-                )
-
-            invoice_lines.append(
-                {
-                    "dimension": self._get_dimensions(line),
-                }
-            )
-
-        return {"invoice_lines": invoice_lines}

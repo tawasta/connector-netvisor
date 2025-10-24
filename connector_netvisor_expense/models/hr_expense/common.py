@@ -1,4 +1,5 @@
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class HrExpense(models.Model):
@@ -16,6 +17,33 @@ class HrExpense(models.Model):
         :return:
         """
         for record in self:
+            expense_type = record.product_id.netvisor_expense_type
+            if not expense_type:
+                raise ValidationError(
+                    _(
+                        "Netvisor expense type is missing from product '%s'"
+                        % record.product_id.name
+                    )
+                )
+
+            if expense_type == "travel" and not record.product_id.netvisor_travel_type:
+                raise ValidationError(
+                    _(
+                        "Travel type is missing from product '%s'"
+                        % record.product_id.name
+                    )
+                )
+            elif (
+                expense_type == "daily"
+                and not record.product_id.netvisor_compensation_type
+            ):
+                raise ValidationError(
+                    _(
+                        "Compensation type is missing from product '%s'"
+                        % record.product_id.name
+                    )
+                )
+
             netvisor_model = self.env["netvisor.expense"]
 
             if not company_id and record.company_id:

@@ -16,7 +16,7 @@ class NetvisorInvoiceImportMapper(Component):
     _inherit = "base.import.mapper"
     _apply_on = ["netvisor.invoice"]
 
-    def update_status(self, record):
+    def import_status_from_netvisor(self, record):
         """
         Update invoice status
         :param netvisor_key: Netvisor external id
@@ -97,7 +97,7 @@ class NetvisorInvoiceImportMapper(Component):
 
         return _("Updated details for {}".format(binding.odoo_id))
 
-    def import_purchase_invoice(self, backend, netvisor_key):
+    def import_purchase_invoice(self, backend, netvisor_key, update=False):
         """
         Import or update a purchase invoice from Netvisor.
         :param backend: Netvisor backend record
@@ -107,10 +107,16 @@ class NetvisorInvoiceImportMapper(Component):
         netvisor_model = self.env["netvisor.invoice"]
 
         endpoint = f"getpurchaseinvoice.nv?netvisorkey={netvisor_key}"
-        invoice = backend._api_request_get(endpoint)
-        values = self.map_record(invoice).values()
+        raw_response = backend._api_request_get(endpoint)
+        attachments = raw_response.get("Attachments", {}).get("Attachment", {})
+        if isinstance(attachments, dict) and attachments:
+            # Always put lines in a list
+            attachments = [attachments]
+
+        values = self.map_record(raw_response).values()
         values["company_id"] = backend.company_id.id
-        netvisor_key = invoice.get("PurchaseInvoiceNetvisorKey")
+        _logger.debug(values)
+        netvisor_key = raw_response.get("PurchaseInvoiceNetvisorKey")
 
         # Search for existing binding
         existing_binding = netvisor_model.search(
@@ -121,26 +127,55 @@ class NetvisorInvoiceImportMapper(Component):
             limit=1,
         )
 
-        if existing_binding:
+        if existing_binding and not update:
             # Updating purchase invoices is not implemented
             return _("Purchase invoice already imported. Nothing to do")
 
-        # Create invoice
         account_move = self.env["account.move"]
-        invoice_line_ids = values.pop("invoice_line_ids")
-        invoice = account_move.create(values)
-        invoice.write({"invoice_line_ids": invoice_line_ids})
 
-        # No existing binding
-        binding_values = {
-            "backend_id": backend.id,
-            "external_id": netvisor_key,
-            "odoo_id": invoice.id,
-        }
+        if not update:
+            # Create a new invoice
+            invoice_line_ids = values.pop("invoice_line_ids")
+            invoice = account_move.create(values)
+            invoice.write({"invoice_line_ids": invoice_line_ids})
 
-        netvisor_model.create(binding_values)
+            # Import attachments
+            for attachment in attachments:
+                values = dict(
+                    datas=attachment.get("AttachmentBase64Data"),
+                    name=attachment.get("FileName", "n/a"),
+                    store_fname=attachment.get("FileName", "n/a"),
+                    type="binary",
+                    res_model="account.move",
+                    res_id=invoice.id,
+                    mimetype=attachment.get("ContentType", "Unknown"),
+                    description=attachment.get("Comment"),
+                )
 
-        return _("Created invoice '{}'".format(invoice.id))
+                self.env["ir.attachment"].create(values)
+                values.pop("datas")
+                _logger.debug("Created attachment with values %s" % values)
+
+            # Create a binding
+            binding_values = {
+                "backend_id": backend.id,
+                "external_id": netvisor_key,
+                "odoo_id": invoice.id,
+                "netvisor_raw_content": raw_response,
+            }
+
+            netvisor_model.create(binding_values)
+            msg = _("Updated invoice with Odoo ID '{}'".format(invoice.id))
+        else:
+            # Update the invoice information
+            existing_binding.netvisor_raw_content += "\n" + str(raw_response)
+            invoice = existing_binding.odoo_id
+            invoice.invoice_line_ids = False
+            invoice.write(values)
+            invoice.message_post(body=_("Updated values from Netvisor"))
+            msg = _("Updated invoice with Odoo ID '{}'".format(invoice.id))
+
+        return msg
 
     # Netvisor, Odoo
     direct = [
@@ -177,33 +212,64 @@ class NetvisorInvoiceImportMapper(Component):
     def partner_id(self, record):
         code = record.get("VendorCode")
         name = record.get("VendorName")
-
-        res_partner = self.env["res.partner"]
-
         company_registry = record.get("VendorOrganizationIdentifier")
 
-        # Try to find partner by company registry, ref, or exact name
-        partner_id = res_partner.search(
-            [
-                "|",
-                "|",
-                ("company_registry", "=", company_registry),
-                ("ref", "=", code),
-                ("name", "=", name),
-            ]
-        )
+        res_partner = self.env["res.partner"]
+        partner_id = False
 
-        if len(partner_id) != 1:
+        # 1. Try to find partner by ref
+        if not partner_id and code:
+            partner_id = res_partner.search(
+                [("ref", "=", code)],
+                limit=1,
+            )
+
+        # 2. Try to find partner by company registry
+        if not partner_id and company_registry:
+            partner_id = res_partner.search(
+                [("company_registry", "=", company_registry)],
+                limit=1,
+            )
+
+        # 3. Try to find partner by vat code
+        if not partner_id and company_registry:
+            partner_id = res_partner.search(
+                [("vat", "=", company_registry)],
+                limit=1,
+            )
+
+        # 4. Try to find partner by exact name
+        if not partner_id and name:
+            # Try to find partner by exact name
+            partner_ids = res_partner.search(
+                [("name", "=ilike", name)],
+            )
+            if len(partner_ids) == 1:
+                # Only use exact match
+                partner_id = partner_ids
+
+        # 5. Create a new partner
+        if not partner_id:
             # Only use an exact match, otherwise create a new partner
+
+            vendor_country_id = False
+            if record.get("VendorCountry"):
+                vendor_country = self.env["res.country"].search(
+                    [("name", "=ilike", record["VendorCountry"])], limit=1
+                )
+                if vendor_country:
+                    vendor_country_id = vendor_country.id
+
             partner_id = res_partner.create(
                 {
                     "name": name,
                     "company_registry": company_registry,
+                    "is_company": company_registry is not False,
                     "ref": code,
                     "street": record.get("VendorAddressline"),
                     "zip": record.get("VendorPostnumber"),
                     "city": record.get("VendorTown"),
-                    # TODO VendorCountry
+                    "country_id": vendor_country_id,
                 }
             )
 
@@ -253,38 +319,47 @@ class NetvisorInvoiceImportMapper(Component):
         # TODO: an option to auto-create new products by code or name
         # TODO: break this method into smaller methods
 
-        price_unit = line.get("UnitPrice", 0)
         product_name = line.get("ProductName", "")
         product_code = line.get("ProductCode", "")
-        vat_percent = line.get("VatPercent", 0)
+        line_values = {}
 
-        if isinstance(price_unit, str):
-            price_unit = float(price_unit.replace(",", "."))
+        # region Line quantity
+        # TODO: Should there be some logic between ordered amount and delivered amount?
+        delivered = line.get("DeliveredAmount") or 0
+        delivered = self._str_to_float(delivered)
 
-        if isinstance(vat_percent, str):
-            vat_percent = float(vat_percent.replace(",", "."))
+        if delivered == 0:
+            ordered = line.get("OrderedAmount") or 0
+            ordered = self._str_to_float(ordered)
 
-        if vat_percent:
-            # Price unit is returned as a gross price
-            price_unit = price_unit / (1 + vat_percent / 100)
+        quantity = delivered or ordered or 1
 
         # In Odoo the invoice type dictates the sign, not the sign on the qty
         qty_factor = -1 if "refund" in move_type else 1
+        # endregion
 
-        # TODO: Should there be some logic between ordered amount and delivered amount?
-        quantity = line.get("DeliveredAmount") or line.get("OrderedAmount") or 0
+        # region Unit price
+        # Untaxed amount
+        line_sum = line.get("LineNetSum", 0)
+        line_sum = self._str_to_float(line_sum)
 
-        line_values = {
-            "netvisor_key": line.get("NetvisorKey"),
-            "name": line.get("Description", ""),
-            "discount": line.get("DiscountPercentage", 0),
-            "price_unit": price_unit,
-            "purchase_price": line.get("PurchasePrice", 0),
-            "quantity": quantity * qty_factor,
-        }
+        discount = line.get("DiscountPercentage", 0)
+        discount = self._str_to_float(discount)
+
+        price_unit = line_sum / quantity
+        if discount:
+            # In Netvisor, the discount is included in unit price
+            price_unit = price_unit / (1 - discount / 100)
+
+        # endregion
+
+        # region VAT
+        vat_percent = line.get("VatPercent", 0)
+        vat_code = line.get("VatCode")
+        vat_percent = self._str_to_float(vat_percent)
 
         if vat_percent:
-            AccountTax = self.env["account.tax"]
+            AccountTax = self.env["account.tax"].sudo()
 
             tax_scope = "purchase" if move_type == "in_invoice" else "sale"
 
@@ -293,6 +368,11 @@ class NetvisorInvoiceImportMapper(Component):
                 "type_tax_use": tax_scope,
                 "price_include": False,
             }
+
+            if vat_code:
+                tax_vals["netvisor_code"] = vat_code
+
+            _logger.debug("Using tax values {}".format(tax_vals))
             tax = AccountTax.search([(k, "=", v) for k, v in tax_vals.items()], limit=1)
 
             if not tax:
@@ -301,6 +381,18 @@ class NetvisorInvoiceImportMapper(Component):
                 tax = AccountTax.create(tax_vals)
 
             line_values["tax_ids"] = [(4, tax.id)]
+        # endregion
+
+        line_values.update(
+            {
+                "netvisor_key": line.get("NetvisorKey"),
+                "name": line.get("Description", ""),
+                "discount": discount,
+                "price_unit": price_unit,
+                "purchase_price": self._str_to_float(line.get("PurchasePrice", 0)),
+                "quantity": quantity * qty_factor,
+            }
+        )
 
         if line.get("Unit", False):
             uom = self.env["uom.uom"]
@@ -319,5 +411,19 @@ class NetvisorInvoiceImportMapper(Component):
 
         if len(product_id) == 1:
             line_values["product_id"] = product_id.id
+        else:
+            if product_code:
+                line_values["name"] = "[{}] {}".format(product_code, product_name)
+            elif product_name:
+                line_values["name"] = product_name
+            else:
+                line_values["name"] = line.get("Description")
 
         return line_values
+
+    def _str_to_float(self, string_value):
+        res = string_value
+        if isinstance(string_value, str):
+            res = float(string_value.replace(",", "."))
+
+        return res

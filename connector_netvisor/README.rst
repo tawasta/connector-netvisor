@@ -8,8 +8,8 @@ Netvisor connector
 
 Integration between Odoo and Netvisor
 
-Configuration
-=============
+Odoo Configuration
+==================
 
 **IMPORTANT!**
 Never user more than one (1) worker for root.netvisor.export_invoice channel.
@@ -26,6 +26,31 @@ After installing the module, create a Netvisor Backend-record for each company.
 
 If you want to use dimensions, go to Settings and enable "Netvisor dimensions".
 
+Netvisor Configuration
+======================
+In Netvisor, go to Settings -> API -> API identifiers
+Create new API identifier for Odoo and give it the following rights in API resource access rights:
+- customerlist.nv
+- getcustomer.nv
+- customer.nv
+- salesinvoicelist.nv
+- getorder.nv
+- getsalesinvoice.nv
+- salesinvoice.nv
+- updatesalesinvoicestatus.nv
+- matchcreditnote.nv
+- productlist.nv
+- getproduct.nv
+- product.nv
+- purchaseinvoicelist.nv
+- getpurchaseinvoice.nv
+- purchaseinvoice.nv
+- getvendor.nv
+- vendor.nv
+- dimensionlist.nv
+- dimensionitem.nv
+
+
 Features
 ========
 - Importing/exporting products
@@ -36,6 +61,8 @@ Features
 - Fetching payment status for sale invoices
 - Importing dimensions
 - Using dimensions in sale invoices
+- Importing purchase invoices from Netvisor
+- Exporting purchase invoice status to Netvisor
 
 Bug Tracker
 ===========
@@ -51,13 +78,13 @@ Credits
 Contributors
 ------------
 
-* Jarmo Kortetjärvi <jarmo.kortetjarvi@tawasta.fi>
+* Jarmo Kortetjärvi <jarmo.kortetjarvi@futural.fi>
 
 Maintainer
 ----------
 
-.. image:: https://tawasta.fi/templates/tawastrap/images/logo.png
-   :alt: Oy Tawasta OS Technologies Ltd.
-   :target: https://tawasta.fi/
+.. image:: https://futural.fi/templates/tawastrap/images/logo.png
+   :alt: Futural Oy
+   :target: https://futural.fi/
 
-This module is maintained by Oy Tawasta OS Technologies Ltd.
+This module is maintained by Futural Oy

@@ -5,55 +5,159 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form" />
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_post'][2]" position="attributes">
-                <attribute name="string">Send to Netvisor</attribute>
+            <xpath expr="//button[@name='action_post'][2]" position="after">
+                <button
+                    name="action_post"
+                    string="Send to Netvisor"
+                    class="oe_highlight"
+                    type="object"
+                    groups="account.group_account_invoice"
+                    data-hotkey="q"
+                    context="{'validate_analytic': True}"
+                    invisible="not netvisor_send or state == 'posted' or (netvisor_bind_ids and move_type in ('out_invoice', 'out_refund'))"
+                />
+                <button
+                    name="action_netvisor_export_invoice"
+                    string="Send to Netvisor"
+                    class="oe_highlight"
+                    type="object"
+                    data-hotkey="q"
+                    groups="account.group_account_invoice"
+                    invisible="not netvisor_send or state != 'posted' or netvisor_bind_ids"
+                />
+            </xpath>
+
+            <xpath expr="//widget[@name='web_ribbon'][1]" position="after">
+                <field name="netvisor_status" invisible="1" />
+                <widget
+                    name="web_ribbon"
+                    id="web_ribbon_creditloss"
+                    bg_color="text-bg-danger"
+                    title="Credit loss"
+                    invisible="netvisor_status != 'creditloss'"
+                />
+            </xpath>
+
+            <xpath expr="//widget[@name='web_ribbon'][1]" position="attributes">
+                <!-- We can't append to this, so override the condition -->
+                <!--<attribute name="invisible">payment_state != 'paid' or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') or netvisor_status == 'creditloss'</attribute>-->
+                <attribute
+                    name="invisible"
+                    separator=" "
+                    add="or netvisor_status == 'creditloss'"
+                />
             </xpath>
 
             <xpath expr="//notebook/page[last()]" position="after">
-                <page string="Netvisor" name="netvisor" groups="base.group_no_one">
-                    <group col="1" groups="queue_job.group_queue_job_manager">
-                        <button
-                            name="action_netvisor_export_invoice"
-                            type="object"
-                            class="oe_highlight"
-                            invisible="state != 'posted'"
-                            string="Send to Netvisor"
-                        />
+                <page
+                    string="Netvisor"
+                    name="netvisor"
+                    groups="account.group_account_invoice"
+                >
+                    <group name="netvisor_action">
+                        <group name="netvisor_action_settings" string="Settings">
+                            <field
+                                name="netvisor_send"
+                                groups="account.group_account_invoice"
+                                widget="boolean_toggle"
+                            />
+                            <field
+                                name="netvisor_delayed_send"
+                                groups="base.group_no_one"
+                                widget="boolean_toggle"
+                            />
+                            <field name="netvisor_status" />
 
-                        <button
-                            name="action_netvisor_import_status"
-                            type="object"
-                            class=""
-                            invisible="state != 'posted'"
-                            help="Update status from Netvisor"
-                            string="Fetch status from Netvisor"
-                        />
+                            <field name="netvisor_sent" />
+                            <div colspan="2">
+                                <button
+                                    name="action_reset_netvisor_sent"
+                                    type="object"
+                                    invisible="not netvisor_sent"
+                                    help="Reset Netvisor sent state to allow resending"
+                                    confirm="Are you sure you want reset the sent state?"
+                                    string="Reset sent state"
+                                    groups="queue_job.group_queue_job_manager"
+                                />
+                            </div>
 
-                        <button
-                            name="action_netvisor_export_status"
-                            type="object"
-                            class="oe_highlight"
-                            invisible="state != 'posted'"
-                            help="Update status to Netvisor"
-                            string="Send status to Netvisor"
-                        />
-                    </group>
+                        </group>
 
-                    <group>
-                        <field name="netvisor_send" groups="base.group_no_one" />
-                        <field
-                            name="netvisor_delayed_send"
-                            groups="base.group_no_one"
-                        />
-                        <field name="netvisor_status" />
+                        <group name="netvisor_action_buttons" string="Actions" col="4">
+                            <p class="oe_grey oe_inline" colspan="3">
+                                Export invoice to Netvisor
+                            </p>
+                            <button
+                                name="action_netvisor_export_invoice"
+                                string="Export invoice"
+                                class="oe_highlight"
+                                type="object"
+                                invisible="not netvisor_send or state != 'posted'"
+                            />
+
+                            <p class="oe_grey oe_inline" colspan="3">
+                                Import invoice information from Netvisor
+                            </p>
+                            <button
+                                name="action_netvisor_import_invoice"
+                                string="Import invoice"
+                                class="oe_highlight btn-warning"
+                                type="object"
+                                confirm="Are you sure you want to re-import data from Netvisor? This will override changes in Odoo"
+                                invisible="not netvisor_bind_ids or state != 'draft'"
+                            />
+
+
+                            <p class="oe_grey oe_inline" colspan="3">
+                                Import invoice status from Netvisor to Odoo
+                            </p>
+                            <button
+                                name="action_netvisor_import_status"
+                                type="object"
+                                class=""
+                                invisible="state != 'posted'"
+                                help="Update status from Netvisor"
+                                string="Import status"
+                                groups="queue_job.group_queue_job_manager"
+                            />
+
+                            <p class="oe_grey oe_inline" colspan="3">
+                                Export invoice status from Odoo to Netvisor
+                            </p>
+                            <button
+                                name="action_netvisor_export_status"
+                                type="object"
+                                class="oe_highlight"
+                                invisible="state != 'posted'"
+                                help="Update status to Netvisor"
+                                string="Export status"
+                            />
+
+                            <p
+                                class="oe_grey oe_inline"
+                                colspan="3"
+                                invisible="not netvisor_bind_ids"
+                            >
+                                Unlink Netvisor invoice. This is irreversible!
+                            </p>
+                            <button
+                                name="action_netvisor_unlink"
+                                confirm="Are you sure you want unlink the Netvisor invoice? This can't be undone."
+                                type="object"
+                                class="btn btn-danger"
+                                invisible="not netvisor_bind_ids"
+                                help="Unlink Netvisor invoice"
+                                string="Unlink invoice"
+                            />
+                        </group>
                     </group>
 
                     <label for="netvisor_bind_ids" />
-                    <field name="netvisor_bind_ids" nolabel="1">
-                        <tree create="false" delete="false">
-                            <field name="backend_id" readonly="1" />
-                            <field name="odoo_id" readonly="1" />
-                            <field name="external_id" readonly="1" />
+                    <field name="netvisor_bind_ids" nolabel="1" readonly="1">
+                        <tree>
+                            <field name="backend_id" />
+                            <field name="odoo_id" />
+                            <field name="external_id" />
                         </tree>
                     </field>
                 </page>

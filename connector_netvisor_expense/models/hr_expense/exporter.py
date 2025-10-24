@@ -62,6 +62,8 @@ class NetvisorExpenseExportMapper(Component):
             },
         )
 
+        msg = ""
+
         if not binding:
             # Create a new record to Netvisor
             res = backend._api_request_post("tripexpense.nv", xml_string)

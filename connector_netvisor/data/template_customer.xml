@@ -9,7 +9,9 @@
             <customer>
                 <customerbaseinformation>
                     <internalidentifier t-esc="partner.ref or ''" />
-                    <externalidentifier t-esc="partner.company_registry or ''" />
+                    <externalidentifier
+                        t-esc="partner.company_registry or ''"
+                    />
                     <!--  This is "OVT identifier, if the information differs from the company's business ID"
                           We don't really have a field/need for it currently
 
@@ -26,7 +28,10 @@
                     <additionaladdressline t-esc="partner.street2 or ''" />
                     <city t-esc="partner.city or ''" />
                     <postnumber t-esc="partner.zip or ''" />
-                    <country type="ISO-3166" t-esc="partner.country_id.code or ''" />
+                    <country
+                        type="ISO-3166"
+                        t-esc="partner.country_id.code or ''"
+                    />
                     <!-- <customergroupname>Test customers</customergroupname> -->
                     <phonenumber t-esc="partner.phone or ''" />
                     <!-- <faxnumber>05 123456</faxnumber> -->

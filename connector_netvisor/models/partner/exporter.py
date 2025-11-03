@@ -25,6 +25,9 @@ class NetvisorPartnerExportMapper(Component):
         :return:
         """
 
+        if not record.netvisor_export:
+            return _("Exporting to Netvisor is disabled for this partner.")
+
         # Force record company for property fields
         if record.company_id:
             record = record.with_company(record.company_id.id)

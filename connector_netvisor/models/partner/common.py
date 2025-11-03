@@ -21,6 +21,12 @@ class Partner(models.Model):
         string="Netvisor Bindings",
     )
 
+    netvisor_export = fields.Boolean(
+        string="Export to Netvisor",
+        help="Disable this to prevent exporting partner to Netvisor",
+        default=True,
+    )
+
     def _compute_notes_plaintext(self):
         for record in self:
             record.comment_plaintext = html2plaintext(record.comment)

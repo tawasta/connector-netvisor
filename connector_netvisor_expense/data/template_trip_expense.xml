@@ -16,7 +16,10 @@
                             t-esc="custom_line.employee_id.identification_id or ''"
                             type="number"
                         />
-                        <ratio t-esc="custom_line.product_id.name" type="name" />
+                        <ratio
+                            t-esc="custom_line.product_id.name"
+                            type="name"
+                        />
                         <amount t-esc="custom_line.quantity" />
                         <customlineunitprice
                             iso4217currencycode="EUR"
@@ -33,7 +36,9 @@
                             t-esc="int(vat) if vat%1==0 else str(vat).replace('.', ',')"
                         />
 
-                        <linedescription t-esc="custom_line.description or ''" />
+                        <linedescription
+                            t-esc="custom_line.description or ''"
+                        />
                         <begindate t-esc="custom_line.date.isoformat() or ''" />
                         <enddate t-esc="custom_line.date.isoformat() or ''" />
                         <expenseaccountnumber
@@ -57,15 +62,22 @@
                         </dimension>
                         </t>
 
-                        <tripexpenseattachments t-if="custom_line.attachment_ids">
-                            <t t-foreach="custom_line.attachment_ids" t-as="attachment">
+                        <tripexpenseattachments
+                            t-if="custom_line.attachment_ids"
+                        >
+                            <t
+                                t-foreach="custom_line.attachment_ids"
+                                t-as="attachment"
+                            >
                                 <tripexpenseattachment>
                                     <mimetype t-esc="attachment.mimetype" />
                                     <attachmentdescription
                                         t-esc="attachment.description or attachment.name"
                                     />
                                     <filename t-esc="attachment.name" />
-                                    <documentdata t-raw="attachment.datas_utf8" />
+                                    <documentdata
+                                        t-raw="attachment.datas_utf8"
+                                    />
                                 </tripexpenseattachment>
                             </t>
                         </tripexpenseattachments>
@@ -86,9 +98,15 @@
                         <passengeramount>0</passengeramount>
                         <kilometeramount t-esc="travel_line.quantity" />
                         <unitprice t-esc="travel_line.price_unit" />
-                        <linedescription t-esc="travel_line.description or ''" />
-                        <traveldate t-esc="travel_lines.date.isoformat() or ''" />
-                        <routedescription t-esc="travel_line.description or ''" />
+                        <linedescription
+                            t-esc="travel_line.description or ''"
+                        />
+                        <traveldate
+                            t-esc="travel_lines.date.isoformat() or ''"
+                        />
+                        <routedescription
+                            t-esc="travel_line.description or ''"
+                        />
 
                         <t
                             t-if="travel_line.analytic_distribution"
@@ -107,7 +125,9 @@
                         </dimension>
                         </t>
 
-                        <tripexpenseattachments t-if="travel_lines.attachment_ids">
+                        <tripexpenseattachments
+                            t-if="travel_lines.attachment_ids"
+                        >
                             <t
                                 t-foreach="travel_lines.attachment_ids"
                                 t-as="attachment"
@@ -118,7 +138,9 @@
                                         t-esc="attachment.description or attachment.name"
                                     />
                                     <filename t-esc="attachment.name" />
-                                    <documentdata t-raw="attachment.datas_utf8" />
+                                    <documentdata
+                                        t-raw="attachment.datas_utf8"
+                                    />
                                 </tripexpenseattachment>
                             </t>
                         </tripexpenseattachments>
@@ -127,7 +149,10 @@
                 </travellines>
 
                 <dailycompensationlines t-if="daily_lines">
-                    <dailycompensationline t-foreach="daily_lines" t-as="daily_line">
+                    <dailycompensationline
+                        t-foreach="daily_lines"
+                        t-as="daily_line"
+                    >
                         <employeeidentifier
                             t-esc="daily_line.employee_id.identification_id or ''"
                             type="number"
@@ -139,7 +164,9 @@
                         <unitprice t-esc="daily_line.price_unit" />
                         <linedescription t-esc="daily_line.description or ''" />
                         <!-- TODO: Configurable time of departure, return -->
-                        <timeofdeparture t-esc="daily_line.date.isoformat() or ''" />
+                        <timeofdeparture
+                            t-esc="daily_line.date.isoformat() or ''"
+                        />
                         <returntime t-esc="daily_line.date.isoformat() or ''" />
 
                         <t
@@ -159,15 +186,22 @@
                         </dimension>
                         </t>
 
-                        <tripexpenseattachments t-if="daily_line.attachment_ids">
-                            <t t-foreach="daily_line.attachment_ids" t-as="attachment">
+                        <tripexpenseattachments
+                            t-if="daily_line.attachment_ids"
+                        >
+                            <t
+                                t-foreach="daily_line.attachment_ids"
+                                t-as="attachment"
+                            >
                                 <tripexpenseattachment>
                                     <mimetype t-esc="attachment.mimetype" />
                                     <attachmentdescription
                                         t-esc="attachment.description or attachment.name"
                                     />
                                     <filename t-esc="attachment.name" />
-                                    <documentdata t-raw="attachment.datas_utf8" />
+                                    <documentdata
+                                        t-raw="attachment.datas_utf8"
+                                    />
                                 </tripexpenseattachment>
                             </t>
                         </tripexpenseattachments>

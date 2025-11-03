@@ -13,7 +13,10 @@
                     t-esc="invoice.invoice_date.isoformat() or ''"
                 />
                 <invoiceSource>manual</invoiceSource>
-                <eventDate format="ansi" t-esc="invoice.date.isoformat() or ''" />
+                <eventDate
+                    format="ansi"
+                    t-esc="invoice.date.isoformat() or ''"
+                />
                 <dueDate
                     format="ansi"
                     t-esc="invoice.invoice_date_due.isoformat() or ''"
@@ -25,7 +28,9 @@
                 <vendorAddressLine t-esc="street + ' ' + street2" />
                 <vendorPostNumber t-esc="invoice.partner_id.zip or ''" />
                 <vendorCity t-esc="invoice.partner_id.city or ''" />
-                <vendorCountry t-esc="invoice.partner_id.country_id.code or ''" />
+                <vendorCountry
+                    t-esc="invoice.partner_id.country_id.code or ''"
+                />
                 <vendorPhoneNumber t-esc="invoice.partner_id.phone or ''" />
                 <vendoremail t-esc="invoice.partner_id.email or ''" />
                 <vendorHomePage t-esc="invoice.partner_id.website or ''" />
@@ -55,20 +60,34 @@
                 <purchaseInvoiceLines>
                     <purchaseInvoiceLine t-foreach="invoice_lines" t-as="line">
                         <!-- Normal invoice lines -->
-                        <productCode t-esc="line.product_id.default_code or ''" />
-                        <productName t-esc="line.name and line.name[0:200] or ''" />
+                        <productCode
+                            t-esc="line.product_id.default_code or ''"
+                        />
+                        <productName
+                            t-esc="line.name and line.name[0:200] or ''"
+                        />
                         <!-- Negative quantity for refunds -->
                         <deliveredAmount
                             t-esc="line.quantity if invoice.move_type != 'in_refund' else line.quantity * -1"
                         />
                         <unitPrice t-esc="line.price_total / line.quantity" />
                         <discountPercentage t-esc="line.discount" />
-                        <vatPercent t-esc="sum(line.mapped('tax_ids.amount'))" />
-                        <lineSum type="brutto" t-esc="round(line.price_total, 2)" />
+                        <vatPercent
+                            t-esc="sum(line.mapped('tax_ids.amount'))"
+                        />
+                        <lineSum
+                            type="brutto"
+                            t-esc="round(line.price_total, 2)"
+                        />
                         <description t-esc="line.name" />
-                        <accountingSuggestion t-esc="line.account_id.code or ''" />
+                        <accountingSuggestion
+                            t-esc="line.account_id.code or ''"
+                        />
 
-                        <t t-if="line.analytic_distribution" id="dimension_wrapper">
+                        <t
+                            t-if="line.analytic_distribution"
+                            id="dimension_wrapper"
+                        >
                         <dimension
                                 t-foreach="list(line.analytic_distribution.keys())[0].split(',')"
                                 t-as="dimension"
@@ -84,7 +103,10 @@
                     </purchaseInvoiceLine>
                 </purchaseInvoiceLines>
                 <purchaseInvoiceCommentLines t-if="comment_lines">
-                    <purchaseInvoiceCommentLine t-foreach="comment_lines" t-as="line">
+                    <purchaseInvoiceCommentLine
+                        t-foreach="comment_lines"
+                        t-as="line"
+                    >
                         <!-- Comment lines -->
                         <t t-if="line.display_type != 'product'">
                             <comment t-esc="line.name or ''" />

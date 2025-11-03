@@ -55,7 +55,10 @@
                     groups="account.group_account_invoice"
                 >
                     <group name="netvisor_action">
-                        <group name="netvisor_action_settings" string="Settings">
+                        <group
+                            name="netvisor_action_settings"
+                            string="Settings"
+                        >
                             <field
                                 name="netvisor_send"
                                 groups="account.group_account_invoice"
@@ -83,7 +86,11 @@
 
                         </group>
 
-                        <group name="netvisor_action_buttons" string="Actions" col="4">
+                        <group
+                            name="netvisor_action_buttons"
+                            string="Actions"
+                            col="4"
+                        >
                             <p class="oe_grey oe_inline" colspan="3">
                                 Export invoice to Netvisor
                             </p>

@@ -6,7 +6,7 @@
 Netvisor Connector Accrual rule support
 =======================================
 
-Add accrual rules to invoices
+Use accrual rules with Netvisor integration
 
 Configuration
 =============

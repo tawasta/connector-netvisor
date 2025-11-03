@@ -6,7 +6,7 @@
 Netvisor Connector Subscription support
 =======================================
 
-Allows Netvisor-integration to handle subscription invoices
+Allows Netvisor integration to handle subscription invoices
 
 Configuration
 =============

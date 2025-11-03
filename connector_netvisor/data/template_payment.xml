@@ -19,9 +19,14 @@
                     <address t-esc="record.partner_id.street" />
                     <postcode t-esc="record.partner_id.zip" />
                     <town t-esc="record.partner_id.city" />
-                <country type="ISO-3166" t-esc="record.partner_id.country_id.code" />
+                <country
+                        type="ISO-3166"
+                        t-esc="record.partner_id.country_id.code"
+                    />
                 </recipient>
-                <sourcebankaccountnumber t-esc="record.journal_id.bank_acc_number" />
+                <sourcebankaccountnumber
+                    t-esc="record.journal_id.bank_acc_number"
+                />
                 <destinationbankaccount>
                     <bankname t-esc="record.partner_bank_id.bank_id.name" />
                     <bankbranch t-esc="record.partner_bank_id.bank_id.bic" />

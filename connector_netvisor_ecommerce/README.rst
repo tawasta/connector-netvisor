@@ -6,7 +6,7 @@
 Netvisor Connector eCommerce support
 ====================================
 
-Use Netvisor with eCommerce.
+Use Netvisor integration with eCommerce
 - Will send invoices as delayed jobs instead of instant sending. This will prevent server errors from end users, if sending will fail.
 
 Configuration

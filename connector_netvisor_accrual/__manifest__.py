@@ -20,7 +20,7 @@
 
 {
     "name": "Netvisor Connector Accrual rule support",
-    "summary": "Add accrual rules to invoices",
+    "summary": "Use accrual rules with Netvisor integration",
     "version": "17.0.1.1.0",
     "category": "Sales",
     "website": "https://gitlab.com/tawasta/odoo/connector-netvisor",

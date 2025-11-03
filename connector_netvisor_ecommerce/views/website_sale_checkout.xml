@@ -7,9 +7,15 @@
         customize_show="True"
         active="True"
     >
-        <xpath expr="//input[@id='shipping_use_same']/../../../.." position="after">
+        <xpath
+            expr="//input[@id='shipping_use_same']/../../../.."
+            position="after"
+        >
             <t t-if="mode == ('new', 'billing') or mode == ('edit', 'billing')">
-                <div class="col-lg-12 hide-company" id="transmit_method_snailmail_div">
+                <div
+                    class="col-lg-12 hide-company"
+                    id="transmit_method_snailmail_div"
+                >
                     <div class="form-check form-switch mt-2 mb-3">
                       <label><input
                                 type="checkbox"

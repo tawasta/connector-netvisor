@@ -6,7 +6,7 @@
 Netvisor Connector Expense support
 ==================================
 
-Add support for travel expenses
+Use travel expenses with Netvisor integration
 
 Configuration
 =============

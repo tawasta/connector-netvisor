@@ -20,7 +20,7 @@
 
 {
     "name": "Netvisor Connector Subscription support",
-    "summary": "Allows Netvisor-integration to handle subscription invoices",
+    "summary": "Allows Netvisor integration to handle subscription invoices",
     "version": "17.0.1.0.0",
     "category": "Sales",
     "website": "https://gitlab.com/tawasta/odoo/connector-netvisor",

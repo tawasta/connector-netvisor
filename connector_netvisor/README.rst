@@ -30,6 +30,7 @@ Netvisor Configuration
 ======================
 In Netvisor, go to Settings -> API -> API identifiers
 Create new API identifier for Odoo and give it the following rights in API resource access rights:
+
 - customerlist.nv
 - getcustomer.nv
 - customer.nv

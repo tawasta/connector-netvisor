@@ -20,18 +20,32 @@
                     groups="queue_job.group_queue_job_manager"
                 >
                     <group>
-                        <button
-                            name="action_netvisor_export_record"
-                            type="object"
-                            class="oe_highlight"
-                            string="Send to Netvisor"
-                        />
-                        <button
-                            name="action_netvisor_import_customer"
-                            type="object"
-                            class=""
-                            string="Update from Netvisor"
-                        />
+                        <group colspan="2">
+                            <field
+                                name="netvisor_export"
+                                widget="boolean_toggle"
+                            />
+                        </group>
+                        <group>
+                            <button
+                                name="action_netvisor_export_record"
+                                type="object"
+                                class="oe_highlight"
+                                string="Export to Netvisor"
+                                invisible="not netvisor_export"
+                                colspan="2"
+                            />
+                        </group>
+                        <group>
+                            <button
+                                name="action_netvisor_import_customer"
+                                type="object"
+                                class=""
+                                string="Update from Netvisor"
+                                invisible="not netvisor_bind_ids"
+                                colspan="2"
+                            />
+                        </group>
                     </group>
 
                     <label for="netvisor_bind_ids" />

@@ -250,11 +250,14 @@ class NetvisorInvoiceExportMapper(Component):
     def export_status_to_netvisor(self, record):
         """Export invoice status to Netvisor"""
         netvisor_status = record.netvisor_status
-        print(netvisor_status)
 
         if record.payment_state == "reversed":
             netvisor_status = "paid"
-        elif netvisor_status == "unsent" and record.is_move_sent:
+        elif (
+            netvisor_status == "unsent"
+            and record.is_move_sent
+            and record.payment_state != "paid"
+        ):
             netvisor_status = "open"
 
         _logger.debug("Export '{}' status as '{}'".format(record.name, netvisor_status))

@@ -69,7 +69,10 @@ class NetvisorDimensionImportMapper(Component):
 
         # Create individual jobs for creating the dimension items
         dimension_item = self.env["netvisor.dimension.item"]
-        dimension_detail = dimension.get("DimensionDetails").get("DimensionDetail")
+        dimension_details = dimension.get("DimensionDetails")
+        dimension_detail = (
+            dimension_details.get("DimensionDetail") if dimension_details else {}
+        )
 
         if isinstance(dimension_detail, dict):
             # If only one dimension detail is returned, it's not in a list

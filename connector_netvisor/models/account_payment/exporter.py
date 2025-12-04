@@ -62,12 +62,14 @@ class NetvisorPaymentExportMapper(Component):
                     invoice.netvisor_delayed_send = False
 
                 if invoice.netvisor_status != "open":
-                    # Set invoice Netvisor status to "open" to allow allocating a payment in Netvisor
+                    # Set invoice Netvisor status to "open"
+                    # to allow allocating a payment in Netvisor
                     tmp_status = invoice.netvisor_status
                     invoice.netvisor_status = "open"
                     invoice.action_netvisor_export_status()
 
-                    # Set invoice Netvisor status back to original status (usually "paid" here)
+                    # Set invoice Netvisor status back to original status
+                    # (usually "paid" here)
                     invoice.netvisor_status = tmp_status
 
                 invoice.message_post(body=msg)

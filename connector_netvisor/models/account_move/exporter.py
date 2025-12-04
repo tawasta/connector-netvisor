@@ -15,6 +15,8 @@ class NetvisorInvoiceExportMapper(Component):
     _usage = "export.mapper"
     _apply_on = ["netvisor.invoice"]
 
+    # TODO: Add helper functions to reduce complexity
+    # flake8: noqa: C901
     def export_invoice(self, backend, record):
         """
         Export invoice from Odoo to Netvisor
@@ -54,7 +56,8 @@ class NetvisorInvoiceExportMapper(Component):
             if record.is_sale_document() and not line.product_id:
                 raise ValidationError(
                     _(
-                        "Using product in invoice lines is mandatory! Please add a product to all invoice lines"
+                        "Using product in invoice lines is mandatory! "
+                        "Please add a product to all invoice lines"
                     )
                 )
 
@@ -78,14 +81,11 @@ class NetvisorInvoiceExportMapper(Component):
             [(r.id, (r.root_plan_id.name, r.name)) for r in analytic_accounts]
         )
         for line in record.invoice_line_ids:
+            msg = _("Only 100% analytic distribution is supported by Netvisor!")
             if line.analytic_distribution:
                 for ad in line.analytic_distribution.values():
                     if ad != 100.0:
-                        raise ValidationError(
-                            _(
-                                "Only 100% analytic distribution is supported by Netvisor!"
-                            )
-                        )
+                        raise ValidationError(msg)
 
         update_allowed = False
         if record.is_sale_document():
@@ -96,6 +96,11 @@ class NetvisorInvoiceExportMapper(Component):
             template = "connector_netvisor.netvisor_purchaseinvoice"
             endpoint = "purchaseinvoice.nv"
             update_allowed = backend.purchase_invoice_allow_updating
+        else:
+            template = False
+            raise ValidationError(
+                _("Only customer and supplier invoices are supported")
+            )
 
         xml_string = self.env["ir.qweb"]._render(
             template,
@@ -151,8 +156,10 @@ class NetvisorInvoiceExportMapper(Component):
                 )
                 raise ValidationError(msg)
 
-            # Set invoice as sent and commit that to prevent a situation where we manage to send an invoice
-            # to Netvisor, but don't receive a reply (due to a timeout or something like that)
+            # Set invoice as sent and commit that
+            # to prevent a situation where we manage to send an invoice
+            # to Netvisor, but don't receive a reply
+            # (due to a timeout or something like that)
             record.netvisor_sent = fields.Datetime.now()
             self.env.cr.commit()
 
@@ -230,9 +237,8 @@ class NetvisorInvoiceExportMapper(Component):
 
             if tax.netvisor_code == "-":
                 err = _(
-                    "The tax '{}' is misconfigured. Please configure 'Netvisor VAT code' for that".format(
-                        tax.name
-                    )
+                    f"The tax '{tax.name}' is misconfigured. "
+                    "Please configure 'Netvisor VAT code' for that"
                 )
                 raise ValidationError(err)
 

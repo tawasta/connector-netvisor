@@ -148,7 +148,8 @@ class NetvisorBackend(models.Model):
     )
     customer_invoice_override_total_amount = fields.Boolean(
         string="Override total amount",
-        help="If this is selected, Netvisor will not calculate the total amount from invoice rows",
+        help="If this is selected, "
+        "Netvisor will not calculate the total amount from invoice rows",
         default=False,
     )
     customer_invoice_writeoff_account_id = fields.Many2one(
@@ -174,7 +175,8 @@ class NetvisorBackend(models.Model):
     # Customer settings
     customer_import_create = fields.Boolean(
         string="Create new customers on import",
-        help="When importing customer that doesn't exist in Odoo, create a new partner",
+        help="When importing customer that doesn't exist in Odoo, "
+        "create a new partner",
         default=True,
     )
     customer_import_update = fields.Boolean(
@@ -192,7 +194,8 @@ class NetvisorBackend(models.Model):
     )
     supplier_import_create = fields.Boolean(
         string="Create new suppliers on import",
-        help="When importing supplier that doesn't exist in Odoo, create a new partner",
+        help="When importing supplier that doesn't exist in Odoo, "
+        "create a new partner",
         default=True,
     )
     supplier_import_update = fields.Boolean(
@@ -204,7 +207,8 @@ class NetvisorBackend(models.Model):
     # Product settings
     product_import_create = fields.Boolean(
         string="Create new products on import",
-        help="When importing products that doesn't exist in Odoo, create a new products",
+        help="When importing products that doesn't exist in Odoo, "
+        "create a new products",
         default=True,
     )
     product_import_update = fields.Boolean(
@@ -381,6 +385,8 @@ class NetvisorBackend(models.Model):
 
         return url
 
+    # TODO: Make smarter response handling
+    # flake8: noqa: C901
     def _parse_response(self, response):
         text = xmltodict.parse(response.text)
         headers = response.headers
@@ -397,7 +403,9 @@ class NetvisorBackend(models.Model):
         try:
             response_status = root.get("ResponseStatus") or {}
         except AttributeError as e:
-            raise Exception(f"Error while trying to parse response '{root}': '{e}'")
+            raise Exception(
+                f"Error while trying to parse response '{root}': '{e}'"
+            ) from e
 
         response_status_list = response_status.get("Status")
 

@@ -26,6 +26,8 @@ class NetvisorPartnerImportMapper(Component):
         endpoint = f"getcustomer.nv?id={netvisor_key}"
         return self.import_partner(backend, netvisor_key, endpoint)
 
+    # TODO: Add helper functions to reduce complexity
+    # flake8: noqa: C901
     def import_partner(self, backend, netvisor_key, endpoint):
         """
         Import or update a partner from Netvisor

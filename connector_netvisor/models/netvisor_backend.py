@@ -98,6 +98,11 @@ class NetvisorBackend(models.Model):
     )
 
     # Customer invoice settings
+    customer_invoice_auto_export = fields.Boolean(
+        string="Auto-export customer invoices",
+        help="Uncheck this to skip sending customer invoices automatically to Netvisor",
+        default=True,
+    )
     auto_open_refunds = fields.Boolean(
         string="Set refunds as sent",
         help="When sending a refund invoice, mark it as sent (open)",
@@ -159,6 +164,11 @@ class NetvisorBackend(models.Model):
     )
 
     # Purchase invoice settings
+    purchase_invoice_auto_export = fields.Boolean(
+        string="Auto-export purchase invoices",
+        help="Uncheck this to skip sending purchase invoices automatically to Netvisor",
+        default=True,
+    )
     purchases_start_date = fields.Datetime(
         string="Import start date",
         help="When fetching the purchase invoices, use this date as the "

@@ -85,9 +85,9 @@
                         </page>
 
                         <page name="purchase_invoices" string="Purchase invoices">
-                            <group name="purchase_invoices_group">
+                            <group name="purchase_invoices_import_group">
                                 <group
-                                    name="purchase_invoices_group_import"
+                                    name="purchase_invoices_import_group_import"
                                     string="Import"
                                 >
                                     <p class="oe_grey oe_inline" colspan="2">
@@ -103,7 +103,7 @@
                                     />
                                 </group>
                                 <group
-                                    name="purchase_invoices_group_import_settings"
+                                    name="purchase_invoices_import_group_settings"
                                     string="Import settings"
                                 >
                                     <field name="purchases_start_date" />
@@ -111,6 +111,17 @@
                                         name="purchase_invoice_allow_updating"
                                         widget="boolean_toggle"
                                     />
+                                </group>
+                                <group name="purchase_invoices_export_group">
+                                    <group
+                                        name="purchase_invoices_export_group_settings"
+                                        string="Export settings"
+                                    >
+                                        <field
+                                            name="purchase_invoice_auto_export"
+                                            widget="boolean_toggle"
+                                        />
+                                    </group>
                                 </group>
                             </group>
                         </page>

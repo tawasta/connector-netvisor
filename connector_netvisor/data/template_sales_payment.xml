@@ -7,10 +7,7 @@
     <template id="netvisor_sales_payment">
         <root>
             <salespayment>
-                <sum
-                    t-esc="record.amount"
-                    t-att-currency="record.currency_id.name"
-                />
+                <sum t-esc="record.amount" t-att-currency="record.currency_id.name" />
                 <paymentdate t-esc="record.date.isoformat()" />
 
                 <t

@@ -41,7 +41,7 @@ class NetvisorDimensionImportMapper(Component):
             # Binding exists: update values
             existing_binding.odoo_id.write(values)
             existing_record = existing_binding.odoo_id
-            res = _("Updated values for dimension '{}'".format(existing_binding.name))
+            res = _(f"Updated values for dimension '{existing_binding.name}'")
         else:
             # No existing binding
             binding_values = {"backend_id": backend.id, "external_id": netvisor_key}
@@ -54,22 +54,21 @@ class NetvisorDimensionImportMapper(Component):
                 binding_values["odoo_id"] = existing_record.id
                 netvisor_model.create(binding_values)
                 existing_record.write(values)
-                res = _(
-                    "Updated values for dimension '{}'".format(existing_record.name)
-                )
+                res = _(f"Updated values for dimension '{existing_record.name}'")
             else:
                 # No dimension found. Create a new dimension and binding
                 existing_record = odoo_model.create(values)
                 binding_values["odoo_id"] = existing_record.id
                 netvisor_model.create(binding_values)
 
-                res = _(
-                    "Created a new dimension '{}'".format(existing_record.display_name)
-                )
+                res = _(f"Created a new dimension '{existing_record.display_name}'")
 
         # Create individual jobs for creating the dimension items
         dimension_item = self.env["netvisor.dimension.item"]
-        dimension_detail = dimension.get("DimensionDetails").get("DimensionDetail")
+        dimension_details = dimension.get("DimensionDetails")
+        dimension_detail = (
+            dimension_details.get("DimensionDetail") if dimension_details else {}
+        )
 
         if isinstance(dimension_detail, dict):
             # If only one dimension detail is returned, it's not in a list

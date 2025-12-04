@@ -18,11 +18,7 @@
         <field eval="False" name="doall" />
     </record>
 
-    <record
-        id="ir_cron_netvisor_payments_import"
-        model="ir.cron"
-        forcecreate="True"
-    >
+    <record id="ir_cron_netvisor_payments_import" model="ir.cron" forcecreate="True">
         <field name="name">Netvisor: Import payments</field>
         <field name="model_id" ref="model_netvisor_backend" />
         <field name="state">code</field>
@@ -35,11 +31,7 @@
         <field eval="False" name="doall" />
     </record>
 
-    <record
-        id="ir_cron_netvisor_dimension_import"
-        model="ir.cron"
-        forcecreate="True"
-    >
+    <record id="ir_cron_netvisor_dimension_import" model="ir.cron" forcecreate="True">
         <field name="name">Netvisor: Import/update dimensions</field>
         <field name="model_id" ref="model_netvisor_backend" />
         <field name="state">code</field>

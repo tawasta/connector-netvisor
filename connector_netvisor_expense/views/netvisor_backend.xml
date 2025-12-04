@@ -3,10 +3,7 @@
     <record id="view_netvisor_backend_form" model="ir.ui.view">
         <field name="name">Netvisor backend form expense</field>
         <field name="model">netvisor.backend</field>
-        <field
-            name="inherit_id"
-            ref="connector_netvisor.view_netvisor_backend_form"
-        />
+        <field name="inherit_id" ref="connector_netvisor.view_netvisor_backend_form" />
         <field name="arch" type="xml">
             <page name="dimensions" position="after">
                 <page name="expenses" string="Expenses">
@@ -27,10 +24,7 @@
                                 string="Import salary types"
                             />
                         </group>
-                        <group
-                            name="expenses_group_settings"
-                            string="Expense Settings"
-                        >
+                        <group name="expenses_group_settings" string="Expense Settings">
 
                         </group>
                     </group>

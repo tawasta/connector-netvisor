@@ -36,9 +36,7 @@ class NetvisorDimensionItemImportMapper(Component):
         if existing_binding:
             # Binding exists: update values
             existing_binding.odoo_id.write(values)
-            return _(
-                "Updated values for dimension item '{}'".format(existing_binding.name)
-            )
+            return _(f"Updated values for dimension item '{existing_binding.name}'")
         else:
             # No existing binding
             binding_values = {"backend_id": backend.id, "external_id": netvisor_key}
@@ -51,11 +49,7 @@ class NetvisorDimensionItemImportMapper(Component):
                 binding_values["odoo_id"] = existing_record.id
                 netvisor_model.create(binding_values)
                 existing_record.write(values)
-                return _(
-                    "Updated values for dimension item '{}'".format(
-                        existing_record.name
-                    )
-                )
+                return _(f"Updated values for dimension item '{existing_record.name}'")
             else:
                 # No dimension found. Create a new dimension and binding
                 existing_record = odoo_model.create(values)
@@ -63,9 +57,7 @@ class NetvisorDimensionItemImportMapper(Component):
                 netvisor_model.create(binding_values)
 
                 return _(
-                    "Created a new dimension item '{}'".format(
-                        existing_record.display_name
-                    )
+                    f"Created a new dimension item '{existing_record.display_name}'"
                 )
 
     # Netvisor, Odoo

@@ -2,14 +2,8 @@
 <odoo noupdate="1">
 
     <!-- Sale invoices -->
-    <record
-        id="job_function_netvisor_export_invoice"
-        model="queue.job.function"
-    >
-        <field
-            name="model_id"
-            ref="connector_netvisor.model_netvisor_invoice"
-        />
+    <record id="job_function_netvisor_export_invoice" model="queue.job.function">
+        <field name="model_id" ref="connector_netvisor.model_netvisor_invoice" />
         <field name="method">netvisor_export_invoice</field>
         <field name="channel_id" ref="channel_netvisor_export_invoice" />
     </record>
@@ -18,10 +12,7 @@
         id="job_function_netvisor_netvisor_import_status"
         model="queue.job.function"
     >
-        <field
-            name="model_id"
-            ref="connector_netvisor.model_netvisor_invoice"
-        />
+        <field name="model_id" ref="connector_netvisor.model_netvisor_invoice" />
         <field name="method">netvisor_import_status</field>
         <field name="channel_id" ref="channel_netvisor" />
     </record>
@@ -30,37 +21,22 @@
         id="job_function_netvisor_netvisor_export_status"
         model="queue.job.function"
     >
-        <field
-            name="model_id"
-            ref="connector_netvisor.model_netvisor_invoice"
-        />
+        <field name="model_id" ref="connector_netvisor.model_netvisor_invoice" />
         <field name="method">netvisor_export_status</field>
         <field name="channel_id" ref="channel_netvisor" />
     </record>
 
     <!-- Credit notes -->
-    <record
-        id="job_function_netvisor_match_credit_note"
-        model="queue.job.function"
-    >
-        <field
-            name="model_id"
-            ref="connector_netvisor.model_netvisor_invoice"
-        />
+    <record id="job_function_netvisor_match_credit_note" model="queue.job.function">
+        <field name="model_id" ref="connector_netvisor.model_netvisor_invoice" />
         <field name="method">netvisor_match_credit_note</field>
         <field name="retry_pattern" eval="{1: 480, 2: 720, 3: 1440}" />
         <field name="channel_id" ref="channel_netvisor" />
     </record>
 
     <!-- Payments -->
-    <record
-        id="job_function_netvisor_import_payments"
-        model="queue.job.function"
-    >
-        <field
-            name="model_id"
-            ref="connector_netvisor.model_netvisor_payment"
-        />
+    <record id="job_function_netvisor_import_payments" model="queue.job.function">
+        <field name="model_id" ref="connector_netvisor.model_netvisor_payment" />
         <field name="method">netvisor_import_payments</field>
         <field name="retry_pattern" eval="{1: 480, 2: 720, 3: 1440}" />
         <field name="channel_id" ref="channel_netvisor" />
@@ -71,10 +47,7 @@
         id="job_function_netvisor_netvisor_export_customer"
         model="queue.job.function"
     >
-        <field
-            name="model_id"
-            ref="connector_netvisor.model_netvisor_invoice"
-        />
+        <field name="model_id" ref="connector_netvisor.model_netvisor_invoice" />
         <field name="method">netvisor_export_customer</field>
         <field name="channel_id" ref="channel_netvisor" />
     </record>
@@ -83,10 +56,7 @@
         id="job_function_netvisor_netvisor_import_customer"
         model="queue.job.function"
     >
-        <field
-            name="model_id"
-            ref="connector_netvisor.model_netvisor_invoice"
-        />
+        <field name="model_id" ref="connector_netvisor.model_netvisor_invoice" />
         <field name="method">netvisor_import_customer</field>
         <field name="channel_id" ref="channel_netvisor" />
     </record>
@@ -96,10 +66,7 @@
         id="job_function_netvisor_netvisor_export_product"
         model="queue.job.function"
     >
-        <field
-            name="model_id"
-            ref="connector_netvisor.model_netvisor_invoice"
-        />
+        <field name="model_id" ref="connector_netvisor.model_netvisor_invoice" />
         <field name="method">netvisor_export_product</field>
         <field name="channel_id" ref="channel_netvisor" />
     </record>
@@ -108,10 +75,7 @@
         id="job_function_netvisor_netvisor_import_product"
         model="queue.job.function"
     >
-        <field
-            name="model_id"
-            ref="connector_netvisor.model_netvisor_invoice"
-        />
+        <field name="model_id" ref="connector_netvisor.model_netvisor_invoice" />
         <field name="method">netvisor_import_product</field>
         <field name="channel_id" ref="channel_netvisor" />
     </record>

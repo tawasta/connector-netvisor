@@ -60,12 +60,8 @@
                                         name="customer_invoice_use_product_name"
                                         widget="boolean_toggle"
                                     />
-                                    <field
-                                        name="customer_invoice_our_reference"
-                                    />
-                                    <field
-                                        name="customer_invoice_your_reference"
-                                    />
+                                    <field name="customer_invoice_our_reference" />
+                                    <field name="customer_invoice_your_reference" />
                                     <field
                                         name="customer_invoice_writeoff_account_id"
                                     />
@@ -88,10 +84,7 @@
                             </group>
                         </page>
 
-                        <page
-                            name="purchase_invoices"
-                            string="Purchase invoices"
-                        >
+                        <page name="purchase_invoices" string="Purchase invoices">
                             <group name="purchase_invoices_group">
                                 <group
                                     name="purchase_invoices_group_import"
@@ -124,10 +117,7 @@
 
                         <page name="payments" string="Payments">
                             <group name="payments_group">
-                                <group
-                                    name="payments_group_import"
-                                    string="Import"
-                                >
+                                <group name="payments_group_import" string="Import">
                                     <p class="oe_grey oe_inline" colspan="2">
                                         Import payments from Netvisor
                                     </p>
@@ -151,10 +141,7 @@
 
                         <page name="customers" string="Customers">
                             <group name="customers_group">
-                                <group
-                                    name="customers_group_import"
-                                    string="Import"
-                                >
+                                <group name="customers_group_import" string="Import">
                                     <p class="oe_grey oe_inline" colspan="2">
                                         Import or update all customers from Netvisor.
                                         <br />
@@ -189,10 +176,7 @@
 
                         <page name="supplier" string="Suppliers">
                             <group name="suppliers_group">
-                                <group
-                                    name="suppliers_group_import"
-                                    string="Import"
-                                >
+                                <group name="suppliers_group_import" string="Import">
                                     <p class="oe_grey oe_inline" colspan="2">
                                         Import or update all suppliers from Netvisor.
                                         <br />
@@ -295,10 +279,7 @@
 
                         <page name="dimensions" string="Dimensions">
                             <group name="dimensions_group_import">
-                                <group
-                                    name="dimensions_group_import"
-                                    string="Import"
-                                >
+                                <group name="dimensions_group_import" string="Import">
                                     <p class="oe_grey oe_inline" colspan="2">
                                         Import or update all dimensions from Netvisor.
                                         <br />

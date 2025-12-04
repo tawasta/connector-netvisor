@@ -35,11 +35,11 @@ class AccountMove(models.Model):
     )
 
     netvisor_send = fields.Boolean(
-        string="Send to netvisor",
+        string="Send to Netvisor",
         help="Uncheck this to skip sending the invoice to Netvisor on confirm",
         compute="_compute_netvisor_send",
         store=True,
-        default=True,
+        readonly=False,
     )
 
     netvisor_sent = fields.Datetime(

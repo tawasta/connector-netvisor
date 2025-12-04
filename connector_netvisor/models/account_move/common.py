@@ -37,6 +37,8 @@ class AccountMove(models.Model):
     netvisor_send = fields.Boolean(
         string="Send to netvisor",
         help="Uncheck this to skip sending the invoice to Netvisor on confirm",
+        compute="_compute_netvisor_send",
+        store=True,
         default=True,
     )
 
@@ -108,6 +110,28 @@ class AccountMove(models.Model):
                 record.show_reset_to_draft_button = False
 
         return res
+
+    @api.depends("company_id", "move_type")
+    def _compute_netvisor_send(self):
+        for record in self:
+            backend = (
+                self.sudo()
+                .env["netvisor.invoice"]
+                .get_netvisor_backend(record.company_id.id)
+            )
+
+            if not backend:
+                # No backend found, no sending
+                record.netvisor_send = False
+            elif record.is_sale_document():
+                # Send according to backend setting
+                record.netvisor_send = backend.customer_invoice_auto_export
+            elif record.is_purchase_document():
+                # Send according to backend setting
+                record.netvisor_send = backend.purchase_invoice_auto_export
+            else:
+                # Don't send other types of account.moves
+                record.netvisor_send = False
 
     def write(self, vals):
         res = super().write(vals)

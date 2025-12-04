@@ -49,9 +49,7 @@ class Partner(models.Model):
 
             if use_queue:
                 # Queued sending
-                job_desc = _(
-                    "Netvisor: export customer '{}'".format(record.display_name)
-                )
+                job_desc = _(f"Netvisor: export customer '{record.display_name}'")
                 netvisor_model.with_delay(
                     description=job_desc
                 ).netvisor_export_customer(record, company_id)

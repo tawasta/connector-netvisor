@@ -1,13 +1,12 @@
+import logging
+
 from psycopg2 import IntegrityError
 
 from odoo import _
 from odoo.exceptions import UserError, ValidationError
-from odoo.addons.queue_job.exception import RetryableJobError
-
 
 from odoo.addons.component.core import Component
-
-import logging
+from odoo.addons.queue_job.exception import RetryableJobError
 
 _logger = logging.getLogger(__name__)
 
@@ -63,12 +62,14 @@ class NetvisorPaymentExportMapper(Component):
                     invoice.netvisor_delayed_send = False
 
                 if invoice.netvisor_status != "open":
-                    # Set invoice Netvisor status to "open" to allow allocating a payment in Netvisor
+                    # Set invoice Netvisor status to "open"
+                    # to allow allocating a payment in Netvisor
                     tmp_status = invoice.netvisor_status
                     invoice.netvisor_status = "open"
                     invoice.action_netvisor_export_status()
 
-                    # Set invoice Netvisor status back to original status (usually "paid" here)
+                    # Set invoice Netvisor status back to original status
+                    # (usually "paid" here)
                     invoice.netvisor_status = tmp_status
 
                 invoice.message_post(body=msg)
@@ -89,7 +90,7 @@ class NetvisorPaymentExportMapper(Component):
                     # Binding already exists
                     pass
 
-                msg = _("Created payment '{}'".format(record.display_name))
+                msg = _(f"Created payment '{record.display_name}'")
 
             else:
                 raise UserError(

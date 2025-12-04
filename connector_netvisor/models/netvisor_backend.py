@@ -1,10 +1,10 @@
 import hashlib
+import hmac
 import logging
 import uuid
-import httpx
-import hmac
-
 from datetime import datetime, timedelta
+
+import httpx
 import xmltodict
 
 from odoo import _, api, fields, models
@@ -148,7 +148,8 @@ class NetvisorBackend(models.Model):
     )
     customer_invoice_override_total_amount = fields.Boolean(
         string="Override total amount",
-        help="If this is selected, Netvisor will not calculate the total amount from invoice rows",
+        help="If this is selected, "
+        "Netvisor will not calculate the total amount from invoice rows",
         default=False,
     )
     customer_invoice_writeoff_account_id = fields.Many2one(
@@ -174,7 +175,8 @@ class NetvisorBackend(models.Model):
     # Customer settings
     customer_import_create = fields.Boolean(
         string="Create new customers on import",
-        help="When importing customer that doesn't exist in Odoo, create a new partner",
+        help="When importing customer that doesn't exist in Odoo, "
+        "create a new partner",
         default=True,
     )
     customer_import_update = fields.Boolean(
@@ -192,7 +194,8 @@ class NetvisorBackend(models.Model):
     )
     supplier_import_create = fields.Boolean(
         string="Create new suppliers on import",
-        help="When importing supplier that doesn't exist in Odoo, create a new partner",
+        help="When importing supplier that doesn't exist in Odoo, "
+        "create a new partner",
         default=True,
     )
     supplier_import_update = fields.Boolean(
@@ -204,7 +207,8 @@ class NetvisorBackend(models.Model):
     # Product settings
     product_import_create = fields.Boolean(
         string="Create new products on import",
-        help="When importing products that doesn't exist in Odoo, create a new products",
+        help="When importing products that doesn't exist in Odoo, "
+        "create a new products",
         default=True,
     )
     product_import_update = fields.Boolean(
@@ -263,7 +267,7 @@ class NetvisorBackend(models.Model):
         :return: Parser response dict
         """
 
-        _logger.debug(_("Making a POST request to endpoint {}".format(endpoint)))
+        _logger.debug(_(f"Making a POST request to endpoint {endpoint}"))
         _logger.debug(values)
 
         if self.environment == "disabled":
@@ -295,7 +299,7 @@ class NetvisorBackend(models.Model):
         :param params: Requests params
         :return: Parser response dict
         """
-        _logger.debug(_("Making a GET request to endpoint {}".format(endpoint)))
+        _logger.debug(_(f"Making a GET request to endpoint {endpoint}"))
 
         if self.environment == "disabled":
             _logger.warning(_("Integration disabled. Not making the request"))
@@ -381,13 +385,15 @@ class NetvisorBackend(models.Model):
 
         return url
 
+    # TODO: Make smarter response handling
+    # flake8: noqa: C901
     def _parse_response(self, response):
         text = xmltodict.parse(response.text)
         headers = response.headers
         root = text.get("Root") or {}
 
         if not root:
-            _logger.warning("Root element not found: {}".format(text))
+            _logger.warning(f"Root element not found: {text}")
 
         status_code = response.status_code
 
@@ -398,8 +404,8 @@ class NetvisorBackend(models.Model):
             response_status = root.get("ResponseStatus") or {}
         except AttributeError as e:
             raise Exception(
-                "Error while trying to parse response '{}': '{}'".format(root, e)
-            )
+                f"Error while trying to parse response '{root}': '{e}'"
+            ) from e
 
         response_status_list = response_status.get("Status")
 
@@ -490,9 +496,7 @@ class NetvisorBackend(models.Model):
                 company_id=record.company_id.id
             )
 
-            job_desc = _(
-                "Netvisor: import customers for {}".format(record.company_id.name)
-            )
+            job_desc = _(f"Netvisor: import customers for {record.company_id.name}")
 
             netvisor_model.with_delay(description=job_desc).netvisor_import_customers(
                 record.company_id
@@ -512,9 +516,7 @@ class NetvisorBackend(models.Model):
                 company_id=record.company_id.id
             )
 
-            job_desc = _(
-                "Netvisor: import suppliers for {}".format(record.company_id.name)
-            )
+            job_desc = _(f"Netvisor: import suppliers for {record.company_id.name}")
 
             netvisor_model.with_delay(description=job_desc).netvisor_import_suppliers(
                 record.company_id
@@ -533,9 +535,7 @@ class NetvisorBackend(models.Model):
                 company_id=record.company_id.id
             )
 
-            job_desc = _(
-                "Netvisor: import products for {}".format(record.company_id.name)
-            )
+            job_desc = _(f"Netvisor: import products for {record.company_id.name}")
 
             netvisor_model.with_delay(description=job_desc).netvisor_import_products(
                 record.company_id
@@ -554,9 +554,7 @@ class NetvisorBackend(models.Model):
                 company_id=record.company_id.id
             )
 
-            job_desc = _(
-                "Netvisor: export products for {}".format(record.company_id.name)
-            )
+            job_desc = _(f"Netvisor: export products for {record.company_id.name}")
 
             netvisor_model.with_delay(description=job_desc).netvisor_export_products()
 
@@ -574,9 +572,7 @@ class NetvisorBackend(models.Model):
             )
 
             job_desc = _(
-                "Netvisor: import purchase invoices for {}".format(
-                    record.company_id.name
-                )
+                f"Netvisor: import purchase invoices for {record.company_id.name}"
             )
 
             netvisor_model.with_delay(
@@ -611,12 +607,10 @@ class NetvisorBackend(models.Model):
                 ("netvisor_status", "not in", ["paid", "rejected"]),
             ]
         )
-        _logger.debug(_("Updating status for invoices: {}".format(bindings.ids)))
+        _logger.debug(_(f"Updating status for invoices: {bindings.ids}"))
 
         for binding in bindings:
-            job_desc = _(
-                "Update status from Netvisor for invoice {}".format(binding.name)
-            )
+            job_desc = _(f"Update status from Netvisor for invoice {binding.name}")
 
             binding.with_delay(description=job_desc).netvisor_import_status(
                 binding.odoo_id
@@ -652,9 +646,7 @@ class NetvisorBackend(models.Model):
         netvisor_model = self.env["netvisor.dimension"]
 
         for record in self:
-            job_desc = _(
-                "Netvisor: import dimensions for {}".format(record.company_id.name)
-            )
+            job_desc = _(f"Netvisor: import dimensions for {record.company_id.name}")
 
             netvisor_model.with_delay(description=job_desc).netvisor_import_dimensions()
 

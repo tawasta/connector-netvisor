@@ -51,9 +51,7 @@ class NetvisorProductImportMapper(Component):
                 # Binding exists: update values
                 existing_binding.odoo_id.with_context(skip_export=True).write(values)
                 return _(
-                    "Updated values for product '{}'".format(
-                        existing_binding.display_name
-                    )
+                    f"Updated values for product '{existing_binding.display_name}'"
                 )
             else:
                 return _("Did not update product due to importer settings")
@@ -88,9 +86,7 @@ class NetvisorProductImportMapper(Component):
             if existing_binding.backend_id.product_import_update:
                 existing_binding.with_context(skip_export=True).write(values)
                 return _(
-                    "Updated values for product '{}'".format(
-                        existing_binding.display_name
-                    )
+                    f"Updated values for product '{existing_binding.display_name}'"
                 )
         elif backend.product_import_create:
             # No product found. Create a new product and binding
@@ -98,7 +94,7 @@ class NetvisorProductImportMapper(Component):
             binding_values["odoo_id"] = existing_record.id
             netvisor_model.create(binding_values)
 
-            return _("Created a new product '{}'".format(existing_record.display_name))
+            return _(f"Created a new product '{existing_record.display_name}'")
         else:
             return _("Did not create or update product due to importer settings")
 

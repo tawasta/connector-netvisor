@@ -84,7 +84,7 @@ class NetvisorExpenseExportMapper(Component):
                     # Binding already exists
                     pass
 
-                msg = _("Created expense '{}'".format(record.display_name))
+                msg = _(f"Created expense '{record.display_name}'")
             else:
                 raise UserError(
                     _(

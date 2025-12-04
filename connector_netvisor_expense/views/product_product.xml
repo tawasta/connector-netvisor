@@ -3,10 +3,7 @@
     <record id="product_product_expense_form_view" model="ir.ui.view">
         <field name="name">product.product.expense.form.netvisor</field>
         <field name="model">product.product</field>
-        <field
-            name="inherit_id"
-            ref="hr_expense.product_product_expense_form_view"
-        />
+        <field name="inherit_id" ref="hr_expense.product_product_expense_form_view" />
         <field name="arch" type="xml">
 
             <field name="uom_id" position="before">
@@ -32,10 +29,7 @@
         </field>
     </record>
 
-    <record
-        id="product_product_expense_categories_tree_view"
-        model="ir.ui.view"
-    >
+    <record id="product_product_expense_categories_tree_view" model="ir.ui.view">
         <field name="name">product.product.expense.tree.netvisor</field>
         <field name="model">product.product</field>
         <field

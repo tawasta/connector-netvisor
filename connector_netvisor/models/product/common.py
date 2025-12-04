@@ -26,9 +26,7 @@ class Product(models.Model):
 
             if use_queue:
                 # Queued sending
-                job_desc = _(
-                    "Netvisor: export product '{}'".format(record.display_name)
-                )
+                job_desc = _(f"Netvisor: export product '{record.display_name}'")
                 netvisor_model.with_delay(description=job_desc).netvisor_export_product(
                     record, company_id
                 )

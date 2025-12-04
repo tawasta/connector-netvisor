@@ -1,7 +1,6 @@
 import logging
 
-from odoo import _
-from odoo import fields
+from odoo import _, fields
 from odoo.exceptions import ValidationError
 
 from odoo.addons.component.core import Component
@@ -16,6 +15,8 @@ class NetvisorInvoiceExportMapper(Component):
     _usage = "export.mapper"
     _apply_on = ["netvisor.invoice"]
 
+    # TODO: Add helper functions to reduce complexity
+    # flake8: noqa: C901
     def export_invoice(self, backend, record):
         """
         Export invoice from Odoo to Netvisor
@@ -55,7 +56,8 @@ class NetvisorInvoiceExportMapper(Component):
             if record.is_sale_document() and not line.product_id:
                 raise ValidationError(
                     _(
-                        "Using product in invoice lines is mandatory! Please add a product to all invoice lines"
+                        "Using product in invoice lines is mandatory! "
+                        "Please add a product to all invoice lines"
                     )
                 )
 
@@ -79,14 +81,11 @@ class NetvisorInvoiceExportMapper(Component):
             [(r.id, (r.root_plan_id.name, r.name)) for r in analytic_accounts]
         )
         for line in record.invoice_line_ids:
+            msg = _("Only 100% analytic distribution is supported by Netvisor!")
             if line.analytic_distribution:
                 for ad in line.analytic_distribution.values():
                     if ad != 100.0:
-                        raise ValidationError(
-                            _(
-                                "Only 100% analytic distribution is supported by Netvisor!"
-                            )
-                        )
+                        raise ValidationError(msg)
 
         update_allowed = False
         if record.is_sale_document():
@@ -97,6 +96,11 @@ class NetvisorInvoiceExportMapper(Component):
             template = "connector_netvisor.netvisor_purchaseinvoice"
             endpoint = "purchaseinvoice.nv"
             update_allowed = backend.purchase_invoice_allow_updating
+        else:
+            template = False
+            raise ValidationError(
+                _("Only customer and supplier invoices are supported")
+            )
 
         xml_string = self.env["ir.qweb"]._render(
             template,
@@ -112,11 +116,7 @@ class NetvisorInvoiceExportMapper(Component):
 
         if binding and not update_allowed:
             _logger.info(
-                _(
-                    "Updating invoices is disabled. Not sending '{}'.".format(
-                        record.name
-                    )
-                )
+                _(f"Updating invoices is disabled. Not sending '{record.name}'.")
             )
             return _("Updating invoices to Netvisor is not allowed")
 
@@ -139,12 +139,12 @@ class NetvisorInvoiceExportMapper(Component):
                     {"invoice": binding, "backend": backend, "dimensions": dimensions},
                 )
                 _logger.info(
-                    "Sending purchase invoice posting data for '{}'".format(record.name)
+                    f"Sending purchase invoice posting data for '{record.name}'"
                 )
 
             backend._api_request_post(endpoint, xml_string)
 
-            msg = _("Updated invoice '{}'".format(record.name))
+            msg = _(f"Updated invoice '{record.name}'")
         else:
             endpoint = f"{endpoint}?method=add"
 
@@ -156,8 +156,10 @@ class NetvisorInvoiceExportMapper(Component):
                 )
                 raise ValidationError(msg)
 
-            # Set invoice as sent and commit that to prevent a situation where we manage to send an invoice
-            # to Netvisor, but don't receive a reply (due to a timeout or something like that)
+            # Set invoice as sent and commit that
+            # to prevent a situation where we manage to send an invoice
+            # to Netvisor, but don't receive a reply
+            # (due to a timeout or something like that)
             record.netvisor_sent = fields.Datetime.now()
             self.env.cr.commit()
 
@@ -202,16 +204,14 @@ class NetvisorInvoiceExportMapper(Component):
         )
 
         # Update Odoo invoice information
-        job_desc = _("Import invoice details for {}".format(binding.odoo_id.name))
+        job_desc = _(f"Import invoice details for {binding.odoo_id.name}")
         binding.with_delay(description=job_desc).netvisor_import_invoice_details(
             binding.odoo_id
         )
 
         if binding.reversed_entry_id:
             # Match credit note to the original invoice
-            job_desc = _(
-                "Mark invoice {} as reversed".format(binding.reversed_entry_id.name)
-            )
+            job_desc = _(f"Mark invoice {binding.reversed_entry_id.name} as reversed")
 
             binding.with_delay(description=job_desc).netvisor_match_credit_note()
 
@@ -226,24 +226,19 @@ class NetvisorInvoiceExportMapper(Component):
             taxes = line.tax_ids
             if len(taxes) > 1:
                 raise ValidationError(
-                    _(
-                        "Please define only one tax for invoice line '{}'".format(
-                            line.name
-                        )
-                    )
+                    _(f"Please define only one tax for invoice line '{line.name}'")
                 )
             elif len(taxes) < 1:
                 raise ValidationError(
-                    _("Please define one tax for invoice line '{}'".format(line.name))
+                    _(f"Please define one tax for invoice line '{line.name}'")
                 )
 
             tax = taxes[0]
 
             if tax.netvisor_code == "-":
                 err = _(
-                    "The tax '{}' is misconfigured. Please configure 'Netvisor VAT code' for that".format(
-                        tax.name
-                    )
+                    f"The tax '{tax.name}' is misconfigured. "
+                    "Please configure 'Netvisor VAT code' for that"
                 )
                 raise ValidationError(err)
 
@@ -260,7 +255,7 @@ class NetvisorInvoiceExportMapper(Component):
         ):
             netvisor_status = "open"
 
-        _logger.debug("Export '{}' status as '{}'".format(record.name, netvisor_status))
+        _logger.debug(f"Export '{record.name}' status as '{netvisor_status}'")
 
         values = {}
         for binding in record.netvisor_bind_ids:
@@ -270,7 +265,7 @@ class NetvisorInvoiceExportMapper(Component):
             binding.backend_id._api_request_post(endpoint, values)
 
         record.netvisor_status = netvisor_status
-        msg = "Set invoice as '{}' in Netvisor".format(netvisor_status)
+        msg = f"Set invoice as '{netvisor_status}' in Netvisor"
         record.message_post(body=msg)
         return msg
 

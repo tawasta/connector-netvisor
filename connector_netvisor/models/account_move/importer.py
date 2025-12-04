@@ -49,14 +49,12 @@ class NetvisorInvoiceImportMapper(Component):
 
         if record.netvisor_status != invoice_status:
             res = _(
-                "Updated status from '{}' to '{}'".format(
-                    record.netvisor_status, invoice_status
-                )
+                f"Updated status from '{record.netvisor_status}' to '{invoice_status}'"
             )
             binding.action_update_invoice_status(invoice_status)
 
         else:
-            res = _("Status '{}' is up to date. Nothing to do".format(invoice_status))
+            res = _(f"Status '{invoice_status}' is up to date. Nothing to do")
 
         return res
 
@@ -95,7 +93,7 @@ class NetvisorInvoiceImportMapper(Component):
 
         binding.write(vals)
 
-        return _("Updated details for {}".format(binding.odoo_id))
+        return _(f"Updated details for {binding.odoo_id}")
 
     def import_purchase_invoice(self, backend, netvisor_key, update=False):
         """
@@ -165,7 +163,7 @@ class NetvisorInvoiceImportMapper(Component):
             }
 
             netvisor_model.create(binding_values)
-            msg = _("Updated invoice with Odoo ID '{}'".format(invoice.id))
+            msg = _(f"Updated invoice with Odoo ID '{invoice.id}'")
         else:
             # Update the invoice information
             existing_binding.netvisor_raw_content += "\n" + str(raw_response)
@@ -173,7 +171,7 @@ class NetvisorInvoiceImportMapper(Component):
             invoice.invoice_line_ids = False
             invoice.write(values)
             invoice.message_post(body=_("Updated values from Netvisor"))
-            msg = _("Updated invoice with Odoo ID '{}'".format(invoice.id))
+            msg = _(f"Updated invoice with Odoo ID '{invoice.id}'")
 
         return msg
 
@@ -372,12 +370,12 @@ class NetvisorInvoiceImportMapper(Component):
             if vat_code:
                 tax_vals["netvisor_code"] = vat_code
 
-            _logger.debug("Using tax values {}".format(tax_vals))
+            _logger.debug(f"Using tax values {tax_vals}")
             tax = AccountTax.search([(k, "=", v) for k, v in tax_vals.items()], limit=1)
 
             if not tax:
                 # Tax not found in Odoo, create one
-                tax_vals["name"] = "{} %".format(vat_percent)
+                tax_vals["name"] = f"{vat_percent} %"
                 tax = AccountTax.create(tax_vals)
 
             line_values["tax_ids"] = [(4, tax.id)]
@@ -413,7 +411,7 @@ class NetvisorInvoiceImportMapper(Component):
             line_values["product_id"] = product_id.id
         else:
             if product_code:
-                line_values["name"] = "[{}] {}".format(product_code, product_name)
+                line_values["name"] = f"[{product_code}] {product_name}"
             elif product_name:
                 line_values["name"] = product_name
             else:

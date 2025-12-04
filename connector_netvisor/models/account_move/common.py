@@ -120,9 +120,7 @@ class AccountMove(models.Model):
                     and record.netvisor_status == "unsent"
                 ):
                     # When invoice is set as sent
-                    job_desc = _(
-                        "Set invoice '{}' as sent in Netvisor".format(record.name)
-                    )
+                    job_desc = _(f"Set invoice '{record.name}' as sent in Netvisor")
                     record.with_delay(
                         description=job_desc
                     ).action_netvisor_export_status()
@@ -165,9 +163,7 @@ class AccountMove(models.Model):
                     )
 
                 job_desc = _(
-                    "Netvisor: send invoice {} [Odoo ID: {}]".format(
-                        record.name, record.id
-                    )
+                    f"Netvisor: send invoice {record.name} [Odoo ID: {record.id}]"
                 )
                 netvisor_model.with_delay(description=job_desc).netvisor_export_invoice(
                     record
@@ -194,9 +190,7 @@ class AccountMove(models.Model):
         else:
             for record in self:
                 job_desc = _(
-                    "Netvisor: import invoice status for '{}'".format(
-                        record.display_name
-                    )
+                    f"Netvisor: import invoice status for '{record.display_name}'"
                 )
                 netvisor_model.with_delay(description=job_desc).netvisor_import_status(
                     record
@@ -213,9 +207,7 @@ class AccountMove(models.Model):
         else:
             for record in self:
                 job_desc = _(
-                    "Netvisor: export invoice status for '{}'".format(
-                        record.display_name
-                    )
+                    f"Netvisor: export invoice status for '{record.display_name}'"
                 )
                 netvisor_model.with_delay(description=job_desc).netvisor_export_status(
                     record
@@ -259,11 +251,11 @@ class AccountMove(models.Model):
         #  E.g. invoices have been created in Netvisor
         for sales_invoice in sale_invoices:
             if sales_invoice.name[0:3] != "INV":
-                new_name = "INV/{}".format(sales_invoice.name)
+                new_name = f"INV/{sales_invoice.name}"
                 i = 1
                 while self.search([("name", "=", new_name)]):
                     # If there is an overlapping name, add a sequence number
-                    new_name = new_name + "_{}".format(i)
+                    new_name = new_name + f"_{i}"
                     i += 1
 
                 sales_invoice.name = new_name

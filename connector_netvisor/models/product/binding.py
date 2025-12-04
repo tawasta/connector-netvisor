@@ -54,7 +54,7 @@ class NetvisorProduct(models.Model):
         records = self.env["product.product"].search([])
 
         for record in records:
-            job_desc = _("Netvisor: export product '{}'".format(record.display_name))
+            job_desc = _(f"Netvisor: export product '{record.display_name}'")
             self.with_delay(description=job_desc).netvisor_export_product(record)
 
     def netvisor_import_product(self, netvisor_key, company=False):

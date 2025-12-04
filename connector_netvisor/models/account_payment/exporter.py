@@ -1,13 +1,12 @@
+import logging
+
 from psycopg2 import IntegrityError
 
 from odoo import _
 from odoo.exceptions import UserError, ValidationError
-from odoo.addons.queue_job.exception import RetryableJobError
-
 
 from odoo.addons.component.core import Component
-
-import logging
+from odoo.addons.queue_job.exception import RetryableJobError
 
 _logger = logging.getLogger(__name__)
 
@@ -89,7 +88,7 @@ class NetvisorPaymentExportMapper(Component):
                     # Binding already exists
                     pass
 
-                msg = _("Created payment '{}'".format(record.display_name))
+                msg = _(f"Created payment '{record.display_name}'")
 
             else:
                 raise UserError(

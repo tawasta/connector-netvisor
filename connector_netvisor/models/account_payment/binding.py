@@ -69,7 +69,7 @@ class NetvisorPayment(models.Model):
             )
 
         backend.payments_start_date = fields.Datetime.now()
-        return _("{} payment import jobs done".format(count))
+        return _(f"{count} payment import jobs done")
 
     def netvisor_import_payment(self, record, company_id=False):
         """

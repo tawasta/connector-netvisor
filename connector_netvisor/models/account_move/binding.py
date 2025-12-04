@@ -185,8 +185,8 @@ class NetvisorInvoice(models.Model):
                             0
                         ].backend_id.customer_invoice_writeoff_account_id.id
 
-                _logger.debug(_("Payment values: {}".format(payment_values)))
-                _logger.debug(_("Invoices to pay: {}".format(record.odoo_id.ids)))
+                _logger.debug(_(f"Payment values: {payment_values}"))
+                _logger.debug(_(f"Invoices to pay: {record.odoo_id.ids}"))
 
                 self.env["account.payment.register"].with_context(
                     active_model="account.move", active_ids=record.odoo_id.ids

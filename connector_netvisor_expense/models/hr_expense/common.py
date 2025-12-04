@@ -56,7 +56,7 @@ class HrExpense(models.Model):
 
             if use_queue:
                 # Queued sending
-                job_desc = _("Netvisor: export expense '{}'".format(record.name))
+                job_desc = _(f"Netvisor: export expense '{record.name}'")
                 netvisor_model.with_delay(description=job_desc).netvisor_export_expense(
                     record, company_id
                 )

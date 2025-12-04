@@ -37,9 +37,7 @@
                     <!--defaulteuaccountnumber>3360<defaulteuaccountnumber-->
                     <!--defaultoutsideeuaccountnumber>3380</defaultoutsideeuaccountnumber-->
                 </productbookkeepingdetails>
-                <productadditionalinformation
-                    t-if="round(product.weight, 2) > 0"
-                >
+                <productadditionalinformation t-if="round(product.weight, 2) > 0">
                     <productnetweight
                         t-esc="str(round(product.weight, 2)).replace('.', ',')"
                     />

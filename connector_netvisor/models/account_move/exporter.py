@@ -1,7 +1,6 @@
 import logging
 
-from odoo import _
-from odoo import fields
+from odoo import _, fields
 from odoo.exceptions import ValidationError
 
 from odoo.addons.component.core import Component
@@ -112,11 +111,7 @@ class NetvisorInvoiceExportMapper(Component):
 
         if binding and not update_allowed:
             _logger.info(
-                _(
-                    "Updating invoices is disabled. Not sending '{}'.".format(
-                        record.name
-                    )
-                )
+                _(f"Updating invoices is disabled. Not sending '{record.name}'.")
             )
             return _("Updating invoices to Netvisor is not allowed")
 
@@ -139,12 +134,12 @@ class NetvisorInvoiceExportMapper(Component):
                     {"invoice": binding, "backend": backend, "dimensions": dimensions},
                 )
                 _logger.info(
-                    "Sending purchase invoice posting data for '{}'".format(record.name)
+                    f"Sending purchase invoice posting data for '{record.name}'"
                 )
 
             backend._api_request_post(endpoint, xml_string)
 
-            msg = _("Updated invoice '{}'".format(record.name))
+            msg = _(f"Updated invoice '{record.name}'")
         else:
             endpoint = f"{endpoint}?method=add"
 
@@ -202,16 +197,14 @@ class NetvisorInvoiceExportMapper(Component):
         )
 
         # Update Odoo invoice information
-        job_desc = _("Import invoice details for {}".format(binding.odoo_id.name))
+        job_desc = _(f"Import invoice details for {binding.odoo_id.name}")
         binding.with_delay(description=job_desc).netvisor_import_invoice_details(
             binding.odoo_id
         )
 
         if binding.reversed_entry_id:
             # Match credit note to the original invoice
-            job_desc = _(
-                "Mark invoice {} as reversed".format(binding.reversed_entry_id.name)
-            )
+            job_desc = _(f"Mark invoice {binding.reversed_entry_id.name} as reversed")
 
             binding.with_delay(description=job_desc).netvisor_match_credit_note()
 
@@ -226,15 +219,11 @@ class NetvisorInvoiceExportMapper(Component):
             taxes = line.tax_ids
             if len(taxes) > 1:
                 raise ValidationError(
-                    _(
-                        "Please define only one tax for invoice line '{}'".format(
-                            line.name
-                        )
-                    )
+                    _(f"Please define only one tax for invoice line '{line.name}'")
                 )
             elif len(taxes) < 1:
                 raise ValidationError(
-                    _("Please define one tax for invoice line '{}'".format(line.name))
+                    _(f"Please define one tax for invoice line '{line.name}'")
                 )
 
             tax = taxes[0]
@@ -260,7 +249,7 @@ class NetvisorInvoiceExportMapper(Component):
         ):
             netvisor_status = "open"
 
-        _logger.debug("Export '{}' status as '{}'".format(record.name, netvisor_status))
+        _logger.debug(f"Export '{record.name}' status as '{netvisor_status}'")
 
         values = {}
         for binding in record.netvisor_bind_ids:
@@ -270,7 +259,7 @@ class NetvisorInvoiceExportMapper(Component):
             binding.backend_id._api_request_post(endpoint, values)
 
         record.netvisor_status = netvisor_status
-        msg = "Set invoice as '{}' in Netvisor".format(netvisor_status)
+        msg = f"Set invoice as '{netvisor_status}' in Netvisor"
         record.message_post(body=msg)
         return msg
 

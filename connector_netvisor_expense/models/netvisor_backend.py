@@ -1,6 +1,6 @@
 import logging
-from odoo import models
-from odoo import _
+
+from odoo import _, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -32,5 +32,5 @@ class NetvisorBackend(models.Model):
             source = "userparameters"
             records = record._api_request_get(endpoint, params={"source": source})
 
-            _logger.info("Found payroll ratio: {}".format(records))
+            _logger.info(f"Found payroll ratio: {records}")
             raise UserError(_("Importing payroll ratios is not implemented"))

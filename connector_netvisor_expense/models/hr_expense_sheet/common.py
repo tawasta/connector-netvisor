@@ -1,4 +1,4 @@
-from odoo import fields, models, _
+from odoo import _, fields, models
 
 
 class HrExpenseSheet(models.Model):

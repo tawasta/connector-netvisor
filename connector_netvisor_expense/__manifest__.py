@@ -23,7 +23,7 @@
     "summary": "Use travel expenses with Netvisor integration",
     "version": "17.0.1.1.1",
     "category": "Sales",
-    "website": "https://gitlab.com/tawasta/odoo/connector-netvisor",
+    "website": "https://github.com/tawasta/connector-netvisor/",
     "author": "Futural",
     "license": "AGPL-3",
     "application": False,

@@ -23,7 +23,7 @@
     "summary": "Allows Netvisor integration to handle subscription invoices",
     "version": "17.0.1.0.0",
     "category": "Sales",
-    "website": "https://gitlab.com/tawasta/odoo/connector-netvisor",
+    "website": "https://github.com/tawasta/connector-netvisor/",
     "author": "Futural",
     "license": "AGPL-3",
     "application": False,

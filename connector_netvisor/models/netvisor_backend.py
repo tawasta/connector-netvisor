@@ -620,11 +620,18 @@ class NetvisorBackend(models.Model):
         _logger.debug(_(f"Updating status for invoices: {bindings.ids}"))
 
         for binding in bindings:
-            job_desc = _(f"Update status from Netvisor for invoice {binding.name}")
+            job_desc = _(f"Netvisor: import status for invoice {binding.name}")
+            existing_job = self._get_existing_job(job_desc)
 
-            binding.with_delay(description=job_desc).netvisor_import_status(
-                binding.odoo_id
-            )
+            if not existing_job:
+                binding.with_delay(description=job_desc).netvisor_import_status(
+                    binding.odoo_id
+                )
+            else:
+                _logger.warning(
+                    f"Status import job already queued for invoice {binding.name}. "
+                    "Skipping new job creation."
+                )
 
     def _cron_import_payments(self):
         """
@@ -640,12 +647,17 @@ class NetvisorBackend(models.Model):
 
         netvisor_model = self.env["netvisor.payment"]
 
-        job_desc = _("Import payments from Netvisor")
-        _logger.info(job_desc)
+        job_desc = _("Netvisor: import payments")
+        existing_job = self._get_existing_job(job_desc)
 
-        netvisor_model.with_delay(description=job_desc).netvisor_import_payments(
-            self.company_id.id
-        )
+        if not existing_job:
+            netvisor_model.with_delay(description=job_desc).netvisor_import_payments(
+                self.company_id.id
+            )
+        else:
+            _logger.warning(
+                "Payment import job already queued. " "Skipping new job creation."
+            )
 
     def action_import_dimensions(self):
         """
@@ -657,9 +669,27 @@ class NetvisorBackend(models.Model):
 
         for record in self:
             job_desc = _(f"Netvisor: import dimensions for {record.company_id.name}")
-
-            netvisor_model.with_delay(description=job_desc).netvisor_import_dimensions()
+            existing_job = self._get_existing_job(job_desc)
+            if not existing_job:
+                # Only create a new job if there isn't already one waiting
+                netvisor_model.with_delay(
+                    description=job_desc
+                ).netvisor_import_dimensions()
+            else:
+                _logger.warning(
+                    "Dimension import job already queued. " "Skipping new job creation."
+                )
 
     def _cron_import_dimensions(self):
         for backend in self.search([]):
             backend.action_import_dimensions()
+
+    def _get_existing_job(self, job_desc):
+        queue_job = self.env["queue.job"].sudo()
+        existing_job = queue_job.search(
+            [
+                ("name", "=", job_desc),
+                ("state", "in", ["pending", "enqueued", "started"]),
+            ]
+        )
+        return existing_job

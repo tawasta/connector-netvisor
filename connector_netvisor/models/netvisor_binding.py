@@ -52,7 +52,7 @@ class NetvisorBinding(models.AbstractModel):
         if not backend:
             raise UserError(
                 _("Please configure a Netvisor backend for company {}.").format(
-                    company.name
+                    isinstance(company, int) and company or company.name
                 )
             )
 

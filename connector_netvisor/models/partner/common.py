@@ -31,7 +31,7 @@ class Partner(models.Model):
         for record in self:
             record.comment_plaintext = html2plaintext(record.comment)
 
-    def action_netvisor_export_record(self, use_queue=True, company_id=False):
+    def action_netvisor_export_record(self, use_queue=False, company_id=False):
         """
         Export partner to Netvisor
         :return:
@@ -69,38 +69,6 @@ class Partner(models.Model):
 
             for binding in record.netvisor_bind_ids:
                 netvisor_model.netvisor_import_customer(binding.external_id, company_id)
-
-    def write(self, values):
-        """
-        Override to force partner create or update on each write
-        :param values: values dict
-        :return:
-        """
-        res = super().write(values)
-        auto_export = self._get_auto_export(values)
-        if auto_export and not self.env.context.get("skip_export"):
-            for record in self.filtered(lambda r: r.customer_rank > 0):
-                self._event("on_partner_update").notify(record)
-
-        return res
-
-    @api.model
-    def create(self, values):
-        """
-        Override to force partner export on each create
-        :param values: values dict
-        :return:
-        """
-        res = super().create(values)
-        auto_export = True
-        if (
-            auto_export
-            and res.customer_rank > 0
-            and not self.env.context.get("skip_export")
-        ):
-            self._event("on_partner_update").notify(res)
-
-        return res
 
     def get_combined_street(self):
         """

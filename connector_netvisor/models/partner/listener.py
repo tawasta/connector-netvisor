@@ -11,4 +11,10 @@ class PartnerEventListener(Component):
         :param record: Partner record
         :return:
         """
-        record.action_netvisor_export_record()
+
+        # Auto-update is disabled for now
+        # It can be added to settings later if needed
+        # Auto-updating partners on every update causes a lot of unnecessary exports
+        auto_update = False
+        if auto_update:
+            record.action_netvisor_export_record()

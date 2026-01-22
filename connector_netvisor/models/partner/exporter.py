@@ -33,7 +33,8 @@ class NetvisorPartnerExportMapper(Component):
                 _(
                     "Multiple partners found with the same reference "
                     "'%s'. Cannot determine the correct "
-                    "Netvisor customer to update.", record.ref
+                    "Netvisor customer to update.",
+                    record.ref,
                 )
             )
 

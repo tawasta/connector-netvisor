@@ -46,4 +46,3 @@ class Product(models.Model):
 
             for binding in record.netvisor_bind_ids:
                 netvisor_model.netvisor_import_product(binding.external_id, company_id)
-

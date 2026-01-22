@@ -57,7 +57,7 @@ class NetvisorPaymentExportMapper(Component):
             except IntegrityError:
                 # Binding already exists
                 pass
-            
+
             record.message_post(
                 body=msg_existing,
             )

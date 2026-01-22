@@ -28,6 +28,16 @@ class NetvisorPartnerExportMapper(Component):
         if not record.netvisor_export:
             return _("Exporting to Netvisor is disabled for this partner.")
 
+        if len(self.env["res.partner"].search([("ref", "=", record.ref)])) > 1:
+            raise UserError(
+                _(
+                    "Multiple partners found with the same reference "
+                    "'%s'. Cannot determine the correct "
+                    "Netvisor customer to update.",
+                    record.ref,
+                )
+            )
+
         # Force record company for property fields
         if record.company_id:
             record = record.with_company(record.company_id.id)

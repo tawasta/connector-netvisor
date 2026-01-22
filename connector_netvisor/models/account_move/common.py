@@ -1,7 +1,7 @@
 import logging
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import html2plaintext
 
 _logger = logging.getLogger(__name__)
@@ -21,14 +21,15 @@ class AccountMove(models.Model):
         selection=[
             ("open", "Open"),
             ("overdue", "Overdue"),
-            ("paid", "Paid"),
-            ("unsent", "Unsent"),
-            ("creditloss", "Credit loss"),
-            ("rejected", "Rejected"),
-            ("requested", "Requested"),
             ("reminded", "Reminded"),
-            ("dueforpayment", "Due for payment"),
+            ("requested", "Requested"),
             ("collected", "Collected"),
+            ("paid", "Paid"),
+            ("creditloss", "Credit loss"),
+            # The following statuses are not supported by updatesalesinvoicestatus.nv
+            ("unsent", "Unsent"),
+            ("rejected", "Rejected"),
+            ("dueforpayment", "Due for payment"),
         ],
         copy=False,
         readonly=True,
@@ -114,11 +115,19 @@ class AccountMove(models.Model):
     @api.depends("company_id", "move_type")
     def _compute_netvisor_send(self):
         for record in self:
-            backend = (
-                self.sudo()
-                .env["netvisor.invoice"]
-                .get_netvisor_backend(record.company_id.id)
-            )
+            try:
+                backend = (
+                    self.sudo()
+                    .env["netvisor.invoice"]
+                    .get_netvisor_backend(record.company_id.id)
+                )
+            except UserError as e:
+                _logger.warning(
+                    "No Netvisor backend configured for company %s: %s",
+                    record.company_id.name,
+                    str(e),
+                )
+                backend = False
 
             if not backend:
                 # No backend found, no sending

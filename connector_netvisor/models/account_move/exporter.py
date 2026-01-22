@@ -246,7 +246,7 @@ class NetvisorInvoiceExportMapper(Component):
         """Export invoice status to Netvisor"""
         netvisor_status = record.netvisor_status
 
-        if record.payment_state == "reversed":
+        if record.payment_state in ["paid", "reversed"]:
             netvisor_status = "paid"
         elif (
             netvisor_status == "unsent"
@@ -254,6 +254,10 @@ class NetvisorInvoiceExportMapper(Component):
             and record.payment_state != "paid"
         ):
             netvisor_status = "open"
+
+        if netvisor_status in ["unsent", "rejected", "dueforpayment"]:
+            _logger.info(f"Skipping export of unsupported status '{netvisor_status}'")
+            return
 
         _logger.debug(f"Export '{record.name}' status as '{netvisor_status}'")
 

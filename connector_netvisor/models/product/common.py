@@ -47,31 +47,3 @@ class Product(models.Model):
             for binding in record.netvisor_bind_ids:
                 netvisor_model.netvisor_import_product(binding.external_id, company_id)
 
-    def write(self, values):
-        """
-        Override to force product create or update on each write
-        :param values: values dict
-        :return:
-        """
-        res = super().write(values)
-        auto_export = False
-        if auto_export and not self.env.context.get("skip_export"):
-            for record in self:
-                self._event("on_product_update").notify(record)
-
-        return res
-
-    @api.model
-    def create(self, values):
-        """
-        Override to force product export on each create
-        :param values: values dict
-        :return:
-        """
-        res = super().create(values)
-
-        auto_export = False
-        if auto_export and not self.env.context.get("skip_export"):
-            self._event("on_product_update").notify(res)
-
-        return res

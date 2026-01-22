@@ -29,6 +29,21 @@ class NetvisorPayment(models.Model):
         ),
     ]
 
+    def netvisor_get_payment_by_name(self, name, company_id=False):
+        """
+        Get a payment by its name
+        :param name: Payment name
+        :return: Netvisor payment record or None
+        """
+        backend = self.get_netvisor_backend(company_id)
+        endpoint = "salespaymentlist.nv"
+        params = {
+            "searchbyname": name,
+        }
+
+        records = backend._api_request_get(endpoint, params=params)
+        return records
+
     def netvisor_import_payments(self, company_id=False):
         """
         Import all payments from Netvisor

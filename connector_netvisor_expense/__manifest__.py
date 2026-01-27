@@ -21,7 +21,7 @@
 {
     "name": "Netvisor Connector Expense support",
     "summary": "Use travel expenses with Netvisor integration",
-    "version": "17.0.1.1.1",
+    "version": "17.0.1.1.2",
     "category": "Sales",
     "website": "https://github.com/tawasta/connector-netvisor/",
     "author": "Futural",

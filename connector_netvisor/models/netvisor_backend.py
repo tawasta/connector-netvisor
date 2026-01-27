@@ -292,7 +292,7 @@ class NetvisorBackend(models.Model):
 
         response = httpx.post(
             url=url,
-            data=values,
+            content=values,
             headers=headers,
             timeout=10,
         )

@@ -10,7 +10,7 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
-[connector_netvisor](connector_netvisor/) | 17.0.1.8.2 |  | Integration between Odoo and Netvisor
+[connector_netvisor](connector_netvisor/) | 17.0.1.8.3 |  | Integration between Odoo and Netvisor
 [connector_netvisor_accrual](connector_netvisor_accrual/) | 17.0.1.1.0 |  | Use accrual rules with Netvisor integration
 [connector_netvisor_ecommerce](connector_netvisor_ecommerce/) | 17.0.1.0.2 |  | Use Netvisor integration with eCommerce
 [connector_netvisor_expense](connector_netvisor_expense/) | 17.0.1.1.2 |  | Use travel expenses with Netvisor integration

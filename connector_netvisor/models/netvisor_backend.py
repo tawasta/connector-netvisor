@@ -290,12 +290,18 @@ class NetvisorBackend(models.Model):
         url = self._get_request_url(endpoint, params)
         headers = self._get_authentication_headers(url)
 
-        response = httpx.post(
+        post_kwargs = dict(
             url=url,
-            content=values,
             headers=headers,
             timeout=10,
         )
+
+        if isinstance(values, dict):
+            post_kwargs["data"] = values
+        else:
+            post_kwargs["content"] = values
+
+        response = httpx.post(**post_kwargs)
 
         res = self._parse_response(response)
 

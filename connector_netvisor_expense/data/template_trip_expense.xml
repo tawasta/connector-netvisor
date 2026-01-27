@@ -65,7 +65,7 @@
                                         t-esc="attachment.description or attachment.name"
                                     />
                                     <filename t-esc="attachment.name" />
-                                    <documentdata t-raw="attachment.datas_utf8" />
+                                    <documentdata t-out="attachment.datas_utf8" />
                                 </tripexpenseattachment>
                             </t>
                         </tripexpenseattachments>
@@ -118,7 +118,7 @@
                                         t-esc="attachment.description or attachment.name"
                                     />
                                     <filename t-esc="attachment.name" />
-                                    <documentdata t-raw="attachment.datas_utf8" />
+                                    <documentdata t-out="attachment.datas_utf8" />
                                 </tripexpenseattachment>
                             </t>
                         </tripexpenseattachments>
@@ -167,7 +167,7 @@
                                         t-esc="attachment.description or attachment.name"
                                     />
                                     <filename t-esc="attachment.name" />
-                                    <documentdata t-raw="attachment.datas_utf8" />
+                                    <documentdata t-out="attachment.datas_utf8" />
                                 </tripexpenseattachment>
                             </t>
                         </tripexpenseattachments>

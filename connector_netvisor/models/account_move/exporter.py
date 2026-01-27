@@ -275,13 +275,16 @@ class NetvisorInvoiceExportMapper(Component):
 
     def match_credit_note(self, binding):
         """Match credit note"""
+        res = None
 
-        if binding.reversed_entry_id and binding.reversed_entry_id.netvisor_bind_ids:
-            if len(binding.reversed_entry_id.netvisor_bind_ids) > 1:
+        reversed_entry = binding.reversed_entry_id
+
+        if reversed_entry and reversed_entry.netvisor_bind_ids:
+            if len(reversed_entry.netvisor_bind_ids) > 1:
                 raise ValidationError(
                     _("Multiple bindings for one invoice is not supported.")
                 )
-            reversed_binding = binding.reversed_entry_id.netvisor_bind_ids[0]
+            reversed_binding = reversed_entry.netvisor_bind_ids[0]
             backend = binding.backend_id
             endpoint = "matchcreditnote.nv"
 
@@ -290,8 +293,21 @@ class NetvisorInvoiceExportMapper(Component):
                 {"invoice": binding, "reverse": reversed_binding},
             )
 
-            res = backend._api_request_post(endpoint, xml_string)
+            try:
+                res = backend._api_request_post(endpoint, xml_string)
+            except ValidationError as e:
+                # TODO: Handle specific errors more gracefully
+                if "INVALID_DATA" in str(e):
+                    _logger.warning(e)
+                    # A credit note without a voucher cannot be allocated
+                    # Just mark the invoice as paid
+                    reversed_entry.netvisor_status = "paid"
+                    binding.netvisor_export_status(reversed_entry)
+                else:
+                    _logger.error(e)
+                    raise
 
         else:
             res = _("No refunded invoice to match")
+
         return res

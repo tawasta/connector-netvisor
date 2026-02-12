@@ -201,6 +201,13 @@ class AccountMove(models.Model):
                 netvisor_model.with_delay(description=job_desc).netvisor_export_invoice(
                     record
                 )
+                # Set "send and print values" for the invoice,
+                # so it's being treated as it was being sent
+                # (to prevent trying to send the same invoice again)
+                record.send_and_print_values = {
+                    "sp_partner_id": self.env.user.partner_id.id,
+                    "sp_user_id": self.env.user.id,
+                }
 
     def action_netvisor_import_invoice(self):
         """

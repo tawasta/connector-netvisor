@@ -172,6 +172,10 @@ class NetvisorInvoiceExportMapper(Component):
                 raise
 
             if res:
+                # Reset "send and print values"
+                # to mute the "invoice is being sent"-message
+                record.send_and_print_values = False
+                # Create a binding between Odoo invoice and Netvisor invoice
                 binding = binding_model.create(
                     {
                         "backend_id": backend.id,

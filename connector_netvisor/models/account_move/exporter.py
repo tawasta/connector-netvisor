@@ -299,10 +299,14 @@ class NetvisorInvoiceExportMapper(Component):
                 # TODO: Handle specific errors more gracefully
                 if "INVALID_DATA" in str(e):
                     _logger.warning(e)
+                    # TODO: put "mark as paid" logic behind a setting,
+                    # if it's necessary at all
+                    return _("The invoice doesn't have a voucher in Netvisor")
+
                     # A credit note without a voucher cannot be allocated
                     # Just mark the invoice as paid
-                    reversed_entry.netvisor_status = "paid"
-                    binding.netvisor_export_status(reversed_entry)
+                    # reversed_entry.netvisor_status = "paid"
+                    # binding.netvisor_export_status(reversed_entry
                 else:
                     _logger.error(e)
                     raise

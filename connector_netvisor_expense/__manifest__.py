@@ -21,7 +21,7 @@
 {
     "name": "Netvisor Connector Expense support",
     "summary": "Use travel expenses with Netvisor integration",
-    "version": "17.0.1.1.2",
+    "version": "17.0.1.2.0",
     "category": "Sales",
     "website": "https://github.com/tawasta/connector-netvisor/",
     "author": "Futural",
@@ -35,11 +35,14 @@
     },
     "depends": [
         "connector_netvisor",
+        "hr_employee_firstname",
         "hr_expense",
     ],
     "data": [
+        "data/template_employee.xml",
         "data/template_trip_expense.xml",
         "security/model_access.xml",
+        "views/hr_employee.xml",
         "views/hr_expense.xml",
         "views/hr_expense_sheet.xml",
         "views/netvisor_backend.xml",

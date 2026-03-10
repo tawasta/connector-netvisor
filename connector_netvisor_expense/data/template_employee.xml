@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!--
+        Netvisor trip employee XML document
+    -->
+    <template id="netvisor_employee">
+        <root>
+            <employee>
+                <employeebaseinformation>
+                    <!-- Foreign employee identification not supported yet -->
+                    <foreignemployeeidentification t-if="0">
+                    </foreignemployeeidentification>
+
+                    <employeeidentifier t-esc="record.get_social_security_number()" />
+                    <!--
+                    <companyidentifier t-esc="record.company_id.company_registry or ''" />
+                    <companyname t-esc="record.company_id.name or ''" />
+                    -->
+                    <firstname t-esc="record.firstname or ''" />
+                    <lastname t-esc="record.lastname or ''" />
+                    <phonenumber t-esc="record.private_phone or ''" />
+                    <email t-esc="record.private_email or ''" />
+                </employeebaseinformation>
+
+                <employeepayrollinformation>
+                    <streetaddress t-esc="record.private_street or ''" />
+                    <postnumber t-esc="record.private_zip or ''" />
+                    <city t-esc="record.private_city or ''" />
+                    <municipality t-esc="record.private_city or ''" />
+                    <country t-esc="record.private_country_id.code or 'fi'" />
+                    <nationality t-if="record.country_id and record.country_id.code" />
+                    <language t-esc="record.lang and record.lang.code or 'fi'" />
+                    <employeenumber t-if="0" /> <!-- Not supported yet -->
+                    <profession t-esc="record.job_title or ''" />
+                    <!-- TODO: Job begin date -->
+                    <jobbegindate>2014-08-10</jobbegindate>
+
+                    <!-- TODO: Get from contract type -->
+                    <payrollrulegroupname>Kuukausipalkka</payrollrulegroupname>
+                    <bankaccountnumber t-esc="record.bank_account_id.acc_number or ''" />
+                    <bankidentificationcode t-esc="record.bank_account_id.bank_id.bic or ''" />
+                </employeepayrollinformation>
+            </employee>
+        </root>
+    </template>
+</odoo>

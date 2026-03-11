@@ -34,7 +34,7 @@ class NetvisorBackend(models.Model):
             source = "userparameters"
             records = record._api_request_get(endpoint, params={"source": source})
 
-            _logger.info(f"Found payroll ratio: {records}")
+            _logger.info("Found payroll ratios: %s", records)
             raise UserError(_("Importing payroll ratios is not implemented"))
 
     def action_import_employees(self):

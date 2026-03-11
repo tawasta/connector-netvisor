@@ -29,6 +29,9 @@ class NetvisorExpenseExportMapper(Component):
         if record.company_id:
             record = record.with_company(record.company_id.id)
 
+        # Export the employee
+        record.employee_id.action_netvisor_export_record()
+
         binding_model = self.env["netvisor.expense"]
 
         binding = binding_model.search(
@@ -84,11 +87,11 @@ class NetvisorExpenseExportMapper(Component):
                     # Binding already exists
                     pass
 
-                msg = _(f"Created expense '{record.display_name}'")
+                msg = _("Created expense '%s'", record.display_name)
             else:
                 raise UserError(
                     _(
-                        "Something went wrong when exporting customer. "
+                        "Something went wrong when exporting. "
                         "Please see log for more details"
                     )
                 )

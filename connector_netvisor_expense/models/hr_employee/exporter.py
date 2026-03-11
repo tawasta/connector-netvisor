@@ -84,11 +84,11 @@ class NetvisorEmployeeExportMapper(Component):
                         )
                     ) from edit_error
 
-            record.message_post(body=msg)
+        record.message_post(body=msg)
 
-            # employee.nv returns nothing, so we assume that the employee
-            # was created successfully if no error is raised.
-            # We can't make a binding, and the matching will be done by SSN
+        # employee.nv returns nothing, so we assume that the employee
+        # was created successfully if no error is raised.
+        # We can't make a binding, and the matching will be done by SSN
 
         return msg
 
@@ -103,20 +103,30 @@ class NetvisorEmployeeExportMapper(Component):
             )
 
         if not record.job_id:
-            raise ValidationError(_("Employee '%s' does not have a job position set"))
+            raise ValidationError(
+                _(
+                    "Employee '%(employee)s' does not have a job position set",
+                    employee=record.display_name,
+                )
+            )
 
         if record.job_id and not record.job_id.contract_type_id:
             raise ValidationError(
-                _("Employee '%s' job position does not have a contract type set")
+                _(
+                    "Employee '%(employee)s' job position '%(job)s' "
+                    "does not have a contract type set",
+                    employee=record.display_name,
+                    job=record.job_id.name,
+                )
             )
 
         if record.bank_account_id and not record.bank_account_id.allow_out_payment:
             raise ValidationError(
                 _(
-                    "Employee '%s' has a bank account '%s' "
+                    "Employee '%(employee)s' has a bank account '%(bank)s' "
                     "that is not allowed for outgoing payments. "
                     "Please set the bank account as trusted first.",
-                    record.display_name,
-                    record.bank_account_id.acc_number,
+                    employee=record.display_name,
+                    bank=record.bank_account_id.acc_number,
                 )
             )

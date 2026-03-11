@@ -1,13 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* connector_netvisor_accrual
+# 	* connector_netvisor_expense
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0-20240924\n"
+"Project-Id-Version: Odoo Server 17.0-20250725\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-16 08:56+0000\n"
-"PO-Revision-Date: 2024-10-16 12:01+0300\n"
+"POT-Creation-Date: 2026-03-11 12:29+0000\n"
+"PO-Revision-Date: 2026-03-11 15:09+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -15,89 +15,1555 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.9\n"
 
-#. module: connector_netvisor_accrual
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_move_line__accrual_rule_id
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_netvisor_product__accrual_rule_id
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_product_product__accrual_rule_id
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_product_template__accrual_rule_id
-msgid "Accrual rule"
-msgstr "Jaksotussääntö"
+#. module: connector_netvisor_expense
+#: model:ir.model.constraint,message:connector_netvisor_expense.constraint_netvisor_employee_odoo_uniq
+#: model:ir.model.constraint,message:connector_netvisor_expense.constraint_netvisor_expense_odoo_uniq
+msgid "A Netvisor binding for this record already exists."
+msgstr "Netvisor-liitos tälle tietueelle on jo olemassa."
 
-#. module: connector_netvisor_accrual
-#: model:ir.model,name:connector_netvisor_accrual.model_account_accrual_rule
-msgid "Accrual rule for invoices"
-msgstr "Laskujen jaksotussääntö"
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__account_id
+msgid "Account"
+msgstr "Tili"
 
-#. module: connector_netvisor_accrual
-#: model_terms:ir.ui.view,arch_db:connector_netvisor_accrual.view_accrual_rule_form
-msgid "Accrual rule name"
-msgstr "Jaksotussäännön nimi"
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__accounting_date
+msgid "Accounting Date"
+msgstr "Kirjanpitopäivä"
 
-#. module: connector_netvisor_accrual
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__active
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__message_needaction
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__message_needaction
+msgid "Action Needed"
+msgstr "Toimenpide tarvitaan"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__active
 msgid "Active"
 msgstr "Aktiivinen"
 
-#. module: connector_netvisor_accrual
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__create_uid
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__activity_ids
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__activity_ids
+msgid "Activities"
+msgstr "Aktiviteetit"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__activity_exception_decoration
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Toimenpiteen poikkeaman koriste"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__activity_state
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__activity_state
+msgid "Activity State"
+msgstr "Toimenpiteen tila"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__activity_type_icon
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Toimenpidetyypin kuvake"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__departure_description
+msgid "Additional Information"
+msgstr "Lisätiedot"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__additional_note
+msgid "Additional Note"
+msgstr "Kuvaus"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_expense__account_id
+msgid "An expense account is expected"
+msgstr "Kulutiliä odotetaan käytettävän"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__analytic_distribution
+msgid "Analytic Distribution"
+msgstr "Laskentakohde"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__analytic_distribution_search
+msgid "Analytic Distribution Search"
+msgstr "Laskentakohteiden haku"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__analytic_precision
+msgid "Analytic Precision"
+msgstr "Laskennan tarkkuus"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__approved_by
+msgid "Approved By"
+msgstr "Hyväksynyt"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__approved_on
+msgid "Approved On"
+msgstr "Hyväksytty"
+
+#. module: connector_netvisor_expense
+#: model_terms:ir.ui.view,arch_db:connector_netvisor_expense.view_netvisor_backend_form
+msgid "Are you sure you want to import employees?"
+msgstr "Oletko varma, että haluat tuoda työntekijät?"
+
+#. module: connector_netvisor_expense
+#: model_terms:ir.ui.view,arch_db:connector_netvisor_expense.view_netvisor_backend_form
+msgid "Are you sure you want to import salary types?"
+msgstr "Oletko varma, että haluat tuoda palkkalajit?"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__message_attachment_count
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__message_attachment_count
+msgid "Attachment Count"
+msgstr "Liitteiden määrä"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__attachment_ids
+msgid "Attachments"
+msgstr "Liitteet"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__avatar_1920
+msgid "Avatar"
+msgstr "Avatar-kuva"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__avatar_1024
+msgid "Avatar 1024"
+msgstr "Avatar 1024"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__avatar_128
+msgid "Avatar 128"
+msgstr "Avatar 128"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__avatar_256
+msgid "Avatar 256"
+msgstr "Avatar 256"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__avatar_512
+msgid "Avatar 512"
+msgstr "Avatar 512"
+
+#. module: connector_netvisor_expense
+#: model:ir.model,name:connector_netvisor_expense.model_netvisor_backend
+msgid "Backend for Netvisor integration"
+msgstr "Netvisor-integraation asetukset"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__barcode
+msgid "Badge ID"
+msgstr "Badge ID"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__bank_account_id
+msgid "Bank Account Number"
+msgstr "Pankkitilin numero"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_expense__tax_ids
+msgid "Both price-included and price-excluded taxes will behave as price-included taxes for expenses."
+msgstr "Sekä hintoihin sisältyvät että hintoihin sisältymättömät verot käyttäytyvät kulujen osalta hintoihin sisältyvinä veroina."
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields.selection,name:connector_netvisor_expense.selection__product_template__netvisor_travel_type__car
+msgid "Car"
+msgstr "Auto"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields.selection,name:connector_netvisor_expense.selection__product_template__netvisor_travel_type__car_travel_in_rough_terrain
+msgid "Car in difficult terrain"
+msgstr "Auto, liikkuminen vaikeassa maastossa"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields.selection,name:connector_netvisor_expense.selection__product_template__netvisor_travel_type__car_with_caravan
+msgid "Car towing a caravan"
+msgstr "Auto, asuntovaunullinen"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields.selection,name:connector_netvisor_expense.selection__product_template__netvisor_travel_type__car_with_heavy_cargo
+msgid "Car towing a heavy load"
+msgstr "Auto, raskas kuorma"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields.selection,name:connector_netvisor_expense.selection__product_template__netvisor_travel_type__car_with_trailer
+msgid "Car towing a trailer"
+msgstr "Auto, perävaunullinen"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields.selection,name:connector_netvisor_expense.selection__product_template__netvisor_travel_type__car_with_dog
+msgid "Car with dog in the car"
+msgstr "Auto, koira kyydissä"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields.selection,name:connector_netvisor_expense.selection__product_template__netvisor_travel_type__car_with_big_machinery
+msgid "Car with heavy or large machinery"
+msgstr "Auto, iso kone kyydissä"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__product_id
+msgid "Category"
+msgstr "Kategoria"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__certificate
+msgid "Certificate Level"
+msgstr "Sertifikaatin taso"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__message_main_attachment_checksum
+msgid "Checksum/SHA1"
+msgstr "Tarkastussumma/SHA1"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__coach_id
+msgid "Coach"
+msgstr "Valmentaja"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__color
+msgid "Color Index"
+msgstr "Väri-indeksi"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__company_id
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__company_id
+msgid "Company"
+msgstr "Yritys"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__company_country_id
+msgid "Company Country"
+msgstr "Yrityksen maa"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields.selection,name:connector_netvisor_expense.selection__product_template__netvisor_travel_type__carbenefit
+msgid "Company car limited benefit"
+msgstr "Auton käyttöetu"
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/hr_expense/common.py:0
+#, python-format
+msgid "Compensation type is missing from product '%s'"
+msgstr "Kompensaatiotyyppi puuttuu tuotteelta '%s'"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__emergency_contact
+msgid "Contact Name"
+msgstr "Yhteyshenkilön nimi"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__emergency_phone
+msgid "Contact Phone"
+msgstr "Puhelinnumero"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_expense__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the "
+"ratios."
+msgstr ""
+"Mittayksiköiden välinen muuntaminen voi tapahtua vain, jos ne kuuluvat samaan luokkaan. Muunnos tehdään suhdelukujen perusteella."
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__company_country_code
+msgid "Country Code"
+msgstr "Maakoodi"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__country_of_birth
+msgid "Country of Birth"
+msgstr "Synnyinmaa"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__create_uid
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__create_uid
 msgid "Created by"
 msgstr "Luonut"
 
-#. module: connector_netvisor_accrual
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__create_date
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/hr_expense/exporter.py:0
+#, python-format
+msgid "Created expense '%s'"
+msgstr "Luotu kulu '%s'"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__create_date
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__create_date
 msgid "Created on"
 msgstr "Luotu"
 
-#. module: connector_netvisor_accrual
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__display_name
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__currency_id
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__currency_id
+msgid "Currency"
+msgstr "Valuutta"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__currency_rate
+msgid "Currency Rate"
+msgstr "Valuuttakurssi"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields.selection,name:connector_netvisor_expense.selection__product_template__netvisor_expense_type__custom
+msgid "Custom expenses"
+msgstr "Muut kulut"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields.selection,name:connector_netvisor_expense.selection__product_template__netvisor_expense_type__daily
+msgid "Daily compensation"
+msgstr "Päiväraha"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__birthday
+msgid "Date of Birth"
+msgstr "Syntymäpäivä"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__department_id
+msgid "Department"
+msgstr "Osasto"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__department_color
+msgid "Department Color"
+msgstr "Osaston väri"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__departure_date
+msgid "Departure Date"
+msgstr "Lähtöpäivä"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__departure_reason_id
+msgid "Departure Reason"
+msgstr "Lähdön syy"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__name
+msgid "Description"
+msgstr "Kuvaus"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__child_count
+msgid "Direct Subordinates Count"
+msgstr "Suorien alaisten lukumäärä"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__subordinate_ids
+msgid "Direct and indirect subordinates"
+msgstr "Suorat ja epäsuorat alaiset"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__child_ids
+msgid "Direct subordinates"
+msgstr "Suorat alaiset"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__display_name
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
 
-#. module: connector_netvisor_accrual
-#: model:ir.model.fields,help:connector_netvisor_accrual.field_account_accrual_rule__period_length
-msgid "How many months in the accrual period"
-msgstr "Kuinka monelle kuukaudelle jaksotus tehdään"
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Jakomallin laskentakohde"
 
-#. module: connector_netvisor_accrual
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__id
+#. module: connector_netvisor_expense
+#: model:ir.model.fields.selection,name:connector_netvisor_expense.selection__product_template__netvisor_compensation_type__domesticfull
+msgid "Domestic full"
+msgstr "Päiväraha"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields.selection,name:connector_netvisor_expense.selection__product_template__netvisor_compensation_type__domestichalf
+msgid "Domestic half"
+msgstr "Osapäiväraha"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__driving_license
+msgid "Driving License"
+msgstr "Ajokortti"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__duplicate_expense_ids
+msgid "Duplicate Expense"
+msgstr "Kopio kulu"
+
+#. module: connector_netvisor_expense
+#: model:ir.model,name:connector_netvisor_expense.model_hr_employee
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__employee_id
+msgid "Employee"
+msgstr "Työntekijä"
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/hr_employee/exporter.py:0
+#, python-format
+msgid "Employee '%(employee)s' does not have a job position set"
+msgstr "Työntekijällä '%(employee)s' ei ole vielä työnkuvaa"
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/hr_employee/exporter.py:0
+#, python-format
+msgid ""
+"Employee '%(employee)s' has a bank account '%(bank)s' that is not allowed for outgoing payments. Please set the bank account as "
+"trusted first."
+msgstr "Työntekijällä '%(employee)s' on pankkitili '%(bank)s' johon ei ole sallittu maksuja. Merkitse pankkitili ensin luotetuksi."
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/hr_employee/exporter.py:0
+#, python-format
+msgid "Employee '%(employee)s' job position '%(job)s' does not have a contract type set"
+msgstr "Työntekijän '%(employee)s' työnkuvalla '%(job)s' ei ole sopimustyyppiä"
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/hr_employee/exporter.py:0
+#, python-format
+msgid "Employee '%s' does not have a social security number, which is required for exporting to Netvisor"
+msgstr "Työntekijällä '%s' ei ole henkilötunnusta, mikä on vaadittu kun kulukorvauksia lähetetään Netvisoriin"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__name
+msgid "Employee Name"
+msgstr "Työntekijän nimi"
+
+#. module: connector_netvisor_expense
+#: model_terms:ir.ui.view,arch_db:connector_netvisor_expense.view_netvisor_backend_form
+msgid "Employee Settings"
+msgstr "Työntekijän asetukset"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__employee_type
+msgid "Employee Type"
+msgstr "Työntekijän tyyppi"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__bank_account_id
+msgid "Employee bank account to pay salaries"
+msgstr "Työntekijän pankkitili, johon palkat maksetaan"
+
+#. module: connector_netvisor_expense
+#: model_terms:ir.ui.view,arch_db:connector_netvisor_expense.view_netvisor_backend_form
+msgid "Employees"
+msgstr "Työntekijät"
+
+#. module: connector_netvisor_expense
+#: model:ir.model,name:connector_netvisor_expense.model_hr_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__expense_manager_id
+msgid "Expense"
+msgstr "Kulu"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__date
+msgid "Expense Date"
+msgstr "Kulupäivä"
+
+#. module: connector_netvisor_expense
+#: model:ir.model,name:connector_netvisor_expense.model_hr_expense_sheet
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__sheet_id
+msgid "Expense Report"
+msgstr "Kuluraportti"
+
+#. module: connector_netvisor_expense
+#: model_terms:ir.ui.view,arch_db:connector_netvisor_expense.view_netvisor_backend_form
+msgid "Expense Settings"
+msgstr "Kustannusasetukset"
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/hr_expense/exporter.py:0
+#, python-format
+msgid "Expense posted to Netvisor"
+msgstr "Netvisoriin lähetetty kulu"
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/hr_expense_sheet/common.py:0
+#, python-format
+msgid "Expense report posted to Netvisor"
+msgstr "Netvisoriin lähetetty kuluraportti"
+
+#. module: connector_netvisor_expense
+#: model_terms:ir.ui.view,arch_db:connector_netvisor_expense.view_netvisor_backend_form
+msgid "Expenses"
+msgstr "Kulut"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_hr_expense_sheet__expenses_sent_to_netvisor
+msgid "Expenses sent to Netvisor"
+msgstr "Kulut lähetetty Netvisoriin"
+
+#. module: connector_netvisor_expense
+#: model_terms:ir.ui.view,arch_db:connector_netvisor_expense.view_employee_form
+msgid "Export employee"
+msgstr "Vie työntekijä"
+
+#. module: connector_netvisor_expense
+#: model_terms:ir.ui.view,arch_db:connector_netvisor_expense.view_employee_form
+msgid "Export this employee to Netvisor"
+msgstr "Vie tämä työntekijä Netvisoriin"
+
+#. module: connector_netvisor_expense
+#: model_terms:ir.ui.view,arch_db:connector_netvisor_expense.view_employee_form
+msgid ""
+"Export this employee to Netvisor.\n"
+"                            <br/>If the employee is not yet exported, a new record will be created in Netvisor.\n"
+"                            <br/>If the employee is already exported (Employee ID match), the existing Netvisor record will be updated."
+msgstr ""
+"Vie tämä työntekijä Netvisoriin.\r\n"
+"                            <br/>Jos työntekijää ei ole vielä viety, uusi tietue luodaan Netvisoriin.\r\n"
+"                            <br/>Jos työntekijä on jo viety (täsmäys työntekijänumeron perusteella), olemassaoleva tietue päivitetään."
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/hr_employee/exporter.py:0
+#, python-format
+msgid "Exported employee information to Netvisor"
+msgstr "Työntekijän tiedot viety Netvisoriin"
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/hr_employee/exporter.py:0
+#, python-format
+msgid "Exported employee to Netvisor"
+msgstr "Työntekijä viety Netvisoriin"
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/hr_employee/exporter.py:0
+#, python-format
+msgid "Failed to export employee '%s' to Netvisor: %s"
+msgstr "Työntekijän '%s' vienti Netvisoriin epäonnistui: %s"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__study_field
+msgid "Field of Study"
+msgstr "Koulutusala"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__filter_for_expense
+msgid "Filter For Expense"
+msgstr "Suodata kuluja varten"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__firstname
+msgid "Firstname"
+msgstr "Etunimi"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__message_follower_ids
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__message_follower_ids
+msgid "Followers"
+msgstr "Seuraajat"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__message_partner_ids
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seuraajat (kumppanit)"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__activity_type_icon
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_expense__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome -kuvake esim.. fa-tasks"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields.selection,name:connector_netvisor_expense.selection__product_template__netvisor_compensation_type__foreign
+msgid "Foreign"
+msgstr "Ulkomaalainen"
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/hr_employee/importer.py:0
+#, python-format
+msgid "Found multiple matching records: %s"
+msgstr "Löydettiin useita tietueita: %s"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__gender
+msgid "Gender"
+msgstr "Sukupuoli"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__has_message
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__has_message
+msgid "Has Message"
+msgstr "Sisältää viestin"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__km_home_work
+msgid "Home-Work Distance"
+msgstr "Etäisyys kotoa konttorille"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__hr_icon_display
+msgid "Hr Icon Display"
+msgstr "HR-kuvakkeen näyttö"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__hr_presence_state
+msgid "Hr Presence State"
+msgstr "HR Läsnäolon tila"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__id
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__id
 msgid "ID"
 msgstr "ID"
 
-#. module: connector_netvisor_accrual
-#: model:ir.model,name:connector_netvisor_accrual.model_account_move_line
-msgid "Journal Item"
-msgstr "Päiväkirjatapahtuma"
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__id_card
+msgid "ID Card Copy"
+msgstr "ID-kortin kopio"
 
-#. module: connector_netvisor_accrual
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__write_uid
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__barcode
+msgid "ID used for employee identification."
+msgstr "ID jota käytetään työntekijän tunnistamiseen."
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__activity_exception_icon
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__activity_exception_icon
+msgid "Icon"
+msgstr "Kuvake"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__activity_exception_icon
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_expense__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Kuvake joka kertoo poikkeustoiminnosta."
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__identification_id
+msgid "Identification No"
+msgstr "Tunnistenumero"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__message_needaction
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_expense__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Jos valittu, uudet viestit vaativat huomiota."
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__message_has_error
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__message_has_sms_error
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_expense__message_has_error
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_expense__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Jos valittuna, joissakin viesteissä on toimitusvirhe."
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__active
+msgid "If the active field is set to False, it will allow you to hide the resource record without removing it."
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__private_car_plate
+msgid "If you have more than one car, just separate the plates by a space."
+msgstr "Jos sinulla on useampi kuin yksi auto, erota kilvet toisistaan välilyönnillä."
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__image_1920
+msgid "Image"
+msgstr "Kuva"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__image_1024
+msgid "Image 1024"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__image_128
+msgid "Image 128"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__image_256
+msgid "Image 256"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__image_512
+msgid "Image 512"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model_terms:ir.ui.view,arch_db:connector_netvisor_expense.view_netvisor_backend_form
+msgid "Import"
+msgstr "Tuo"
+
+#. module: connector_netvisor_expense
+#: model_terms:ir.ui.view,arch_db:connector_netvisor_expense.view_netvisor_backend_form
+msgid "Import employees"
+msgstr "Tuo työntekijät"
+
+#. module: connector_netvisor_expense
+#: model_terms:ir.ui.view,arch_db:connector_netvisor_expense.view_netvisor_backend_form
+msgid ""
+"Import or update all employees from Netvisor.<br/>\n"
+"                                If an employee doesn't exist, one will be created.<br/>\n"
+"                                If an employee exists (Employee ID match), it will be updated.<br/>"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model_terms:ir.ui.view,arch_db:connector_netvisor_expense.view_netvisor_backend_form
+msgid ""
+"Import or update all salary types from Netvisor.<br/>\n"
+"                                If salary type doesn't exist, one will be created.<br/>\n"
+"                                If salary type exists (name match), it will be updated.<br/>"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model_terms:ir.ui.view,arch_db:connector_netvisor_expense.view_netvisor_backend_form
+msgid "Import salary types"
+msgstr "Tuo palkkalajit"
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/netvisor_backend.py:0
+#, python-format
+msgid "Import started"
+msgstr "Tuonti aloitettu"
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/netvisor_backend.py:0
+#, python-format
+msgid "Importing %d employees in the background..."
+msgstr "Tuodaan %d työntekijää taustalla..."
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/netvisor_backend.py:0
+#, python-format
+msgid "Importing payroll ratios is not implemented"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/netvisor_backend.py:0
+#, python-format
+msgid "Importing salary types from Netvisor"
+msgstr "Palkkalajien tuonti Netvisorista"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_backend__include_ended_employments
+msgid "Include Ended Employments"
+msgstr "Hae poistuneet työntekijät"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__tax_ids
+msgid "Included taxes"
+msgstr "Sisältää verot"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__child_all_count
+msgid "Indirect Subordinates Count"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__description
+msgid "Internal Notes"
+msgstr "Sisäiset muistiinpanot"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__is_editable
+msgid "Is Editable By Current User"
+msgstr "Nykyisen käyttäjän muokattavissa"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__message_is_follower
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__message_is_follower
+msgid "Is Follower"
+msgstr "On seuraaja"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__is_subordinate
+msgid "Is Subordinate"
+msgstr "On alainen"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__is_multiple_currency
+msgid "Is currency_id different from the company_currency_id"
+msgstr "Onko currency_id eri kuin company_currency_id?"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__job_id
+msgid "Job Position"
+msgstr "Työnkuva"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__job_title
+msgid "Job Title"
+msgstr "Työtehtävä"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_hr_employee__job_begin_date
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__job_begin_date
+msgid "Job begin date"
+msgstr "Töiden alkamisaika"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__label_currency_rate
+msgid "Label Currency Rate"
+msgstr "Valuuttakurssin etiketti"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__lang
+msgid "Lang"
+msgstr "Kieli"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__last_activity
+msgid "Last Activity"
+msgstr "Viimeisin toiminta"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__last_activity_time
+msgid "Last Activity Time"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__write_uid
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__write_uid
 msgid "Last Updated by"
-msgstr "Viimeksi päivittänyt"
+msgstr "Viimeisin muokkaaja"
 
-#. module: connector_netvisor_accrual
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__write_date
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__write_date
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__write_date
 msgid "Last Updated on"
 msgstr "Viimeksi päivitetty"
 
-#. module: connector_netvisor_accrual
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__name
-msgid "Name"
-msgstr "Nimi"
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__sync_date
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__sync_date
+msgid "Last synchronization date"
+msgstr ""
 
-#. module: connector_netvisor_accrual
-#: model:ir.model.fields,field_description:connector_netvisor_accrual.field_account_accrual_rule__period_length
-msgid "Period (months)"
-msgstr "Jakso (kuukautta)"
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__lastname
+msgid "Lastname"
+msgstr "Sukunimi"
 
-#. module: connector_netvisor_accrual
-#: model:ir.model,name:connector_netvisor_accrual.model_product_template
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__message_main_attachment_id
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Pääliite"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__parent_id
+msgid "Manager"
+msgstr "Esimies"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__marital
+msgid "Marital Status"
+msgstr "Siviilisääty"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__member_of_department
+msgid "Member of department"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__message_has_error
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__message_has_error
+msgid "Message Delivery error"
+msgstr "Viestin toimitusvirhe"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__message_ids
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__message_ids
+msgid "Messages"
+msgstr "Viestit"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields.selection,name:connector_netvisor_expense.selection__product_template__netvisor_travel_type__moped
+msgid "Moped"
+msgstr "Mopo"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields.selection,name:connector_netvisor_expense.selection__product_template__netvisor_travel_type__motorboat_over_50hp
+msgid "Motorboat, more than 50 hp"
+msgstr "Moottorivene, yli 50hv"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields.selection,name:connector_netvisor_expense.selection__product_template__netvisor_travel_type__motorboat_max_50hp
+msgid "Motorboat, up to 50 hp"
+msgstr "Moottorivene, enintään 50hv"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields.selection,name:connector_netvisor_expense.selection__product_template__netvisor_travel_type__motorbike
+msgid "Motorcycle"
+msgstr "Moottoripyörä"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__my_activity_date_deadline
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Oman toimenpiteen määräaika"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__country_id
+msgid "Nationality (Country)"
+msgstr "Kansalaisuus (maa)"
+
+#. module: connector_netvisor_expense
+#: model_terms:ir.ui.view,arch_db:connector_netvisor_expense.view_employee_form
+msgid "Netvisor"
+msgstr "Netvisor"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__backend_id
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__backend_id
+msgid "Netvisor Backend"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_hr_employee__netvisor_bind_ids
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_hr_expense__netvisor_bind_ids
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__netvisor_bind_ids
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__netvisor_bind_ids
+msgid "Netvisor Bindings"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_product__netvisor_compensation_type
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_product_product__netvisor_compensation_type
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_product_template__netvisor_compensation_type
+msgid "Netvisor Compensation Type"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model,name:connector_netvisor_expense.model_netvisor_employee
+msgid "Netvisor Employee"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model,name:connector_netvisor_expense.model_netvisor_expense
+msgid "Netvisor Expense"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_product__netvisor_expense_type
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_product_product__netvisor_expense_type
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_product_template__netvisor_expense_type
+msgid "Netvisor Expense Type"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__external_id
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__external_id
+msgid "Netvisor ID"
+msgstr "Netvisor ID"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_product__netvisor_travel_type
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_product_product__netvisor_travel_type
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_product_template__netvisor_travel_type
+msgid "Netvisor Travel Type"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/hr_expense/common.py:0
+#, python-format
+msgid "Netvisor expense type is missing from product '%s'"
+msgstr "Netvisor-kulutyyppi puuttuu tuotteelta '%s'"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__external_id
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_expense__external_id
+msgid "Netvisor record id"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/hr_employee/common.py:0
+#, python-format
+msgid "Netvisor: export employee '%s'"
+msgstr "Netvisor: vie työntekijä '%s'"
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/hr_expense/common.py:0
+#, python-format
+msgid "Netvisor: export expense '%s'"
+msgstr "Netvisor: vie kulu '%s'"
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/netvisor_backend.py:0
+#, python-format
+msgid "Netvisor: import employee '%(name)s' using Netvisor ID %(key)s"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__newly_hired
+msgid "Newly Hired"
+msgstr "Äskettäin palkattu"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__activity_date_deadline
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Seuraavan aktiviteetin määräaika"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__activity_summary
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__activity_summary
+msgid "Next Activity Summary"
+msgstr "Seuraavan aktiviteetin yhteenveto"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__activity_type_id
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__activity_type_id
+msgid "Next Activity Type"
+msgstr "Seuraava aktiviteettityyppi"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__notes
+msgid "Notes"
+msgstr "Muistiinpanot"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__message_needaction_counter
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Toimenpiteiden määrä"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__nb_attachment
+msgid "Number of Attachments"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__children
+msgid "Number of Dependent Children"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__message_has_error_counter
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__message_has_error_counter
+msgid "Number of errors"
+msgstr "Virheiden määrä"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__message_needaction_counter
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_expense__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Toimintaa vaativien viestien määrä"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__message_has_error_counter
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_expense__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Toimitusvirheitä sisältävien viestien määrä"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__odoo_id
+msgid "Odoo Employee"
+msgstr "Odoo työntekijä"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__odoo_id
+msgid "Odoo Expense"
+msgstr "Odoo kulu"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields.selection,name:connector_netvisor_expense.selection__product_template__netvisor_travel_type__other
+msgid "Other means of transport"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__pin
+msgid "PIN"
+msgstr "PIN"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__pin
+msgid ""
+"PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if enabled in Configuration) and to change the cashier in "
+"the Point of Sale application."
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__payment_mode
+msgid "Paid By"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__user_partner_id
+msgid "Partner-related data of the user"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__passport_id
+msgid "Passport No"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__place_of_birth
+msgid "Place of Birth"
+msgstr "Syntymäpaikka"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__private_car_plate
+msgid "Private Car Plate"
+msgstr "Yksityisauton kilpi"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__private_city
+msgid "Private City"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__private_country_id
+msgid "Private Country"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__private_email
+msgid "Private Email"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__private_phone
+msgid "Private Phone"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__private_state_id
+msgid "Private State"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__private_street
+msgid "Private Street"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__private_street2
+msgid "Private Street2"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__private_zip
+msgid "Private Zip"
+msgstr "Yksityinen postinumero"
+
+#. module: connector_netvisor_expense
+#: model:ir.model,name:connector_netvisor_expense.model_product_template
 msgid "Product"
 msgstr "Tuote"
 
-#. module: connector_netvisor_accrual
-#: model:ir.model.fields,help:connector_netvisor_accrual.field_netvisor_product__accrual_rule_id
-#: model:ir.model.fields,help:connector_netvisor_accrual.field_product_product__accrual_rule_id
-#: model:ir.model.fields,help:connector_netvisor_accrual.field_product_template__accrual_rule_id
-msgid "Use accrual rule for invoice lines with this product"
-msgstr "Käytä jaksotussäänötä laskuriveille, joilla on tämä tuote"
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__product_description
+msgid "Product Description"
+msgstr "Tuotekuvaus"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__product_has_cost
+msgid "Product Has Cost"
+msgstr "Tuotteella on kustannuksia"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__employee_properties
+msgid "Properties"
+msgstr "Ominaisuudet"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields.selection,name:connector_netvisor_expense.selection__product_template__netvisor_travel_type__atv
+msgid "Quadbike (ATV)"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__quantity
+msgid "Quantity"
+msgstr "Määrä"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__rating_ids
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__rating_ids
+msgid "Ratings"
+msgstr "Arvioinnit"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__netvisor_raw_content
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__netvisor_raw_content
+msgid "Raw Netvisor Content"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__netvisor_raw_content
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_expense__netvisor_raw_content
+msgid "Raw Netvisor response for debugging purposes"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__user_id
+msgid "Related user name for the resource to manage its access."
+msgstr "Liittyvä käyttäjätunnus resurssille sen oikeuksien määrittämiseksi."
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__company_currency_id
+msgid "Report Company Currency"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__resource_id
+msgid "Resource"
+msgstr "Resurssi"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__activity_user_id
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__activity_user_id
+msgid "Responsible User"
+msgstr "Vastuukäyttäjä"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__sinid
+msgid "SIN No"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__message_has_sms_error
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Tekstiviestin toimitusvirhe"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__ssnid
+msgid "SSN No"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__study_school
+msgid "School"
+msgstr "Oppilaitos"
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/hr_employee/importer.py:0
+#, python-format
+msgid "Search for existing employee using Employee ID"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/hr_employee/importer.py:0
+#, python-format
+msgid "Search for existing employee using SSN"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__coach_id
+msgid ""
+"Select the \"Employee\" who is the coach of this employee.\n"
+"The \"Coach\" has no specific rights or responsibilities by default."
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__expense_manager_id
+msgid ""
+"Select the user responsible for approving \"Expenses\" of this employee.\n"
+"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model_terms:ir.ui.view,arch_db:connector_netvisor_expense.hr_expense_view_form
+#: model_terms:ir.ui.view,arch_db:connector_netvisor_expense.view_hr_expense_sheet_form
+msgid "Send to Netvisor"
+msgstr "Lähetä Netvisorille"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__show_hr_icon_display
+msgid "Show Hr Icon Display"
+msgstr "Näytä HR-kuvakkeen näyttö"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields.selection,name:connector_netvisor_expense.selection__product_template__netvisor_travel_type__snowmobile
+msgid "Snowmobile"
+msgstr "Moottorikelkka"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__sinid
+msgid "Social Insurance Number"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__ssnid
+msgid "Social Security Number"
+msgstr "Henkilötunnus"
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/hr_expense/exporter.py:0
+#, python-format
+msgid "Something went wrong when exporting. Please see log for more details"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__spouse_birthdate
+msgid "Spouse Birthdate"
+msgstr "Puolison syntymäpäivä"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__spouse_complete_name
+msgid "Spouse Complete Name"
+msgstr "Puolison täydellinen nimi"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__state
+msgid "Status"
+msgstr "Tila"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__activity_state
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_expense__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Tila aktiviteetin perusteella\n"
+"Myöhässä: Eräpäivä on menneisyydessä\n"
+"Tänään: Eräpäivä on tänään\n"
+"Suunniteltu: Tulevaisuudessa."
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__subordinate_ids
+msgid "Subordinates"
+msgstr "Alaiset"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__category_ids
+msgid "Tags"
+msgstr "Avainsanat"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__tax_amount
+msgid "Tax amount"
+msgstr "Veron määrä"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__tax_amount_currency
+msgid "Tax amount in Currency"
+msgstr "Veron määrä valuuttana"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_expense__tax_amount
+msgid "Tax amount in company currency"
+msgstr "Veron määrä yrityksen valuutassa"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_expense__tax_amount_currency
+msgid "Tax amount in currency"
+msgstr "Veron määrä valuuttana"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__company_country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"Kaksikirjaiminen ISO-maaatunnus\n"
+"Voit käyttää tätä kenttää nopeaan hakuun."
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__employee_type
+msgid ""
+"The employee type. Although the primary purpose may seem to categorize employees, this field has also an impact in the Contract "
+"History. Only Employee type is supposed to be under contract and will have a Contract History."
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__tz
+msgid "This field is used in order to define in which timezone the resources will work."
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__tz
+msgid "Timezone"
+msgstr "Aikavyöhyke"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__total_amount
+msgid "Total"
+msgstr "Yhteensä"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__total_amount_currency
+msgid "Total In Currency"
+msgstr "Yhteensä valuutassa"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__untaxed_amount_currency
+msgid "Total Untaxed Amount In Currency"
+msgstr "Veroton määrä yhteensä valuutassa"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields.selection,name:connector_netvisor_expense.selection__product_template__netvisor_expense_type__travel
+msgid "Travel expenses"
+msgstr "Matkakulut"
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/hr_expense/common.py:0
+#, python-format
+msgid "Travel type is missing from product '%s'"
+msgstr "Tuotteelta '%s' puuttuu matkan tyyppi"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__activity_exception_decoration
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_expense__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Poikkeusaktiviteetin tyyppi tietueella."
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__price_unit
+msgid "Unit Price"
+msgstr "Yksikköhinta"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__product_uom_id
+msgid "Unit of Measure"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__product_uom_category_id
+msgid "UoM Category"
+msgstr "Mittayksikön luokka"
+
+#. module: connector_netvisor_expense
+#. odoo-python
+#: code:addons/connector_netvisor_expense/models/hr_employee/importer.py:0
+#, python-format
+msgid "Updated values for employee '{}' with ID {}"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__user_id
+msgid "User"
+msgstr "Käyttäjä"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__user_partner_id
+msgid "User's partner"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__visa_expire
+msgid "Visa Expiration Date"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__visa_no
+msgid "Visa No"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__website_message_ids
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__website_message_ids
+msgid "Website Messages"
+msgstr "Verkkosivun viesti"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__website_message_ids
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_expense__website_message_ids
+msgid "Website communication history"
+msgstr "Verkkosivun viestihistoria"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_expense__product_has_tax
+msgid "Whether tax is defined on a selected product"
+msgstr "Onko vero määritelty valitulle tuotteelle"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,help:connector_netvisor_expense.field_netvisor_employee__member_of_department
+msgid "Whether the employee is a member of the active user's department or one of it's child department."
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__address_id
+msgid "Work Address"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__work_contact_id
+msgid "Work Contact"
+msgstr "Työpaikan yhteystiedot"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__work_email
+msgid "Work Email"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__work_location_id
+msgid "Work Location"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__mobile_phone
+msgid "Work Mobile"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__has_work_permit
+msgid "Work Permit"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__work_permit_expiration_date
+msgid "Work Permit Expiration Date"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__permit_no
+msgid "Work Permit No"
+msgstr ""
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__work_permit_scheduled_activity
+msgid "Work Permit Scheduled Activity"
+msgstr "Työluvan ajastettu toiminta"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__work_phone
+msgid "Work Phone"
+msgstr "Työpuhelin"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__resource_calendar_id
+msgid "Working Hours"
+msgstr "Työajat"
+
+#. module: connector_netvisor_expense
+#: model_terms:ir.ui.view,arch_db:connector_netvisor_expense.netvisor_employee
+msgid "enabled"
+msgstr "käytössä"
+
+#. module: connector_netvisor_expense
+#: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__work_permit_name
+msgid "work_permit_name"
+msgstr "work_permit_name"

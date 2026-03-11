@@ -172,6 +172,10 @@ class NetvisorInvoiceExportMapper(Component):
                 raise
 
             if res:
+                # Reset "send and print values"
+                # to mute the "invoice is being sent"-message
+                record.send_and_print_values = False
+                # Create a binding between Odoo invoice and Netvisor invoice
                 binding = binding_model.create(
                     {
                         "backend_id": backend.id,
@@ -299,10 +303,14 @@ class NetvisorInvoiceExportMapper(Component):
                 # TODO: Handle specific errors more gracefully
                 if "INVALID_DATA" in str(e):
                     _logger.warning(e)
+                    # TODO: put "mark as paid" logic behind a setting,
+                    # if it's necessary at all
+                    return _("The invoice doesn't have a voucher in Netvisor")
+
                     # A credit note without a voucher cannot be allocated
                     # Just mark the invoice as paid
-                    reversed_entry.netvisor_status = "paid"
-                    binding.netvisor_export_status(reversed_entry)
+                    # reversed_entry.netvisor_status = "paid"
+                    # binding.netvisor_export_status(reversed_entry
                 else:
                     _logger.error(e)
                     raise

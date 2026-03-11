@@ -8,7 +8,9 @@ import httpx
 import xmltodict
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
+
+from odoo.addons.queue_job.exception import RetryableJobError
 
 _logger = logging.getLogger(__name__)
 
@@ -29,6 +31,10 @@ class NetvisorBackend(models.Model):
 
     active = fields.Boolean(
         default=True,
+    )
+
+    name = fields.Char(
+        compute="_compute_name",
     )
 
     environment = fields.Selection(
@@ -236,6 +242,11 @@ class NetvisorBackend(models.Model):
     )
     # endregion
 
+    # region Compute and onchange
+    def _compute_name(self):
+        for record in self:
+            record.name = record.company_id.name
+
     @api.onchange("environment")
     def onchange_environment(self):
         for record in self:
@@ -244,29 +255,9 @@ class NetvisorBackend(models.Model):
             else:
                 record.host = "https://isvapi.netvisor.fi"
 
-    def action_test_authentication(self):
-        """
-        Test authentication
-        :return:
-        """
-        self.ensure_one()
+    # endregion
 
-        # Try to list products
-        endpoint = "productlist.nv"
-        self._api_request_get(endpoint)
-
-        title = _("Authentication successful!")
-        message = _("Everything seems properly set up.")
-        return {
-            "type": "ir.actions.client",
-            "tag": "display_notification",
-            "params": {
-                "title": title,
-                "message": message,
-                "sticky": False,
-            },
-        }
-
+    # region API calls
     def _api_request_post(self, endpoint, values, params=None):
         """
         Helper for httpx.post method
@@ -327,15 +318,25 @@ class NetvisorBackend(models.Model):
         url = self._get_request_url(endpoint, params)
         headers = self._get_authentication_headers(url)
 
-        response = httpx.get(
-            url=url,
-            headers=headers,
-        )
+        try:
+            response = httpx.get(
+                url=url,
+                headers=headers,
+            )
+        except httpx.TimeoutException as e:
+            raise RetryableJobError(
+                _("Netvisor API request timed out: %s", str(e))
+            ) from e
+        except Exception as e:
+            raise ValidationError(_("Netvisor API request failed: %s", str(e))) from e
 
         res = self._parse_response(response)
 
         return res
 
+    # endregion
+
+    # region Helpers
     def _get_mac(self, url, timestamp_unix, timestamp_ansi, transaction_id):
         parameters = [
             url,
@@ -400,6 +401,16 @@ class NetvisorBackend(models.Model):
             url = f"{url}?{query_string}"
 
         return url
+
+    def _get_existing_job(self, job_desc):
+        queue_job = self.env["queue.job"].sudo()
+        existing_job = queue_job.search(
+            [
+                ("name", "=", job_desc),
+                ("state", "in", ["pending", "enqueued", "started"]),
+            ]
+        )
+        return existing_job
 
     # TODO: Make smarter response handling
     # flake8: noqa: C901
@@ -498,6 +509,48 @@ class NetvisorBackend(models.Model):
             res = {}
 
         return res
+
+    # endregion
+
+    # region Actions
+    def action_test_authentication(self):
+        """
+        Test authentication
+        :return:
+        """
+        self.ensure_one()
+
+        # Try to list products
+        endpoint = "productlist.nv"
+        self._api_request_get(endpoint)
+
+        title = _("Authentication successful!")
+        message = _("Everything seems properly set up.")
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": title,
+                "message": message,
+                "sticky": False,
+            },
+        }
+
+    def action_open_schedulers(self):
+        """Open Netvisor-related cron jobs."""
+        cron_jobs = (
+            self.env["ir.cron"]
+            .with_context(active_test=False)
+            .search([("name", "like", "Netvisor%")])
+        )
+
+        return {
+            "name": _("Netvisor Schedulers"),
+            "type": "ir.actions.act_window",
+            "res_model": "ir.cron",
+            "view_mode": "tree,form",
+            "domain": [("id", "in", cron_jobs.ids)],
+        }
 
     def action_import_customers(self):
         """
@@ -598,34 +651,6 @@ class NetvisorBackend(models.Model):
             # Always fetch a week backwards, if new invoices have been created to past
             record.purchases_start_date = fields.Datetime.now() - timedelta(days=7)
 
-    def _cron_import_purchase_invoices(self):
-        """
-        Scheduled import all new purchase invoices
-        """
-        for backend in self.search([("environment", "!=", "disabled")]):
-            backend.action_import_purchase_invoices()
-
-    def _cron_update_invoices_status(self):
-        """
-        Scheduled update all invoices status
-        """
-        for backend in self.search([("environment", "!=", "disabled")]):
-            backend.action_update_invoices_status()
-
-    def _cron_import_payments(self):
-        """
-        Scheduled import all new payments
-        """
-        for backend in self.search([("environment", "!=", "disabled")]):
-            backend.action_import_payments()
-
-    def _cron_import_dimensions(self):
-        """
-        Scheduled import dimensions
-        """
-        for backend in self.search([("environment", "!=", "disabled")]):
-            backend.action_import_dimensions()
-
     def action_update_invoices_status(self):
         """
         Update status for all invoices
@@ -696,12 +721,35 @@ class NetvisorBackend(models.Model):
                     "Dimension import job already queued. " "Skipping new job creation."
                 )
 
-    def _get_existing_job(self, job_desc):
-        queue_job = self.env["queue.job"].sudo()
-        existing_job = queue_job.search(
-            [
-                ("name", "=", job_desc),
-                ("state", "in", ["pending", "enqueued", "started"]),
-            ]
-        )
-        return existing_job
+    # endregion
+
+    # region Cron methods
+    def _cron_import_purchase_invoices(self):
+        """
+        Scheduled import all new purchase invoices
+        """
+        for backend in self.search([("environment", "!=", "disabled")]):
+            backend.action_import_purchase_invoices()
+
+    def _cron_update_invoices_status(self):
+        """
+        Scheduled update all invoices status
+        """
+        for backend in self.search([("environment", "!=", "disabled")]):
+            backend.action_update_invoices_status()
+
+    def _cron_import_payments(self):
+        """
+        Scheduled import all new payments
+        """
+        for backend in self.search([("environment", "!=", "disabled")]):
+            backend.action_import_payments()
+
+    def _cron_import_dimensions(self):
+        """
+        Scheduled import dimensions
+        """
+        for backend in self.search([("environment", "!=", "disabled")]):
+            backend.action_import_dimensions()
+
+    # endregion

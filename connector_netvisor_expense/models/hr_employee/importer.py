@@ -61,9 +61,9 @@ class NetvisorEmployeeImportMapper(Component):
             existing_record = odoo_model.search([("ssnid", "=", values["ssnid"])])
 
         if existing_record and len(existing_record) > 1:
-            raise ValidationError(_(
-                "Found multiple matching records: %s", existing_record.ids   
-            ))
+            raise ValidationError(
+                _("Found multiple matching records: %s", existing_record.ids)
+            )
 
         if not existing_record:
             existing_record = self.env["hr.employee"].sudo().create(values)
@@ -85,17 +85,16 @@ class NetvisorEmployeeImportMapper(Component):
         )
 
     # Netvisor, Odoo
-    direct = [
-    ]
+    direct = []
 
     def _get_base_information(self, record):
         return record.get("employeebaseinformation", {})
-            
+
     @mapping
     def ssnid(self, record):
         base_info = self._get_base_information(record)
         employee_identifier = base_info.get("employeeidentifier", {})
-        
+
         res = {}
 
         if employee_identifier.get("@type") == "number":
@@ -104,21 +103,21 @@ class NetvisorEmployeeImportMapper(Component):
             res["ssnid"] = employee_identifier.get("#text")
 
         return res
-            
+
     @mapping
     def identification_id(self, record):
         base_info = self._get_base_information(record)
         res = {"identification_id": base_info.get("employeenumber")}
 
         return res
-             
+
     @mapping
     def firstname(self, record):
         base_info = self._get_base_information(record)
         res = {"firstname": base_info.get("firstname")}
-        
+
         return res
-             
+
     @mapping
     def lastname(self, record):
         base_info = self._get_base_information(record)

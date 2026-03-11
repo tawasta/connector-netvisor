@@ -28,23 +28,15 @@
                             string="Export employee"
                             help="Export this employee to Netvisor"
                         />
-
-                        <label
-                            for="netvisor_bind_ids"
-                            invisible="not netvisor_bind_ids"
-                        />
-                        <field
-                            name="netvisor_bind_ids"
-                            nolabel="1"
-                            invisible="not netvisor_bind_ids"
-                        >
-                            <tree create="false" delete="false">
-                                <field name="backend_id" readonly="1" />
-                                <field name="odoo_id" readonly="1" />
-                                <field name="external_id" readonly="1" />
-                            </tree>
-                        </field>
                     </group>
+                    <label for="netvisor_bind_ids" invisible="not netvisor_bind_ids" />
+                    <field name="netvisor_bind_ids" invisible="not netvisor_bind_ids">
+                        <tree create="false" delete="false">
+                            <field name="backend_id" readonly="1" />
+                            <field name="odoo_id" readonly="1" />
+                            <field name="external_id" readonly="1" />
+                        </tree>
+                    </field>
                 </page>
             </page>
         </field>

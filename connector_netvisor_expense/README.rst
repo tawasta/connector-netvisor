@@ -15,6 +15,8 @@ Configure employment type code to match the ones in Netvisor.
 Employment type can be configured in Employees -> Configuration -> Employment types.
 This could be something like "Kuukausipalkka" or "Tuntipalkka".
 
+Configure "Netvisor expense type" for product that will be used for expenses.
+
 Usage
 =====
 \-

@@ -46,7 +46,13 @@ class NetvisorEmployeeExportMapper(Component):
 
         msg = ""
 
-        if not binding:
+        if binding:
+            method = "edit"
+            backend._api_request_post(
+                "employee.nv", xml_string, params={"Method": method}
+            )
+            msg = _("Exported employee information to Netvisor")
+        else:
             # TODO / FYI: This is dumb, because getemployee.nv endpoint doesn't return
             # the employee ID or Netvisor ID.
             # We currently can't check if the employee already exists in Netvisor.

@@ -44,6 +44,13 @@
                         t-esc="record.bank_account_id.bank_id.bic or ''"
                     />
                 </employeepayrollinformation>
+
+                <!-- TODO: Can we just enable these, or should they be configurable? -->
+                <employeesettings>
+                    <payrollservice>enabled</payrollservice>
+                    <resourcemanagement>enabled</resourcemanagement>
+                </employeesettings>
+
             </employee>
         </root>
     </template>

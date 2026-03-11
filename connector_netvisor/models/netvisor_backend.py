@@ -599,15 +599,32 @@ class NetvisorBackend(models.Model):
             record.purchases_start_date = fields.Datetime.now() - timedelta(days=7)
 
     def _cron_import_purchase_invoices(self):
-        for backend in self.search([]):
+        """
+        Scheduled import all new purchase invoices
+        """
+        for backend in self.search([("environment", "!=", "disabled")]):
             backend.action_import_purchase_invoices()
 
     def _cron_update_invoices_status(self):
         """
         Scheduled update all invoices status
         """
-        for backend in self.search([]):
+        for backend in self.search([("environment", "!=", "disabled")]):
             backend.action_update_invoices_status()
+
+    def _cron_import_payments(self):
+        """
+        Scheduled import all new payments
+        """
+        for backend in self.search([("environment", "!=", "disabled")]):
+            backend.action_import_payments()
+
+    def _cron_import_dimensions(self):
+        """
+        Scheduled import dimensions
+        """
+        for backend in self.search([("environment", "!=", "disabled")]):
+            backend.action_import_dimensions()
 
     def action_update_invoices_status(self):
         """
@@ -638,13 +655,6 @@ class NetvisorBackend(models.Model):
                     f"Status import job already queued for invoice {binding.name}. "
                     "Skipping new job creation."
                 )
-
-    def _cron_import_payments(self):
-        """
-        Scheduled import all new payments
-        """
-        for backend in self.search([]):
-            backend.action_import_payments()
 
     def action_import_payments(self):
         """
@@ -685,10 +695,6 @@ class NetvisorBackend(models.Model):
                 _logger.warning(
                     "Dimension import job already queued. " "Skipping new job creation."
                 )
-
-    def _cron_import_dimensions(self):
-        for backend in self.search([]):
-            backend.action_import_dimensions()
 
     def _get_existing_job(self, job_desc):
         queue_job = self.env["queue.job"].sudo()

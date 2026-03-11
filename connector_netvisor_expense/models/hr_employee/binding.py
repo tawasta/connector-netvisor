@@ -36,3 +36,15 @@ class NetvisorEmployee(models.Model):
         with backend.work_on(self._name) as work:
             exporter = work.component(usage="export.mapper")
             return exporter.export_employee(backend, record)
+
+    def netvisor_import_employee(self, netvisor_key):
+        """
+        Import an employee from Netvisor
+        :param netvisor_key: Employee key in Netvisor
+        :return:
+        """
+        backend = self.get_netvisor_backend()
+
+        with backend.work_on(self._name) as work:
+            importer = work.component(usage="import.mapper")
+            return importer.import_employee(backend, netvisor_key)

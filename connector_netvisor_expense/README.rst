@@ -6,11 +6,14 @@
 Netvisor Connector Expense support
 ==================================
 
-Use travel expenses with Netvisor integration
+Use travel expenses with Netvisor integration.
+Allows exporting employees to Netvisor.
 
 Configuration
 =============
-\-
+Configure employment type code to match the ones in Netvisor.
+Employment type can be configured in Employees -> Configuration -> Employment types.
+This could be something like "Kuukausipalkka" or "Tuntipalkka".
 
 Usage
 =====

@@ -3,7 +3,7 @@ import logging
 from psycopg2 import IntegrityError
 
 from odoo import _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.component.core import Component
 
@@ -56,9 +56,7 @@ class NetvisorEmployeeExportMapper(Component):
                 # Create a new record to Netvisor
                 method = "add"
                 backend._api_request_post(
-                    "employee.nv",
-                    xml_string,
-                    params={"Method": method}
+                    "employee.nv", xml_string, params={"Method": method}
                 )
                 msg = _("Exported employee to Netvisor")
             except Exception as e:
@@ -68,38 +66,51 @@ class NetvisorEmployeeExportMapper(Component):
                 method = "edit"
                 try:
                     backend._api_request_post(
-                        "employee.nv",
-                        xml_string,
-                        params={"Method": method}
+                        "employee.nv", xml_string, params={"Method": method}
                     )
                     msg = _("Exported employee information to Netvisor")
                 except Exception as edit_error:
-                    raise UserError(_(
-                        "Failed to export employee '%s' to Netvisor: %s",
-                        record.display_name, str(edit_error)
-                    )) from edit_error
+                    raise UserError(
+                        _(
+                            "Failed to export employee '%s' to Netvisor: %s",
+                            record.display_name,
+                            str(edit_error),
+                        )
+                    ) from edit_error
 
             record.message_post(body=msg)
 
-            # employee.nv returns nothing, so we assume that the employee 
+            # employee.nv returns nothing, so we assume that the employee
             # was created successfully if no error is raised.
-            # We can't make a binding, and the matching will be done by SSN         
+            # We can't make a binding, and the matching will be done by SSN
 
         return msg
 
     def _validate(self, record):
         if not record.get_social_security_number():
-            raise UserError(
-                _("Employee '%s' does not have a social security number, " \
-                "which is required for exporting to Netvisor", record.display_name)
+            raise ValidationError(
+                _(
+                    "Employee '%s' does not have a social security number, "
+                    "which is required for exporting to Netvisor",
+                    record.display_name,
+                )
+            )
+
+        if not record.job_id:
+            raise ValidationError(_("Employee '%s' does not have a job position set"))
+
+        if record.job_id and not record.job_id.contract_type_id:
+            raise ValidationError(
+                _("Employee '%s' job position does not have a contract type set")
             )
 
         if record.bank_account_id and not record.bank_account_id.allow_out_payment:
-            raise UserError(
-                _("Employee '%s' has a bank account '%s' " \
-                "that is not allowed for outgoing payments. "
-                "Please set the bank account as trusted first.",
-                record.display_name,
-                record.bank_account_id.acc_number
+            raise ValidationError(
+                _(
+                    "Employee '%s' has a bank account '%s' "
+                    "that is not allowed for outgoing payments. "
+                    "Please set the bank account as trusted first.",
+                    record.display_name,
+                    record.bank_account_id.acc_number,
                 )
             )

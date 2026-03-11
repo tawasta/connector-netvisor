@@ -486,6 +486,8 @@ class NetvisorBackend(models.Model):
             if isinstance(res, dict):
                 # Always put ratios in a list
                 res = [res]
+        elif "employee" in root:
+            res = root.get("employee")
         elif "employees" in root:
             res = root.get("employees") and root["employees"].get("employee", {})
             if isinstance(res, dict):

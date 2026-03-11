@@ -31,15 +31,18 @@
                     <country t-esc="record.private_country_id.code or 'fi'" />
                     <nationality t-if="record.country_id and record.country_id.code" />
                     <language t-esc="record.lang and record.lang.code or 'fi'" />
-                    <employeenumber t-if="0" /> <!-- Not supported yet -->
+                    <employeenumber t-esc="record.identification_id" />
                     <profession t-esc="record.job_title or ''" />
-                    <!-- TODO: Job begin date -->
-                    <jobbegindate>2014-08-10</jobbegindate>
-
-                    <!-- TODO: Get from contract type -->
-                    <payrollrulegroupname>Kuukausipalkka</payrollrulegroupname>
-                    <bankaccountnumber t-esc="record.bank_account_id.acc_number or ''" />
-                    <bankidentificationcode t-esc="record.bank_account_id.bank_id.bic or ''" />
+                    <jobbegindate t-esc="record.job_begin_date or ''" />
+                    <payrollrulegroupname
+                        t-esc="record.job_id.contract_type_id.code or ''"
+                    />
+                    <bankaccountnumber
+                        t-esc="record.bank_account_id.acc_number or ''"
+                    />
+                    <bankidentificationcode
+                        t-esc="record.bank_account_id.bank_id.bic or ''"
+                    />
                 </employeepayrollinformation>
             </employee>
         </root>

@@ -11,12 +11,17 @@ class HrEmployee(models.Model):
         string="Netvisor Bindings",
     )
 
+    job_begin_date = fields.Date(
+        string="Job begin date",
+        default=fields.Date.context_today,
+    )
+
     def get_social_security_number(self):
         """
         Get the employee's social security number (SSN)
         :return: SSN or None
 
-        The point of this method is to allow overriding the logic for getting the SSN, 
+        The point of this method is to allow overriding the logic for getting the SSN,
         as in some cases it might be stored in a different field or require formatting.
         """
         self.ensure_one()
@@ -29,7 +34,7 @@ class HrEmployee(models.Model):
         :return:
         """
         netvisor_model = self.env["netvisor.employee"]
-        
+
         for record in self:
             if not company_id and record.company_id:
                 company_id = record.company_id.id
@@ -42,9 +47,9 @@ class HrEmployee(models.Model):
             if use_queue:
                 # Queued sending
                 job_desc = _(f"Netvisor: export employee '{record.name}'")
-                netvisor_model.with_delay(description=job_desc).netvisor_export_employee(
-                    record, company_id
-                )
+                netvisor_model.with_delay(
+                    description=job_desc
+                ).netvisor_export_employee(record, company_id)
             else:
                 # Immediate sending
                 netvisor_model.netvisor_export_employee(record, company_id)

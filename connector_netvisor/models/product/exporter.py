@@ -23,7 +23,7 @@ class NetvisorProductExportMapper(Component):
         # Force record company for property fields
         if record.company_id:
             record = record.with_company(record.company_id.id)
-        binding_model = self.env["netvisor.product"]
+        binding_model = self.env["netvisor.product"].with_context(active_test=False)
 
         binding = binding_model.search(
             [("odoo_id", "=", record.id), ("backend_id", "=", backend.id)]

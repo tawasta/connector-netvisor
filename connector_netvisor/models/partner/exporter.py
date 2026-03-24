@@ -42,7 +42,7 @@ class NetvisorPartnerExportMapper(Component):
         if record.company_id:
             record = record.with_company(record.company_id.id)
 
-        binding_model = self.env["netvisor.partner"]
+        binding_model = self.env["netvisor.partner"].with_context(active_test=False)
 
         binding = binding_model.search(
             [("odoo_id", "=", record.id), ("backend_id", "=", backend.id)]

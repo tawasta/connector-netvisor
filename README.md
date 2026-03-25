@@ -14,6 +14,7 @@ addon | version | maintainers | summary
 [connector_netvisor_accrual](connector_netvisor_accrual/) | 17.0.1.1.0 |  | Use accrual rules with Netvisor integration
 [connector_netvisor_ecommerce](connector_netvisor_ecommerce/) | 17.0.1.0.2 |  | Use Netvisor integration with eCommerce
 [connector_netvisor_expense](connector_netvisor_expense/) | 17.0.1.2.0 |  | Use travel expenses with Netvisor integration
+[connector_netvisor_expense_partner_ssn](connector_netvisor_expense_partner_ssn/) | 17.0.1.0.0 |  | Use partner's SSN as employee's SSN in Netvisor Connector
 [connector_netvisor_subscription](connector_netvisor_subscription/) | 17.0.1.0.0 |  | Allows Netvisor integration to handle subscription invoices
 
 [//]: # (end addons)

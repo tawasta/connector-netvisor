@@ -1561,7 +1561,7 @@ msgstr "Työajat"
 #. module: connector_netvisor_expense
 #: model_terms:ir.ui.view,arch_db:connector_netvisor_expense.netvisor_employee
 msgid "enabled"
-msgstr "käytössä"
+msgstr "enabled"
 
 #. module: connector_netvisor_expense
 #: model:ir.model.fields,field_description:connector_netvisor_expense.field_netvisor_employee__work_permit_name

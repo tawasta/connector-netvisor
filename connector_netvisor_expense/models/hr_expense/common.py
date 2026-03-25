@@ -21,16 +21,16 @@ class HrExpense(models.Model):
             if not expense_type:
                 raise ValidationError(
                     _(
-                        "Netvisor expense type is missing from product '%s'"
-                        % record.product_id.name
+                        "Netvisor expense type is missing from product '%s'",
+                        record.product_id.name,
                     )
                 )
 
             if expense_type == "travel" and not record.product_id.netvisor_travel_type:
                 raise ValidationError(
                     _(
-                        "Travel type is missing from product '%s'"
-                        % record.product_id.name
+                        "Travel type is missing from product '%s'",
+                        record.product_id.name,
                     )
                 )
             elif (
@@ -39,8 +39,8 @@ class HrExpense(models.Model):
             ):
                 raise ValidationError(
                     _(
-                        "Compensation type is missing from product '%s'"
-                        % record.product_id.name
+                        "Compensation type is missing from product '%s'",
+                        record.product_id.name,
                     )
                 )
 
@@ -56,7 +56,7 @@ class HrExpense(models.Model):
 
             if use_queue:
                 # Queued sending
-                job_desc = _(f"Netvisor: export expense '{record.name}'")
+                job_desc = _("Netvisor: export expense '%s'", record.name)
                 netvisor_model.with_delay(description=job_desc).netvisor_export_expense(
                     record, company_id
                 )

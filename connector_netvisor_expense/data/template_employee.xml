@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!--
+        Netvisor trip employee XML document
+    -->
+    <template id="netvisor_employee">
+        <root>
+            <employee>
+                <employeebaseinformation>
+                    <!-- Foreign employee identification not supported yet -->
+                    <foreignemployeeidentification t-if="0">
+                    </foreignemployeeidentification>
+
+                    <employeeidentifier t-esc="record.get_social_security_number()" />
+                    <!--
+                    <companyidentifier t-esc="record.company_id.company_registry or ''" />
+                    <companyname t-esc="record.company_id.name or ''" />
+                    -->
+                    <firstname t-esc="record.firstname or ''" />
+                    <lastname t-esc="record.lastname or ''" />
+                    <phonenumber t-esc="record.private_phone or ''" />
+                    <email t-esc="record.private_email or ''" />
+                </employeebaseinformation>
+
+                <employeepayrollinformation>
+                    <streetaddress t-esc="record.private_street or ''" />
+                    <postnumber t-esc="record.private_zip or ''" />
+                    <city t-esc="record.private_city or ''" />
+                    <municipality t-esc="record.private_city or ''" />
+                    <country t-esc="record.private_country_id.code or 'fi'" />
+                    <nationality t-if="record.country_id and record.country_id.code" />
+                    <language t-esc="record.lang and record.lang[0:2] or 'fi'" />
+                    <employeenumber t-esc="record.identification_id" />
+                    <profession t-esc="record.job_title or ''" />
+                    <jobbegindate t-esc="record.job_begin_date or ''" />
+                    <payrollrulegroupname
+                        t-esc="record.job_id.contract_type_id.code or ''"
+                    />
+                    <bankaccountnumber
+                        t-esc="record.bank_account_id.acc_number or ''"
+                    />
+                    <bankidentificationcode
+                        t-esc="record.bank_account_id.bank_id.bic or ''"
+                    />
+                </employeepayrollinformation>
+
+                <!-- TODO: Can we just enable these, or should they be configurable? -->
+                <employeesettings>
+                    <payrollservice>enabled</payrollservice>
+                    <resourcemanagement>enabled</resourcemanagement>
+                </employeesettings>
+
+            </employee>
+        </root>
+    </template>
+</odoo>

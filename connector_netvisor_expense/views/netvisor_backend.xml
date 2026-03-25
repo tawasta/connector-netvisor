@@ -6,14 +6,45 @@
         <field name="inherit_id" ref="connector_netvisor.view_netvisor_backend_form" />
         <field name="arch" type="xml">
             <page name="dimensions" position="after">
+
+                <page name="employee" string="Employees">
+                    <group name="employee_group">
+                        <group name="employee_group_import" string="Import">
+                            <p class="oe_grey oe_inline" colspan="2">
+                                Import or update all employees from Netvisor.<br />
+                                If an employee doesn't exist, one will be created.<br />
+                                If an employee exists (Employee ID match), it will be updated.<br
+                                />
+                            </p>
+                            <button
+                                name="action_import_employees"
+                                confirm="Are you sure you want to import employees?"
+                                type="object"
+                                class="oe_highlight"
+                                colspan="2"
+                                string="Import employees"
+                            />
+                        </group>
+                        <group
+                            name="employee_group_settings"
+                            string="Employee Settings"
+                        >
+                            <field
+                                name="include_ended_employments"
+                                widget="boolean_toggle"
+                            />
+                        </group>
+                    </group>
+                </page>
+
                 <page name="expenses" string="Expenses">
                     <group name="expenses_group">
                         <group name="expenses_group_import" string="Import">
                             <p class="oe_grey oe_inline" colspan="2">
-                                Import or update all salary types from Netvisor.
-                                <br />
-                                If salary type doesn't exist, one will be created.
-                                If salary type exists (name match), it will be updated.
+                                Import or update all salary types from Netvisor.<br />
+                                If salary type doesn't exist, one will be created.<br />
+                                If salary type exists (name match), it will be updated.<br
+                                />
                             </p>
                             <button
                                 name="action_import_salary_types"
@@ -25,7 +56,6 @@
                             />
                         </group>
                         <group name="expenses_group_settings" string="Expense Settings">
-
                         </group>
                     </group>
                 </page>

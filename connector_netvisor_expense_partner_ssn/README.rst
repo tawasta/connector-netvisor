@@ -2,20 +2,15 @@
    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
    :alt: License: AGPL-3
 
-==================================
-Netvisor Connector Expense support
-==================================
+===================================
+Netvisor Connector SSN from partner
+===================================
 
-Use travel expenses with Netvisor integration.
-Allows exporting employees to Netvisor.
+Use partner's SSN as employee's SSN when exporting to Netvisor
 
 Configuration
 =============
-Configure employment type code to match the ones in Netvisor.
-Employment type can be configured in Employees -> Configuration -> Employment types.
-This could be something like "Kuukausipalkka" or "Tuntipalkka".
-
-Configure "Netvisor expense type" for product that will be used for expenses.
+\-
 
 Usage
 =====

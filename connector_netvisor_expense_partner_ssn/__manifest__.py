@@ -1,7 +1,7 @@
 ##############################################################################
 #
 #    Author: Futural Oy
-#    Copyright 2024 Futural Oy (https://tawasta.fi)
+#    Copyright 2026 Futural Oy (https://futural.fi)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,9 +19,9 @@
 ##############################################################################
 
 {
-    "name": "Netvisor Connector Expense support",
-    "summary": "Use travel expenses with Netvisor integration",
-    "version": "17.0.1.2.0",
+    "name": "Netvisor Connector SSN from partner",
+    "summary": "Use partner's SSN as employee's SSN in Netvisor Connector",
+    "version": "17.0.1.0.0",
     "category": "Sales",
     "website": "https://github.com/tawasta/connector-netvisor/",
     "author": "Futural",
@@ -34,21 +34,10 @@
         "bin": [],
     },
     "depends": [
-        "connector_netvisor",
-        "hr_employee_firstname",
-        "hr_expense",
+        "connector_netvisor_expense",
+        "social_security_number_management",
     ],
-    "data": [
-        "data/template_employee.xml",
-        "data/template_trip_expense.xml",
-        "security/model_access.xml",
-        "views/hr_employee.xml",
-        "views/hr_expense.xml",
-        "views/hr_expense_sheet.xml",
-        "views/netvisor_backend.xml",
-        "views/product_product.xml",
-        "views/product_template.xml",
-    ],
+    "data": [],
     "assets": {},
     "demo": [],
 }

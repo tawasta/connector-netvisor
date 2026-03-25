@@ -1,0 +1,44 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.form.netvisor</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form" />
+        <field name="arch" type="xml">
+            <field name="work_email" position="after">
+                <field name="job_begin_date" />
+            </field>
+
+            <page name="hr_settings" position="after">
+                <page name="netvisor" string="Netvisor">
+                    <group name="netvisor_group">
+
+                        <p class="oe_grey oe_inline" colspan="2">
+                            Export this employee to Netvisor.
+                            <br
+                            />If the employee is not yet exported, a new record will be created in Netvisor.
+                            <br
+                            />If the employee is already exported (Employee ID match), the existing Netvisor record will be updated.
+                        </p>
+                        <button
+                            name="action_netvisor_export_record"
+                            type="object"
+                            class="oe_highlight"
+                            colspan="2"
+                            string="Export employee"
+                            help="Export this employee to Netvisor"
+                        />
+                    </group>
+                    <label for="netvisor_bind_ids" invisible="not netvisor_bind_ids" />
+                    <field name="netvisor_bind_ids" invisible="not netvisor_bind_ids">
+                        <tree create="false" delete="false">
+                            <field name="backend_id" readonly="1" />
+                            <field name="odoo_id" readonly="1" />
+                            <field name="external_id" readonly="1" />
+                        </tree>
+                    </field>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>

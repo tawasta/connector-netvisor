@@ -13,13 +13,13 @@
                 <customlines t-if="custom_lines">
                     <customline t-foreach="custom_lines" t-as="custom_line">
                         <employeeidentifier
-                            t-if="custom_lines.employee_id.get_social_security_number()"
-                            t-esc="custom_lines.employee_id.get_social_security_number()"
+                            t-if="custom_line.employee_id.get_social_security_number()"
+                            t-esc="custom_line.employee_id.get_social_security_number()"
                             type="finnishpersonalidentifier"
                         />
                         <employeeidentifier
                             t-else=""
-                            t-esc="custom_lines.employee_id.identification_id or ''"
+                            t-esc="custom_line.employee_id.identification_id or ''"
                             type="number"
                         />
                         <ratio t-esc="custom_line.product_id.name" type="name" />
@@ -119,11 +119,8 @@
                         </dimension>
                         </t>
 
-                        <tripexpenseattachments t-if="travel_lines.attachment_ids">
-                            <t
-                                t-foreach="travel_lines.attachment_ids"
-                                t-as="attachment"
-                            >
+                        <tripexpenseattachments t-if="travel_line.attachment_ids">
+                            <t t-foreach="travel_line.attachment_ids" t-as="attachment">
                                 <tripexpenseattachment>
                                     <mimetype t-esc="attachment.mimetype" />
                                     <attachmentdescription
@@ -141,13 +138,13 @@
                 <dailycompensationlines t-if="daily_lines">
                     <dailycompensationline t-foreach="daily_lines" t-as="daily_line">
                         <employeeidentifier
-                            t-if="daily_lines.employee_id.get_social_security_number()"
-                            t-esc="daily_lines.employee_id.get_social_security_number()"
+                            t-if="daily_line.employee_id.get_social_security_number()"
+                            t-esc="daily_line.employee_id.get_social_security_number()"
                             type="finnishpersonalidentifier"
                         />
                         <employeeidentifier
                             t-else=""
-                            t-esc="daily_lines.employee_id.identification_id or ''"
+                            t-esc="daily_line.employee_id.identification_id or ''"
                             type="number"
                         />
                         <compensationtype

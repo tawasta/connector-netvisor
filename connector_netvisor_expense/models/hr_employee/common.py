@@ -36,20 +36,26 @@ class HrEmployee(models.Model):
         netvisor_model = self.env["netvisor.employee"]
 
         for record in self:
-            if not company_id and record.company_id:
-                company_id = record.company_id.id
-            elif not company_id:
-                company_id = self.env.user.company_id.id
-
             if company_id:
-                netvisor_model = netvisor_model.with_context(company_id=company_id)
+                # Prefer overridden company ID
+                effective_company_id = company_id
+            elif not company_id and record.company_id:
+                # Fallback to record company ID if no overridden company ID is provided
+                effective_company_id = record.company_id.id
+            else:
+                # Fallback to user's company ID if no record company ID is set
+                effective_company_id = self.env.user.company_id.id
+
+            netvisor_model = netvisor_model.with_context(
+                company_id=effective_company_id
+            )
 
             if use_queue:
                 # Queued sending
                 job_desc = _("Netvisor: export employee '%s'", record.name)
                 netvisor_model.with_delay(
                     description=job_desc
-                ).netvisor_export_employee(record, company_id)
+                ).netvisor_export_employee(record, effective_company_id)
             else:
                 # Immediate sending
-                netvisor_model.netvisor_export_employee(record, company_id)
+                netvisor_model.netvisor_export_employee(record, effective_company_id)

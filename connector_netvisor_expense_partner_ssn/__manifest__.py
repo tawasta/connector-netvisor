@@ -37,8 +37,7 @@
         "connector_netvisor_expense",
         "social_security_number_management",
     ],
-    "data": [
-    ],
+    "data": [],
     "assets": {},
     "demo": [],
 }

@@ -30,7 +30,7 @@
                     <municipality t-esc="record.private_city or ''" />
                     <country t-esc="record.private_country_id.code or 'fi'" />
                     <nationality t-if="record.country_id and record.country_id.code" />
-                    <language t-esc="record.lang and record.lang.code or 'fi'" />
+                    <language t-esc="record.lang and record.lang[0:2] or 'fi'" />
                     <employeenumber t-esc="record.identification_id" />
                     <profession t-esc="record.job_title or ''" />
                     <jobbegindate t-esc="record.job_begin_date or ''" />

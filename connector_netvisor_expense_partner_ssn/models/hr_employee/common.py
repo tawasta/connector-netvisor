@@ -5,10 +5,9 @@ from odoo.exceptions import ValidationError
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
-
     def get_social_security_number(self):
         """
-        Override the method to get the social security number from the employee's 
+        Override the method to get the social security number from the employee's
         related partner instead of the employee itself.
         """
         res = super().get_social_security_number()
@@ -22,5 +21,5 @@ class HrEmployee(models.Model):
                 .strip()
             )
             res = partner.decrypt_social_security_number(encrypted_ssn, encryption_key)
-        
+
         return res

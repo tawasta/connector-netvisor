@@ -1,7 +1,5 @@
 import logging
 
-from psycopg2 import IntegrityError
-
 from odoo import _
 from odoo.exceptions import UserError, ValidationError
 

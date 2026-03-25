@@ -52,13 +52,15 @@ class NetvisorEmployeeImportMapper(Component):
         if not existing_record and values.get("identification_id"):
             _logger.debug(_("Search for existing employee using Employee ID"))
             existing_record = odoo_model.search(
-                [("identification_id", "=", values["identification_id"])]
+                [("identification_id", "=", values["identification_id"])], limit=1
             )
 
         # 2. Search for existing employee using SSN
         if not existing_record and values.get("ssnid"):
             _logger.debug(_("Search for existing employee using SSN"))
-            existing_record = odoo_model.search([("ssnid", "=", values["ssnid"])])
+            existing_record = odoo_model.search(
+                [("ssnid", "=", values["ssnid"])], limit=1
+            )
 
         if existing_record and len(existing_record) > 1:
             raise ValidationError(

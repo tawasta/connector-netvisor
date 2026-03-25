@@ -14,4 +14,17 @@
         <field name="perm_unlink" eval="0" />
     </record>
 
+    <record id="role_employee_user" model="ir.model.access">
+        <field name="name">Netvisor employee user</field>
+        <field
+            name="model_id"
+            ref="connector_netvisor_expense.model_netvisor_employee"
+        />
+        <field name="group_id" ref="hr.group_hr_user" />
+        <field name="perm_read" eval="1" />
+        <field name="perm_write" eval="1" />
+        <field name="perm_create" eval="1" />
+        <field name="perm_unlink" eval="0" />
+    </record>
+
 </odoo>

@@ -32,7 +32,7 @@
                     <nationality t-if="record.country_id and record.country_id.code" />
                     <language t-esc="record.lang and record.lang[0:2] or 'fi'" />
                     <employeenumber t-esc="record.identification_id" />
-                    <profession t-esc="record.job_title or ''" />
+                    <profession t-esc="record.job_title or record.job_id.name or ''" />
                     <jobbegindate t-esc="record.job_begin_date or ''" />
                     <payrollrulegroupname
                         t-esc="record.job_id.contract_type_id.code or ''"

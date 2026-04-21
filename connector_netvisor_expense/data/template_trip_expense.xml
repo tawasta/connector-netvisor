@@ -45,7 +45,8 @@
                         <expenseaccountnumber
                             t-esc="custom_line.account_id.code or ''"
                         />
-
+                        <!-- TODO: configurable linestatus -->
+                        <linestatus>accepted</linestatus>
                         <t
                             t-if="custom_line.analytic_distribution"
                             id="dimension_wrapper"
@@ -101,7 +102,8 @@
                         <linedescription t-esc="travel_line.description or ''" />
                         <traveldate t-esc="travel_line.date.isoformat() or ''" />
                         <routedescription t-esc="travel_line.description or ''" />
-
+                        <!-- TODO: configurable linestatus -->
+                        <linestatus>accepted</linestatus>
                         <t
                             t-if="travel_line.analytic_distribution"
                             id="dimension_wrapper"
@@ -156,6 +158,8 @@
                         <!-- TODO: Configurable time of departure, return -->
                         <timeofdeparture t-esc="daily_line.date.isoformat() or ''" />
                         <returntime t-esc="daily_line.date.isoformat() or ''" />
+                        <!-- TODO: configurable linestatus -->
+                        <linestatus>accepted</linestatus>
 
                         <t
                             t-if="daily_line.analytic_distribution"

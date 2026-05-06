@@ -209,9 +209,7 @@ class NetvisorInvoiceExportMapper(Component):
 
         # Update Odoo invoice information
         job_desc = _(f"Import invoice details for {binding.odoo_id.name}")
-        binding.with_delay(description=job_desc).netvisor_import_invoice_details(
-            binding.odoo_id
-        )
+        binding.with_delay(description=job_desc).netvisor_import_status(binding.odoo_id)
 
         if binding.reversed_entry_id:
             # Match credit note to the original invoice

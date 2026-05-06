@@ -36,13 +36,34 @@ class NetvisorInvoiceImportMapper(Component):
             endpoint = f"getpurchaseinvoice.nv?netvisorkey={binding.external_id}"
         else:
             # No other invoice types are supported
-            return
+            raise ValidationError(
+                _("Only customer and supplier invoices are supported")
+            )
 
         invoice = binding.backend_id._api_request_get(endpoint)
 
         if not invoice:
             return _("Invoice not found from Netvisor")
 
+        res = ""
+
+        # If invoice number doesn't match, update it
+        invoice_number = invoice.get("SalesInvoiceNumber") or invoice.get(
+            "PurchaseInvoiceNumber"
+        )
+        if invoice_number and record.name != invoice_number:
+            res += _("Updated invoice number to %s", invoice_number) + "\n"
+            record.name = invoice_number
+
+        # If payment reference doesn't match, update it
+        payment_reference = invoice.get("SalesInvoiceReferencenumber") or invoice.get(
+            "PurchaseInvoiceReferencenumber"
+        )
+        if payment_reference and record.payment_reference != payment_reference:
+            res += _("Updated payment reference to %s", payment_reference) + "\n"
+            record.payment_reference = payment_reference
+
+        # If invoice date doesn't match, update it
         invoice_status = invoice.get("InvoiceStatus")
         if isinstance(invoice_status, dict):
             # Sales invoice returns a dict
@@ -52,58 +73,20 @@ class NetvisorInvoiceImportMapper(Component):
             invoice_status = invoice_status.lower().replace(" ", "")
 
         if record.netvisor_status != invoice_status:
-            res = _(
-                f"Updated status from '{record.netvisor_status}' to '{invoice_status}'"
+            res += (
+                _(
+                    "Updated Netvisor status from '%s' to '%s'",
+                    record.netvisor_status,
+                    invoice_status,
+                )
+                + "\n"
             )
             binding.action_update_invoice_status(invoice_status)
 
-        else:
-            res = _(f"Status '{invoice_status}' is up to date. Nothing to do")
+        if not res:
+            res = _("Invoice details are up to date. Nothing to do")
 
         return res
-
-    def update_details(self, backend, record):
-        """
-        Update invoice details
-        :param backend: Netvisor backend record
-        :param record: Odoo record
-        :return:
-        """
-        binding = record.netvisor_bind_ids.filtered(
-            lambda r: r.backend_id.company_id == record.company_id
-        )
-
-        if not binding:
-            raise ValidationError(_("Please send the invoice to Netvisor first"))
-
-        if record.is_sale_document():
-            endpoint = f"getsalesinvoice.nv?netvisorkey={binding.external_id}"
-        elif record.is_purchase_document():
-            endpoint = f"getpurchaseinvoice.nv?netvisorkey={binding.external_id}"
-        else:
-            # No other invoice types are supported
-            return
-
-        invoice = backend._api_request_get(endpoint)
-        invoice_status = invoice.get("InvoiceStatus")
-        if isinstance(invoice_status, dict):
-            # Sales invoice returns a dict
-            invoice_status = invoice_status.get("#text")
-
-        if invoice_status:
-            invoice_status = invoice_status.lower().replace(" ", "")
-
-        vals = {
-            "name": invoice.get("SalesInvoiceNumber")
-            or invoice.get("PurchaseInvoiceNumber"),
-            "payment_reference": invoice.get("SalesInvoiceReferencenumber")
-            or invoice.get("PurchaseInvoiceReferencenumber"),
-            "netvisor_status": invoice_status,
-        }
-
-        binding.write(vals)
-
-        return _(f"Updated details for {binding.odoo_id}")
 
     def import_purchase_invoice(self, backend, netvisor_key, update=False):
         """

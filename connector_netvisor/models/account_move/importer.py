@@ -34,6 +34,9 @@ class NetvisorInvoiceImportMapper(Component):
             endpoint = f"getsalesinvoice.nv?netvisorkey={binding.external_id}"
         elif record.is_purchase_document():
             endpoint = f"getpurchaseinvoice.nv?netvisorkey={binding.external_id}"
+        else:
+            # No other invoice types are supported
+            return
 
         invoice = binding.backend_id._api_request_get(endpoint)
 
@@ -45,7 +48,8 @@ class NetvisorInvoiceImportMapper(Component):
             # Sales invoice returns a dict
             invoice_status = invoice_status.get("#text")
 
-        invoice_status = invoice_status.lower().replace(" ", "")
+        if invoice_status:
+            invoice_status = invoice_status.lower().replace(" ", "")
 
         if record.netvisor_status != invoice_status:
             res = _(
@@ -76,6 +80,9 @@ class NetvisorInvoiceImportMapper(Component):
             endpoint = f"getsalesinvoice.nv?netvisorkey={binding.external_id}"
         elif record.is_purchase_document():
             endpoint = f"getpurchaseinvoice.nv?netvisorkey={binding.external_id}"
+        else:
+            # No other invoice types are supported
+            return
 
         invoice = backend._api_request_get(endpoint)
         invoice_status = invoice.get("InvoiceStatus")
@@ -83,12 +90,15 @@ class NetvisorInvoiceImportMapper(Component):
             # Sales invoice returns a dict
             invoice_status = invoice_status.get("#text")
 
+        if invoice_status:
+            invoice_status = invoice_status.lower().replace(" ", "")
+
         vals = {
             "name": invoice.get("SalesInvoiceNumber")
             or invoice.get("PurchaseInvoiceNumber"),
             "payment_reference": invoice.get("SalesInvoiceReferencenumber")
             or invoice.get("PurchaseInvoiceReferencenumber"),
-            "netvisor_status": invoice_status.lower().replace(" ", ""),
+            "netvisor_status": invoice_status,
         }
 
         binding.write(vals)

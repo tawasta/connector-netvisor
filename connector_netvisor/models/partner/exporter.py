@@ -48,7 +48,12 @@ class NetvisorPartnerExportMapper(Component):
             [("odoo_id", "=", record.id), ("backend_id", "=", backend.id)]
         )
 
-        xml_string = self.env["ir.qweb"]._render(
+        qweb = self.env["ir.qweb"].with_context(
+            inherit_branding=False,
+            inherit_branding_auto=False,
+        )
+
+        xml_string = qweb._render(
             "connector_netvisor.netvisor_customer", {"partner": record}
         )
 

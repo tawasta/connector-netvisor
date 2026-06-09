@@ -102,7 +102,12 @@ class NetvisorInvoiceExportMapper(Component):
                 _("Only customer and supplier invoices are supported")
             )
 
-        xml_string = self.env["ir.qweb"]._render(
+        qweb = self.env["ir.qweb"].with_context(
+            inherit_branding=False,
+            inherit_branding_auto=False,
+        )
+
+        xml_string = qweb._render(
             template,
             {"invoice": record, "backend": backend, "dimensions": dimensions},
         )
@@ -134,7 +139,7 @@ class NetvisorInvoiceExportMapper(Component):
                 endpoint = "purchaseinvoicepostingdata.nv"
                 template = "connector_netvisor.netvisor_purchaseinvoicepostingdata"
 
-                xml_string = self.env["ir.qweb"]._render(
+                xml_string = qweb._render(
                     template,
                     {"invoice": binding, "backend": backend, "dimensions": dimensions},
                 )
@@ -280,6 +285,10 @@ class NetvisorInvoiceExportMapper(Component):
         res = None
 
         reversed_entry = binding.reversed_entry_id
+        qweb = self.env["ir.qweb"].with_context(
+            inherit_branding=False,
+            inherit_branding_auto=False,
+        )
 
         if reversed_entry and reversed_entry.netvisor_bind_ids:
             if len(reversed_entry.netvisor_bind_ids) > 1:
@@ -290,7 +299,7 @@ class NetvisorInvoiceExportMapper(Component):
             backend = binding.backend_id
             endpoint = "matchcreditnote.nv"
 
-            xml_string = self.env["ir.qweb"]._render(
+            xml_string = qweb._render(
                 "connector_netvisor.netvisor_matchcreditnote",
                 {"invoice": binding, "reverse": reversed_binding},
             )

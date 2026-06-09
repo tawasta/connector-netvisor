@@ -70,7 +70,11 @@ class NetvisorPaymentExportMapper(Component):
             template = "connector_netvisor.netvisor_payment"
             endpoint = "payment.nv"
 
-        xml_string = self.env["ir.qweb"]._render(template, {"record": record})
+        qweb = self.env["ir.qweb"].with_context(
+            inherit_branding=False,
+            inherit_branding_auto=False,
+        )
+        xml_string = qweb._render(template, {"record": record})
 
         _logger.debug(xml_string)
 

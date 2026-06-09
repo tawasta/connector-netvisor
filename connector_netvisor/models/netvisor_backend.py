@@ -291,6 +291,7 @@ class NetvisorBackend(models.Model):
             post_kwargs["data"] = values
         else:
             post_kwargs["content"] = values
+        print(post_kwargs)
 
         response = httpx.post(**post_kwargs)
 
@@ -418,9 +419,31 @@ class NetvisorBackend(models.Model):
         text = xmltodict.parse(response.text)
         headers = response.headers
         root = text.get("Root") or {}
+        html = text.get("html") or {}
+        html_head = html.get("head", {})
 
         if not root:
             _logger.warning(f"Root element not found: {text}")
+
+        if html:
+            # For some error responses, Netvisor returns an HTML response
+            # Try to parse the error message from the HTML title.
+            _logger.warning(f"HTML response received: {html}")
+            html_title = html_head.get("title", "")
+            if html_title == "403 Forbidden":
+                raise ValidationError(
+                    _(
+                        "You are not authorized to access this resource (403). \n"
+                        "Please check your Netvisor integration permissions."
+                    )
+                )
+            elif html_title == "502 Bad Gateway":
+                raise ValidationError(
+                    _(
+                        "Netvisor API is currently unavailable (502). \n"
+                        "Please try again later."
+                    )
+                )
 
         status_code = response.status_code
 

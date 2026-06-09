@@ -185,6 +185,6 @@ class NetvisorInvoice(models.Model):
                 record.odoo_id.message_post(body=msg)
 
             _logger.info(
-                _("Updating record.name Netvisor status to {}").format(invoice_status)
+                _("Updating %s Netvisor status to %s", record.name, invoice_status)
             )
             record.netvisor_status = invoice_status

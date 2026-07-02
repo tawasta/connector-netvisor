@@ -5,10 +5,6 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form" />
         <field name="arch" type="xml">
-            <field name="work_email" position="after">
-                <field name="job_begin_date" />
-            </field>
-
             <page name="hr_settings" position="after">
                 <page name="netvisor" string="Netvisor">
                     <group name="netvisor_group">

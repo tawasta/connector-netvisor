@@ -11,11 +11,6 @@ class HrEmployee(models.Model):
         string="Netvisor Bindings",
     )
 
-    job_begin_date = fields.Date(
-        string="Job begin date",
-        default=fields.Date.context_today,
-    )
-
     def get_social_security_number(self):
         """
         Get the employee's social security number (SSN)

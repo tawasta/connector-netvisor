@@ -180,7 +180,8 @@ class NetvisorInvoiceImportMapper(Component):
 
     @mapping
     def invoice_date(self, record):
-        value_date = record.get("PurchaseInvoiceValueDate").get("#text")
+        purchase_value_date = record.get("PurchaseInvoiceValueDate", False)
+        value_date = purchase_value_date and purchase_value_date.get("#text", False)
         invoice_date = record.get("PurchaseInvoiceDate").get("#text")
 
         res = {

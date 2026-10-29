@@ -43,6 +43,11 @@
                     <bankidentificationcode
                         t-esc="record.bank_account_id.bank_id.bic or ''"
                     />
+                    <hierarchy
+                        t-if="record.netvisor_hierarchy_level"
+                        t-esc="record.netvisor_hierarchy_level"
+                        type="netvisor"
+                    />
                 </employeepayrollinformation>
 
                 <!-- TODO: Can we just enable these, or should they be configurable? -->

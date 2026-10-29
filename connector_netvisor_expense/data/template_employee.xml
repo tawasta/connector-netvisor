@@ -44,7 +44,7 @@
                         t-esc="record.bank_account_id.bank_id.bic or ''"
                     />
                     <hierarchy
-                        t-if="record.netvisor_hierarchy_level"
+                        t-if="record.netvisor_hierarchy_level and record.netvisor_hierarchy_level != 0"
                         t-esc="record.netvisor_hierarchy_level"
                         type="netvisor"
                     />

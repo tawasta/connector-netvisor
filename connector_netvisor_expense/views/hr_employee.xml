@@ -12,6 +12,7 @@
             <page name="hr_settings" position="after">
                 <page name="netvisor" string="Netvisor">
                     <group name="netvisor_group">
+                        <field name="netvisor_hierarchy_level" />
 
                         <p class="oe_grey oe_inline" colspan="2">
                             Export this employee to Netvisor.

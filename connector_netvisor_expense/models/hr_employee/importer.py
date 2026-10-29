@@ -30,6 +30,7 @@ class NetvisorEmployeeImportMapper(Component):
         endpoint = f"getemployee.nv?netvisorkey={netvisor_key}"
 
         employee = backend._api_request_get(endpoint)
+        _logger.debug(_("Fetched employee data from Netvisor: %s", employee))
         values = self.map_record(employee).values()
         existing_record = False
 

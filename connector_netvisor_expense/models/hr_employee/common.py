@@ -16,6 +16,15 @@ class HrEmployee(models.Model):
         default=fields.Date.context_today,
     )
 
+    # TODO: More strictly defined hierachy level,
+    # fetching available options from Netvisor
+    # AFAIK there is no way to do this currently
+    netvisor_hierarchy_level = fields.Integer(
+        string="Hierarchy Level",
+        help="Netvisor hierarchy level. "
+        "Currently you'll need to get the Netvisor ID from the Netvisor system",
+    )
+
     def get_social_security_number(self):
         """
         Get the employee's social security number (SSN)
